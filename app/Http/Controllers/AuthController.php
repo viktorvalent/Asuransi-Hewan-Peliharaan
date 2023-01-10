@@ -13,8 +13,8 @@ class AuthController extends Controller
 {
     public function index()
     {
-        return view('login');
-    }  
+        return view('membership.login');
+    }
 
     public function authenticate(Request $request)
     {
@@ -33,7 +33,7 @@ class AuthController extends Controller
     }
 
     public function store(Request $request)
-    {  
+    {
         // dd($request->all());
         $request->validate([
             'name' => 'required',
@@ -57,9 +57,9 @@ class AuthController extends Controller
         } catch (Exception $e) {
             echo $e;
         }
-        
-    }  
-    
+
+    }
+
     public function dashboard()
     {
         if(Auth::check()){
@@ -68,7 +68,7 @@ class AuthController extends Controller
 
         return redirect("login")->withSuccess('You are not allowed to access');
     }
-    
+
     public function logout(Request $request)
     {
         Auth::logout();
