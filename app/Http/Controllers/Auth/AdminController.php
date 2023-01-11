@@ -11,7 +11,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.login');
+        return view('admin.login',['title'=>'Sign In | Mypett Insurance']);
     }
 
     public function authenticate(Request $request)

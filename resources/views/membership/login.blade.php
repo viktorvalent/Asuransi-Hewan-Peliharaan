@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <title>Sign In | Mypett Insurance</title>
     <link href="{{ asset('landing/css/bootstrap.css') }}" rel="stylesheet" />
     <link href="{{ asset('landing/login/style.css') }}" rel="stylesheet" />
     <link href="{{ asset('landing/vendor/font-awesome/css/main.css') }}" rel="stylesheet" />

@@ -24,7 +24,7 @@
         <li><a href="#">Drop Down 4</a></li>
         </ul>
     </li> --}}
-        <li><a href="{{ url('/le') }}"><i class="bi bi-person fs-5"></i></a></li>
+        <li><a href="{{ route('sign-in.member') }}"><i class="bi bi-person fs-5"></i></a></li>
         <li><a href="{{ url('/le') }}"><i class="bi bi-cart fs-5"></i></a></li>
         <li><a href="{{ url('/le') }}"><i class="bi bi-heart fs-6"></i></a></li>
     </ul>

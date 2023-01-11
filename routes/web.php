@@ -7,14 +7,9 @@ use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\MemberController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Landing\HomeController;
 
-Route::get('/auth/admin/login', function () {
-    return view('admin.login');
-});
-
-Route::get('/', function () {
-    return view('layouts.landing.app');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/membership/login', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->name('login.user');
@@ -34,6 +29,7 @@ Route::controller(MemberController::class)->prefix('/member')->group(function(){
     Route::get('/sign-in','index')->name('sign-in.member');
     Route::post('/authenticating','authenticate')->name('authenticating.member');
     Route::post('/registration','registration')->name('register.member');
+    Route::get('/sign-out','logout')->name('sign-out.member');
 });
 
 Route::middleware('auth')->group(function(){
@@ -42,10 +38,13 @@ Route::middleware('auth')->group(function(){
     });
 
     Route::controller(MasterBankController::class)->prefix('/auth/dashboard/master-bank')->group(function(){
-
+        Route::get('/','index')->name('master-data.bank');
+        Route::get('/list-data','data')->name('master-bank.data');
+        Route::post('/create','store')->name('master-data.bank.create');
     });
 
-    Route::controller(NoRekController::class)->prefix('/auth/dashboard/nomor-rekening')->group(function(){
-
+    Route::controller(NoRekController::class)->prefix('/auth/dashboard/master-nomor-rekening')->group(function(){
+        Route::get('/','index')->name('master-data.no-rek');
+        Route::get('/list-data','data')->name('no-rek.data');
     });
 });

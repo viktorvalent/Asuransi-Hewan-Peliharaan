@@ -1,11 +1,11 @@
-<section id="hero" class="hero" style="min-height: 85vh;">
+<section id="hero" class="hero pb-4" style="min-height: 85vh;">
     <div class="container position-relative">
         <div class="row gy-5" data-aos="fade-in">
             <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center text-center text-lg-start">
                 <h2>Welcome to <span class="text-warning" style="font-family: 'Fredoka One', cursive;">Mypett</span></h2>
                 <p>Sed autem laudantium dolores. Voluptatem itaque ea consequatur eveniet. Eum quas beatae cumque eum quaerat.</p>
                 <div class="d-flex justify-content-center justify-content-lg-start">
-                    <a href="#about" class="btn-get-started">Get Started</a>
+                    <a href="#about" class="btn-get-started">See now</a>
                     <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
                 </div>
             </div>

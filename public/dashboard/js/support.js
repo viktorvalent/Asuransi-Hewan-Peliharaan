@@ -73,13 +73,14 @@ const _validation = {
 
 // Datatable
 const _table = {
-    setData: (url, data, table='#datatable') => {
+    set: (url, data, table='#datatable') => {
         $(table).DataTable({
             processing: true,
             serverSide: true,
             ajax: url,
             columns: data,
             scrollX: true,
+            responsive: true
         });
     },
     reload: (table='#datatable') => {
@@ -88,4 +89,47 @@ const _table = {
         $('#modal_edit').modal('hide');
     }
 }
+
+const _form = {
+    reset: (btn, form) => {
+        $(btn).click(function (e) {
+            e.preventDefault();
+            $('small.text-danger').text('');
+            if ($(form+' input').length>0) {
+                $(form+' input').removeClass('is-invalid');
+                $(form+' input').val('');
+            }
+            if ($(form+' textarea').length>0) {
+                $(form+' textarea').removeClass('is-invalid');
+                $(form+' textarea').val('');
+            }
+            if ($(form+' select').length>0) {
+                $(form+' select').removeClass('is-invalid');
+                $(form+' select').trigger('0');
+            }
+        });
+    }
+}
+
+const _swalert = (resp) => {
+    let response = resp;
+    if (response.status == 200) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: response.message,
+            showConfirmButton: false,
+            timer: 1500
+        })
+    } else if (response.status == 404) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: response.responseJSON.message,
+            showConfirmButton: false,
+            timer: 1500
+        })
+    }
+}
+
 

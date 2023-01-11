@@ -13,7 +13,7 @@
         <div class="sidebar-user">
             <div class="d-flex justify-content-center">
                 <div class="flex-shrink-0">
-                    <img src="{{ asset('assets/img/avatars/avatar.jpg') }}" class="avatar img-fluid rounded me-1" alt="Charles Hall">
+                    <img src="{{ asset('dashboard/img/avatars/avatar-5.jpg') }}" class="avatar img-fluid rounded me-1" alt="Charles Hall">
                 </div>
                 <div class="flex-grow-1 ps-2">
                     <a class="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown">
@@ -46,13 +46,13 @@
                 Navigasi
             </li>
 
-            <li class="sidebar-item active">
-                <a class="sidebar-link" href="index.html">
-                    <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+            <li class="sidebar-item {{ $title=='Dashboard'?'active':'' }}">
+                <a class="sidebar-link" href="{{ route('auth.dashboard') }}">
+                    <i class="align-middle" data-feather="home"></i> <span class="align-middle">Dashboard</span>
                 </a>
             </li>
 
-            <li class="sidebar-item">
+            {{-- <li class="sidebar-item">
                 <a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link" href="pages-profile.html">
                     <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
                 </a>
@@ -65,7 +65,36 @@
                     <li class="sidebar-item"><a class="sidebar-link" href="pages-chat.html">Chat <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="pages-blank.html">Blank Page</a></li>
                 </ul>
+            </li> --}}
+
+            <li class="sidebar-item
+                {{ $title=='Master Bank'?'active':'' }}
+                {{ $title=='Master Nomor Rekening'?'active':'' }}">
+                <a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
+                    <i class="align-middle" data-feather="table"></i> <span class="align-middle">Master Data</span>
+                </a>
+                <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse
+                    {{ $title=='Master Bank'?'show':'' }}
+                    {{ $title=='Master Nomor Rekening'?'show':'' }}"
+                    data-bs-parent="#sidebar" style="">
+                    <li class="sidebar-item">
+                        <a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">Master Bank</a>
+                        <ul id="multi-2" class="sidebar-dropdown list-unstyled collapse
+                            {{ $title=='Master Bank'?'show':'' }}
+                            {{ $title=='Master Nomor Rekening'?'show':'' }}">
+                            <li class="sidebar-item {{ $title=='Master Bank'?'active':'' }}">
+                                <a class="sidebar-link" href="{{ route('master-data.bank') }}">Daftar Bank</a>
+                            </li>
+                            <li class="sidebar-item {{ $title=='Master Nomor Rekening'?'active':'' }}">
+                                <a class="sidebar-link" href="{{ route('master-data.no-rek') }}">Nomor Rekening</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="index.html">Level 0</a></li>
+                </ul>
             </li>
+
+
         </ul>
     </div>
 </nav>
