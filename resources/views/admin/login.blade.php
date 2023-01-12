@@ -64,7 +64,7 @@
                                             <small class="invalid-feedback text-danger password_error"></small>
                                         </div>
 										<div class="text-center mt-3">
-											<button type="button" class="btn btn-lg btn-primary sign">Sign in</button>
+											<button type="submit" class="btn btn-lg btn-primary sign">Sign in</button>
 										</div>
                                         <div class="text-end">
                                             <a class="text-end" href="#">Forgot password?</a>

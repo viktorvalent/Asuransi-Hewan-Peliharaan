@@ -5,17 +5,10 @@ use App\Http\Controllers\Admin\MasterData\MasterBankController;
 use App\Http\Controllers\Admin\MasterData\NoRekController;
 use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\MemberController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Landing\HomeController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-Route::get('/membership/login', [AuthController::class, 'index'])->name('login');
-Route::post('/login', [AuthController::class, 'authenticate'])->name('login.user');
-Route::post('/registration', [AuthController::class, 'store'])->name('register.user');
-Route::get('/dashboard', [AuthController::class, 'dashboard']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Login Admin
 Route::controller(AdminController::class)->prefix('/auth')->group(function(){
@@ -41,10 +34,17 @@ Route::middleware('auth')->group(function(){
         Route::get('/','index')->name('master-data.bank');
         Route::get('/list-data','data')->name('master-bank.data');
         Route::post('/create','store')->name('master-data.bank.create');
+        Route::get('/edit/{id}','edit');
+        Route::post('/update','update')->name('master-data.bank.update');
+        Route::get('/delete/{id}','destroy');
     });
 
     Route::controller(NoRekController::class)->prefix('/auth/dashboard/master-nomor-rekening')->group(function(){
         Route::get('/','index')->name('master-data.no-rek');
         Route::get('/list-data','data')->name('no-rek.data');
+        Route::post('/create','store')->name('master-data.no-rek.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
     });
 });

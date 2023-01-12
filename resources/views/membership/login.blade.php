@@ -12,57 +12,57 @@
     <link href="{{ asset('landing/vendor/font-awesome/css/main.css') }}" rel="stylesheet" />
 </head>
 <body>
-<div class="container" id="container">
-	<div class="form-container sign-up-container">
-		<form method="POST" action="{{ route('register.user') }}">
-			@csrf
-			<h3>Create Account</h3>
-			<span>or use your email for registration</span>
-			@if(session()->has('regisError'))
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<i class="bi bi-lock fs-4 text-black"></i>
-					{{ session('regisError') }}
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			@endif
-			<input type="text" name="name" id="reg-name" required value="" placeholder="Name">
-			<input type="email" name="email" id="reg-email" required value="" placeholder="email">
-			<input type="password" name="password" id="reg-password" required value="" placeholder="Passowrd">
-			<input type="password" name="confirmpassword" id="reg-confirmpassword" required value="" placeholder="Re-Password">
-			<button type="submit" class="mt-5">Sign Up</button>
-		</form>
-	</div>
-	<div class="form-container sign-in-container">
-		<form method="POST" action="{{ route('login.user') }}">
-			@csrf
-			<h3>Sign in</h3>
-			<span  class="mb-3">or use your account</span>
-			@if(session()->has('loginError'))
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<i class="bi bi-lock fs-4 text-black"></i>
-					{{ session('loginError') }}
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			@endif
-			@if(session()->has('regError'))
-				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-					<i class="bi bi-lock fs-4 text-black"></i>
-					{{ session('regError') }}
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			@endif
-			<input type="text" name="email" id="login-email" required value="{{ old('email') }}" placeholder="email">
-			@error('email')
-				<div class="invalid-feedback">{{ $message }}</div>
-			@enderror
-			<input type="password" name="password" id="login-password" required value="{{ old('password') }}" placeholder="password">
-			@error('password')
-				<div class="invalid-feedback">{{ $message }}</div>
-			@enderror
-			<a href="{{ asset('views/indexs.php') }}">Forgot your password?</a>
-			<button type="submit" class="mt-5">Sign In</button>
-		</form>
-	</div>
+<div class="container d-flex flex-wrap" id="container">
+    <div class="form-container sign-up-container col-sm-12">
+        <form method="POST" action="{{ route('sign-in.member') }}">
+            @csrf
+            <h3>Create Account</h3>
+            <span>or use your email for registration</span>
+            @if(session()->has('regisError'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-lock fs-4 text-black"></i>
+                    {{ session('regisError') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            <input type="text" name="name" id="reg-name" required value="" placeholder="Name">
+            <input type="email" name="email" id="reg-email" required value="" placeholder="email">
+            <input type="password" name="password" id="reg-password" required value="" placeholder="Passowrd">
+            <input type="password" name="confirmpassword" id="reg-confirmpassword" required value="" placeholder="Re-Password">
+            <button type="submit" class="mt-5">Sign Up</button>
+        </form>
+    </div>
+    <div class="form-container sign-in-container col-sm-12">
+        <form method="POST" action="{{ route('register.member') }}">
+            @csrf
+            <h3>Sign in</h3>
+            <span  class="mb-3">or use your account</span>
+            @if(session()->has('loginError'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-lock fs-4 text-black"></i>
+                    {{ session('loginError') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if(session()->has('regError'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-lock fs-4 text-black"></i>
+                    {{ session('regError') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            <input type="text" name="email" id="login-email" required value="{{ old('email') }}" placeholder="email">
+            @error('email')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            <input type="password" name="password" id="login-password" required value="{{ old('password') }}" placeholder="password">
+            @error('password')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+            <a href="{{ asset('views/indexs.php') }}">Forgot your password?</a>
+            <button type="submit" class="mt-5">Sign In</button>
+        </form>
+    </div>
 	<div class="overlay-container">
 		<div class="overlay">
 			<div class="overlay-panel overlay-left">

@@ -57,12 +57,11 @@ const _validation = {
                             $('textarea#' + index).removeClass('is-invalid');
                         });
                     }
-                    if($('.dropify-wrapper').length>0){
-                        console.log('o');
-                        $('.dropify.' + index).parent().addClass('border border-danger');
-                        $('.dropify.' + index).change(function() {
+                    if($('.choice').length>0){
+                        $('.choice.' + index).parent().addClass('border border-danger');
+                        $('.choice.' + index).change(function() {
                             $('small.' + index + '_error').text('');
-                            $('.dropify.' + index).parent().removeClass('border border-danger');
+                            $('.choice.' + index).parent().removeClass('border border-danger');
                         });
                     }
                 }
@@ -85,8 +84,12 @@ const _table = {
     },
     reload: (table='#datatable') => {
         $(table).DataTable().ajax.reload();
-        $('#modal_create').modal('hide');
-        $('#modal_edit').modal('hide');
+        if ($('#modal_create').hasClass('show')){
+            $('#modal_create').modal('hide');
+        }
+        if ($('#modal_edit').hasClass('show')) {
+            $('#modal_edit').modal('hide');
+        }
     }
 }
 
@@ -94,6 +97,7 @@ const _form = {
     reset: (btn, form) => {
         $(btn).click(function (e) {
             e.preventDefault();
+            $('form').trigger('reset');
             $('small.text-danger').text('');
             if ($(form+' input').length>0) {
                 $(form+' input').removeClass('is-invalid');
@@ -106,6 +110,10 @@ const _form = {
             if ($(form+' select').length>0) {
                 $(form+' select').removeClass('is-invalid');
                 $(form+' select').trigger('0');
+            }
+            if($(form+' .choice').length>0){
+                $(form+' .choice').parent().removeClass('border border-danger');
+                $(form+' .choice').empty().trigger('change');
             }
         });
     }
@@ -132,4 +140,17 @@ const _swalert = (resp) => {
     }
 }
 
-
+const _input = {
+    loading: {
+        start: (element) => {
+            $(element).html(`<div class="spinner-border text-white" style="width:15.5px;height:15.5px;" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>`);
+            $(element).attr('disabled','disabled');
+        },
+        stop: (element, title='Log In') => {
+            $(element).html(title);
+            $(element).removeAttr('disabled');
+        }
+    }
+}
