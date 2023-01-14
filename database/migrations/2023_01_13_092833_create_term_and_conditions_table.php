@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('testimoni', function (Blueprint $table) {
+        Schema::create('term_and_conditions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->contrained('users');
-            $table->string('teks');
+            $table->mediumText('isi');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('testimoni');
+        Schema::dropIfExists('term_and_conditions');
     }
 };

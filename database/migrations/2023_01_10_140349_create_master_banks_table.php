@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('master_bank', function (Blueprint $table) {
+        Schema::create('master_bank_payment', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
             $table->string('logo');

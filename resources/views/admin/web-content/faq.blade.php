@@ -18,8 +18,8 @@
             <table id="datatable" class="table w-100">
                 <thead>
                     <tr>
-                        <th>Bank</th>
-                        <th>Nomor Rekening</th>
+                        <th>Pertanyaan</th>
+                        <th>Jawaban</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -35,21 +35,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body m-3">
-                        <form id="create" action="{{ route('master-data.bank.create') }}" enctype="multipart/form-data">
+                        <form id="create">
                             <div class="mb-3">
-                                <label class="form-label required">Bank <i class="text-danger">*</i></label>
-                                <select class="form-control form-control-sm choice bank" name="bank_id" id="bank_id">
-                                    <option value="">Pilih Bank</option>
-                                    @foreach ($datas as $item)
-                                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                    @endforeach
-                                </select>
-                                <small class="text-danger bank_error"></small>
+                                <label class="form-label required">Pertanyaan <i class="text-danger">*</i></label>
+                                <textarea id="pertanyaan" class="form-control pertanyaan" name="pertanyaan" placeholder="Pertanyaan" rows="3"></textarea>
+                                <small class="text-danger pertanyaan_error"></small>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label required">Nomor Rekening <i class="text-danger">*</i></label>
-                                <input id="nomor_rekening" type="text" name="nomor_rekening" class="form-control" placeholder="Masukkan nomor rekening">
-                                <small class="text-danger nomor_rekening_error"></small>
+                                <label class="form-label">Jawaban</label>
+                                <textarea id="jawaban" class="form-control jawaban" name="jawaban" placeholder="Jawaban" rows="5"></textarea>
+                                <small class="text-danger jawaban_error"></small>
                             </div>
                             <div class="d-flex justify-content-center mt-5">
                                 <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
@@ -71,19 +66,15 @@
                     <div class="modal-body m-3">
                         <form id="edit">
                             <div class="mb-3">
-                                <label class="form-label required">Bank <i class="text-danger">*</i></label>
-                                <input type="hidden" name="edit_id" class="edit_id">
-                                <div class="select_edit">
-                                    <select class="form-control form-control-sm choice_edit bank" name="bank_id" id="bank_id">
-                                        <option value="">Pilih Bank</option>
-                                    </select>
-                                </div>
-                                <small class="text-danger bank_error"></small>
+                                <label class="form-label required">Pertanyaan <i class="text-danger">*</i></label>
+                                <input type="hidden" name="id" class="edit_id">
+                                <textarea id="pertanyaan" class="form-control edit_pertanyaan" name="edit_pertanyaan" placeholder="Pertanyaan" rows="3"></textarea>
+                                <small class="text-danger pertanyaan_error"></small>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label required">Nomor Rekening <i class="text-danger">*</i></label>
-                                <input id="nomor_rekening" type="text" name="edit_nomor_rekening" class="form-control edit_nomor_rekening" placeholder="Masukkan nomor rekening">
-                                <small class="text-danger nomor_rekening_error"></small>
+                                <label class="form-label">Jawaban</label>
+                                <textarea id="jawaban" class="form-control edit_jawaban" name="edit_jawaban" placeholder="Jawaban" rows="5"></textarea>
+                                <small class="text-danger jawaban_error"></small>
                             </div>
                             <div class="d-flex justify-content-center mt-5">
                                 <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
@@ -107,10 +98,10 @@
 <script src="{{ asset('dashboard/libs/sweetalert/app.js') }}"></script>
 <script>
     $(document).ready(function () {
-        _table.set("{{ route('no-rek.data') }}",
+        _table.set("{{ route('faq.data') }}",
             [
-                {data: 'master_bank.nama', name: 'master_bank.nama'},
-                {data: 'nomor_rekening', name: 'nomor_rekening'},
+                {data: 'pertanyaan', name: 'pertanyaan'},
+                {data: 'jawaban', name: 'jawaban'},
                 {
                     data: 'action',
                     name: 'action',
@@ -119,20 +110,17 @@
                 },
             ]
         );
-        // Choice init
-        const choices = new Choices('.choice');
-        const choices_edit = new Choices('.choice_edit');
-        $('.choices').addClass('mb-0');
+
         _form.reset('.add','#create');
 
         $(document).on('click','.create',function (e) {
             e.preventDefault();
             let data = {
-                'bank':$('#bank_id option:selected').val(),
-                'nomor_rekening':$('#nomor_rekening').val()
+                'pertanyaan':$('#pertanyaan').val(),
+                'jawaban':$('#jawaban').val()
             }
             _input.loading.start(this);
-            _ajax.post("{{ route('master-data.no-rek.create') }}",data,
+            _ajax.post("{{ route('web-content.faq.create') }}",data,
                 (response)=>{
                     _input.loading.stop('.create','Kirim');
                     if (response.status == 200) {
@@ -162,18 +150,13 @@
             e.preventDefault()
             $('form#edit').trigger('reset');
             let id = $(this).data('id');
-            _ajax.get(`{{ url('/auth/dashboard/master-nomor-rekening/edit') }}/${id}`,
+            $('#modal_edit').modal('show');
+            _ajax.get(`{{ url('/auth/dashboard/faq/edit') }}/${id}`,
                 (response) => {
-                    $('#modal_edit').modal('show');
                     if (response.status == 200) {
-                        $('.edit_nomor_rekening').val(response.data.nomor_rekening);
+                        $('.edit_pertanyaan').val(response.data.pertanyaan);
                         $('.edit_id').val(response.data.id);
-                        let options = [];
-                        response.banks.forEach(e => {
-                            response.data.bank_id==e.id?options.push(`<option value="${e.id}" selected>${e.nama}</option>`):options.push(`<option value="${e.id}">${e.nama}</option>`);
-                        });
-                        $('.select_edit').html(`<select class="form-control form-control-sm choice_edit edit_bank_id bank" name="edit_bank_id" id="bank_id">${options.join('')}</select>`);
-                        new Choices('.choice_edit');
+                        $('.edit_jawaban').val(response.data.jawaban).html().replace(/\n/g, "<br />");
                     }
                 },
                 (response) => {
@@ -195,11 +178,12 @@
             e.preventDefault();
             let data = {
                 'id':$('.edit_id').val(),
-                'bank':$('.edit_bank_id').val(),
-                'nomor_rekening':$('.edit_nomor_rekening').val()
+                'pertanyaan':$('.edit_pertanyaan').val(),
+                'jawaban':$('.edit_jawaban').val()
             }
+            console.log(data);
             _input.loading.start(this);
-            _ajax.put(`{{ url('/auth/dashboard/master-nomor-rekening/update') }}/${data.id}`,data,
+            _ajax.put(`{{ url('/auth/dashboard/faq/update') }}/${data.id}`,data,
                 (response) => {
                     _input.loading.stop('.update','Kirim');
                     if (response.status == 200) {
@@ -240,7 +224,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     let id = $(this).data('id');
-                    _ajax.get(`{{ url('/auth/dashboard/master-nomor-rekening/delete') }}/${id}`,
+                    _ajax.get(`{{ url('/auth/dashboard/faq/delete') }}/${id}`,
                         (response)=>{
                             if (response.status == 200) {
                                 Swal.fire({
@@ -264,7 +248,6 @@
                 }
             });
         })
-
     });
 </script>
 @endpush

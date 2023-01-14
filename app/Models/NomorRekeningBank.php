@@ -9,7 +9,7 @@ class NomorRekeningBank extends Model
 {
     use HasFactory;
 
-    protected $table = 'nomor_rekening_bank';
+    protected $table = 'nomor_rekening_bank_payment';
     protected $fillable = ['bank_id','nomor_rekening'];
     public $timestamps = true;
     protected $primaryKey = 'id';

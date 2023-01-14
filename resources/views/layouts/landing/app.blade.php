@@ -50,9 +50,7 @@
             <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
         </div>
     </header>
-
-    @include('layouts.landing.hero')
-
+    @yield('hero')
     <main id="main">
         @yield('content')
         {{-- <section id="about" class="about">

@@ -9,7 +9,7 @@ class MasterBank extends Model
 {
     use HasFactory;
 
-    protected $table = 'master_bank';
+    protected $table = 'master_bank_payment';
     protected $fillable = ['nama','logo','deskripsi'];
     public $timestamps = true;
     protected $primaryKey = 'id';

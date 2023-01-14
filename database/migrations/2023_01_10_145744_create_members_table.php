@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('member', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
-            $table->string('nama_lengkap');
-            $table->string('no_hp');
-            $table->string('no_ktp');
-            $table->string('foto');
-            $table->text('alamat');
+            $table->foreignId('bank_id')->constrained('master_bank');
+            $table->char('nama_lengkap');
+            $table->char('no_hp', 15);
+            $table->char('no_ktp', 20);
+            $table->char('no_rekening', 50);
+            $table->string('alamat');
             $table->timestamps();
         });
     }

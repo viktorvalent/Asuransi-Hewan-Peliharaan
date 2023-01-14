@@ -96,7 +96,55 @@ class NoRekController extends Controller
 
     public function update(Request $request, $id)
     {
-        # code...
+        $validator = Validator::make($request->all(), [
+            'bank' => 'required',
+            'nomor_rekening' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            try {
+                DB::beginTransaction();
+                $data = NomorRekeningBank::find($id);
+                if ($data->nomor_rekening==$request->nomor_rekening) {
+                    $data->update([
+                        'bank_id'=>$request->bank,
+                        'nomor_rekening'=>$request->nomor_rekening
+                    ]);
+                    Helper::createUserLog("Berhasil mengubah nomor rekening bank", auth()->user()->id, $this->title);
+                    DB::commit();
+                    return response()->json([
+                        'status'=>200,
+                        'message'=>'Berhasil mengubah data'
+                    ]);
+                } else {
+                    $cek = NomorRekeningBank::where('nomor_rekening',$request->nomor_rekening)->whereNot('id',$id)->first();
+                    if ($cek) {
+                        return response()->json([
+                            'message'=>'Nomor rekening sudah digunakan!'
+                        ],404);
+                    } else {
+                        $data->update([
+                            'bank_id'=>$request->bank,
+                            'nomor_rekening'=>$request->nomor_rekening
+                        ]);
+                        Helper::createUserLog("Berhasil mengubah nomor rekening bank ", auth()->user()->id, $this->title);
+                        DB::commit();
+                        return response()->json([
+                            'status'=>200,
+                            'message'=>'Berhasil mengubah data'
+                        ]);
+                    }
+                }
+            } catch (Exception $e) {
+                Helper::createUserLog("Gagal mengubah data bank", auth()->user()->id, $this->title);
+                return response()->json([
+                    'message'=>$e->getMessage()
+                ],422);
+            }
+        }
     }
 
     public function destroy($id)

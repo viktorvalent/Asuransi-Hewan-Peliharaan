@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Landing;
 
-use App\Http\Controllers\Controller;
+use App\Models\Faq;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        return view('landing.home',['title'=>'Home']);
+        $faq = Faq::latest()->limit(5)->get();
+        return view('landing.home', [
+            'title'=>'Home',
+            'faqs'=>$faq
+        ]);
     }
 }

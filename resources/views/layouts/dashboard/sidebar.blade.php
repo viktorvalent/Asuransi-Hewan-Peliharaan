@@ -10,36 +10,6 @@
                 <path d="M20 16L12 20L4 16"></path>
             </svg>
         </a>
-        <div class="sidebar-user">
-            <div class="d-flex justify-content-center">
-                <div class="flex-shrink-0">
-                    <img src="{{ asset('dashboard/img/avatars/avatar-5.jpg') }}" class="avatar img-fluid rounded me-1" alt="Charles Hall">
-                </div>
-                <div class="flex-grow-1 ps-2">
-                    <a class="sidebar-user-title dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        {{ auth()->user()->username }}
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-start">
-                        <a class="dropdown-item" href="pages-profile.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user align-middle me-1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg> Profile</a>
-                        <a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-pie-chart align-middle me-1"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg> Analytics</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="pages-settings.html"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings align-middle me-1"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> Settings &amp;
-                            Privacy</a>
-                        <a class="dropdown-item" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-help-circle align-middle me-1"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg> Help Center</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{ route('sign-out.admin') }}">Log out</a>
-                    </div>
-
-                    <div class="sidebar-user-subtitle">
-                        @if (auth()->user()->is_admin)
-                            Admin
-                        @else
-                            Member
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
         <ul class="sidebar-nav">
 
             <li class="sidebar-header">
@@ -52,33 +22,20 @@
                 </a>
             </li>
 
-            {{-- <li class="sidebar-item">
-                <a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link" href="pages-profile.html">
-                    <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
-                </a>
-                <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-settings.html">Settings</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-projects.html">Projects <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-clients.html">Clients <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-orders.html">Orders <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-pricing.html">Pricing <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-chat.html">Chat <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-blank.html">Blank Page</a></li>
-                </ul>
-            </li> --}}
-
             <li class="sidebar-item
                 {{ $title=='Master Bank'?'active':'' }}
+                {{ $title=='Master Jenis Hewan'?'active':'' }}
                 {{ $title=='Master Nomor Rekening'?'active':'' }}">
                 <a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
                     <i class="align-middle" data-feather="table"></i> <span class="align-middle">Master Data</span>
                 </a>
                 <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse
                     {{ $title=='Master Bank'?'show':'' }}
+                    {{ $title=='Master Jenis Hewan'?'show':'' }}
                     {{ $title=='Master Nomor Rekening'?'show':'' }}"
                     data-bs-parent="#sidebar" style="">
                     <li class="sidebar-item">
-                        <a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">Master Bank</a>
+                        <a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">Bank Payment</a>
                         <ul id="multi-2" class="sidebar-dropdown list-unstyled collapse
                             {{ $title=='Master Bank'?'show':'' }}
                             {{ $title=='Master Nomor Rekening'?'show':'' }}">
@@ -90,10 +47,55 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="index.html">Level 0</a></li>
+                    {{-- <li class="sidebar-item"><a class="sidebar-link" href="dashboard-ecommerce.html">E-Commerce</a></li> --}}
+                    <li class="sidebar-item {{ $title=='Master Jenis Hewan'?'active':'' }}">
+                        <a class="sidebar-link" href="{{ route('master-data.jenis-hewan') }}">Jenis Hewan</a>
+                    </li>
+
+                    <li class="sidebar-item {{ $title=='Master Ras Hewan'?'active':'' }}">
+                        <a class="sidebar-link" href="{{ route('master-data.jenis-hewan') }}">Ras Hewan</a>
+                    </li>
                 </ul>
             </li>
 
+            <li class="sidebar-item
+                {{ $title=='FAQ'?'active':'' }}
+                {{ $title=='Term & Conditions'?'active':'' }}
+                {{ $title=='Tambah Term & Conditions'?'active':'' }}">
+                <a data-bs-target="#webcontents" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
+                    <i class="align-middle" data-feather="airplay"></i> <span class="align-middle">Web Content</span>
+                </a>
+                <ul id="webcontents" class="sidebar-dropdown list-unstyled collapse
+                    {{ $title=='FAQ'?'show':'' }}
+                    {{ $title=='Term & Conditions'?'show':'' }}
+                    {{ $title=='Tambah Term & Conditions'?'show':'' }}"
+                    data-bs-parent="#sidebar" style="">
+                    {{-- <li class="sidebar-item">
+                        <a data-bs-target="#multi-2" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">Master Bank</a>
+                        <ul id="multi-2" class="sidebar-dropdown list-unstyled collapse
+                            {{ $title=='Master Bank'?'show':'' }}">
+                            <li class="sidebar-item {{ $title=='Master Bank'?'active':'' }}">
+                                <a class="sidebar-link" href="{{ route('master-data.bank') }}">Daftar Bank</a>
+                            </li>
+                            <li class="sidebar-item {{ $title=='Master Nomor Rekening'?'active':'' }}">
+                                <a class="sidebar-link" href="{{ route('master-data.no-rek') }}">Nomor Rekening</a>
+                            </li>
+                        </ul>
+                    </li> --}}
+                    {{-- <li class="sidebar-item"><a class="sidebar-link" href="dashboard-ecommerce.html">E-Commerce</a></li> --}}
+                    <li class="sidebar-item {{ $title=='Hero'?'active':'' }}">
+                        <a class="sidebar-link" href="{{ route('web-content.hero') }}">Hero</a>
+                    </li>
+                    <li class="sidebar-item
+                    {{ $title=='Term & Conditions'?'active':'' }}
+                    {{ $title=='Tambah Term & Conditions'?'active':'' }}">
+                        <a class="sidebar-link" href="{{ route('web-content.tnc') }}">Term & Conditions</a>
+                    </li>
+                    <li class="sidebar-item {{ $title=='FAQ'?'active':'' }}">
+                        <a class="sidebar-link" href="{{ route('web-content.faq') }}">FAQ</a>
+                    </li>
+                </ul>
+            </li>
 
         </ul>
     </div>

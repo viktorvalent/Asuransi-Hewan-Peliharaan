@@ -1,12 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\MasterData\MasterBankController;
-use App\Http\Controllers\Admin\MasterData\NoRekController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\MemberController;
 use App\Http\Controllers\Landing\HomeController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\WebContent\FaqController;
+use App\Http\Controllers\Admin\MasterData\NoRekController;
+use App\Http\Controllers\Admin\MasterData\MasterBankController;
+use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
+use App\Http\Controllers\Admin\WebContent\HeroController;
+use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
+use App\Http\Controllers\Member\MemberDashboardController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -25,7 +30,7 @@ Route::controller(MemberController::class)->prefix('/member')->group(function(){
     Route::get('/sign-out','logout')->name('sign-out.member');
 });
 
-Route::middleware('auth')->group(function(){
+Route::middleware(['auth','is_admin'])->group(function(){
     Route::controller(DashboardController::class)->prefix('/auth/dashboard')->group(function(){
         Route::get('/','index')->name('auth.dashboard');
     });
@@ -46,5 +51,43 @@ Route::middleware('auth')->group(function(){
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(MasterJenisHewanController::class)->prefix('/auth/dashboard/master-jenis-hewan')->group(function(){
+        Route::get('/','index')->name('master-data.jenis-hewan');
+        Route::get('/list-data','data')->name('jenis-hewan.data');
+        Route::post('/create','store')->name('master-data.jenis-hewan.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(FaqController::class)->prefix('/auth/dashboard/faq')->group(function(){
+        Route::get('/','index')->name('web-content.faq');
+        Route::get('/list-data','data')->name('faq.data');
+        Route::post('/create','store')->name('web-content.faq.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(TermAndConditionsController::class)->prefix('/auth/dashboard/tnc')->group(function(){
+        Route::get('/','index')->name('web-content.tnc');
+        Route::get('/list-data','data')->name('tnc.data');
+        Route::post('/create','update')->name('web-content.tnc.updateOrCreate');
+        Route::get('/edit/{id}','edit');
+    });
+
+    Route::controller(HeroController::class)->prefix('/auth/dashboard/hero')->group(function(){
+        Route::get('/','index')->name('web-content.hero');
+        Route::get('/list-data','data')->name('hero.data');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+    });
+});
+
+Route::middleware(['auth','is_member'])->group(function(){
+    Route::controller(MemberDashboardController::class)->prefix('/member')->group(function(){
+        Route::get('/dashboard', 'index')->name('member.dashboard');
     });
 });

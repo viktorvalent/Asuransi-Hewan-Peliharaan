@@ -35,7 +35,7 @@ class AdminController extends Controller
             $input = [
                 'email' => $request->email,
                 'password' => $request->password,
-                'is_admin' => true
+                'role' => 1
             ];
             if(Auth::attempt($input)) {
                 $request->session()->regenerate();

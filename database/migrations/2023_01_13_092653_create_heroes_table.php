@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('testimoni', function (Blueprint $table) {
+        Schema::create('hero', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->contrained('users');
-            $table->string('teks');
+            $table->char('judul');
+            $table->char('subjudul');
+            $table->char('nama_tombol');
+            $table->string('gambar');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('testimoni');
+        Schema::dropIfExists('hero');
     }
 };

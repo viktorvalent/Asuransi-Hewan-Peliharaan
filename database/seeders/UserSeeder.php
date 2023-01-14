@@ -20,7 +20,21 @@ class UserSeeder extends Seeder
             'username' => 'Admin Gokil',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('123456'),
-            'is_admin' => true
+            'role' => 1
+        ]);
+
+        User::create([
+            'username' => 'Member One',
+            'email' => 'member1@gmail.com',
+            'password' => Hash::make('member1'),
+            'role' => 2
+        ]);
+
+        User::create([
+            'username' => 'Member Two',
+            'email' => 'member2@gmail.com',
+            'password' => Hash::make('member2'),
+            'role' => 2
         ]);
     }
 }

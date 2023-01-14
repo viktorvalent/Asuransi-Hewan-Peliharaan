@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('nomor_rekening_bank', function (Blueprint $table) {
+        Schema::create('nomor_rekening_bank_payment', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('bank_id')->constrained('master_bank');
-            $table->string('nomor_rekening');
+            $table->foreignId('bank_id')->constrained('master_bank_payment');
+            $table->char('nomor_rekening', 50);
             $table->timestamps();
         });
     }

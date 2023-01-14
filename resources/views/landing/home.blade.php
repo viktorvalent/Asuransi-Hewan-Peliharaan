@@ -4,6 +4,10 @@
 
 @endpush
 
+@section('hero')
+@include('layouts.landing.hero')
+@endsection
+
 @section('content')
     @include('landing.partials.home-product')
     @include('landing.partials.home-testimony')

@@ -122,12 +122,11 @@
 
     $(document).on('click','.create',function(e) {
         e.preventDefault();
+        var files = $('#logo')[0].files;
         let data = new FormData();
-        let files = $('#logo')[0].files;
         data.append('logo',files[0]);
         data.append('nama',$('#nama').val());
         data.append('deskripsi',$('#deskripsi').val());
-        console.log(data);
         _ajax.postWithFile("{{ route('master-data.bank.create') }}",data,
             (response) => {
                 if (response.status == 200) {
