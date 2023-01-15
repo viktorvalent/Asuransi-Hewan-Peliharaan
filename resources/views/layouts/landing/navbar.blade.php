@@ -26,16 +26,22 @@
         <li><a href="#">Drop Down 4</a></li>
         </ul>
     </li> --}}
-    @guest
-        <li><a href="{{ route('sign-in.member') }}"><i class="bi bi-person fs-5"></i></a></li>
-    @endguest
-    
-    @auth
-        @if (auth()->user()->role==2)
-            <li><a href="{{ route('member.dashboard') }}"><i class="bi bi-person fs-5"></i> <span class="fw-light ms-2" style="font-size: 15px;">{{ auth()->user()->username }}</span></a></li>
-        @else
-            <li><a href="#"><i class="bi bi-person fs-5"></i></a></li>
-        @endif
-    @endauth
+
+        <li class="dropdown"><a href="javascript:void(0);"><span><i class="bi bi-person fs-5"></i></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+            <ul>
+                @guest
+                    <li><a href="{{ route('sign-in.member') }}">Masuk/Register</a></li>
+                @endguest
+                @auth
+                    @if (auth()->user()->role==2)
+                        <li><a href="{{ route('member.dashboard') }}">Profile</a></li>
+                        <li><a href="{{ route('member.my-insurance') }}">My Insurance</a></li>
+                        <li><a href="{{ route('member.dashboard') }}">Claim</a></li>
+                        <hr class="py-0">
+                        <li><a href="{{ route('sign-out.member') }}">Sign Out</a></li>
+                    @endif
+                @endauth
+            </ul>
+        </li>
     </ul>
 </nav>

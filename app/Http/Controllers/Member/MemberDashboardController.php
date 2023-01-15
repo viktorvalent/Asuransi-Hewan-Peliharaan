@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\MasterBankMember;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PembelianProduk;
 use Illuminate\Support\Facades\Validator;
 
 class MemberDashboardController extends Controller
@@ -23,10 +24,26 @@ class MemberDashboardController extends Controller
         } else {
             $member = null;
         }
-        return view('member.dashboard', [
-            'title'=>$this->title,
+        return view('member.profile', [
+            'title'=>'Member Profile',
             'banks'=>$bank,
             'member'=>$member
+        ]);
+    }
+
+    public function my_insurance()
+    {
+        if(auth()->user()->member) {
+            $member = Member::where('user_id',auth()->user()->id)->first();
+            $pembelian = PembelianProduk::where('member_id','=',$member->id)->get();
+        } else {
+            $member = null;
+        }
+
+        return view('member.asuransi',[
+            'title'=>'My Insurance',
+            'member'=>$member,
+            'pembelians'=>$pembelian
         ]);
     }
 

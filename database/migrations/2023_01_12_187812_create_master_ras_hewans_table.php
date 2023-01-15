@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('master_ras_hewan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('jenis_hewan_id')->constrained('master_jenis_hewan');
+            $table->char('nama_ras');
             $table->bigInteger('harga_hewan');
             $table->integer('persen_per_umur');
             $table->string('deskripsi')->nullable();

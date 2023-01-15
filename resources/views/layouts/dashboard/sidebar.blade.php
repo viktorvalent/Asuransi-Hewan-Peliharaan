@@ -25,6 +25,7 @@
             <li class="sidebar-item
                 {{ $title=='Master Bank'?'active':'' }}
                 {{ $title=='Master Jenis Hewan'?'active':'' }}
+                {{ $title=='Master Ras Hewan'?'active':'' }}
                 {{ $title=='Master Nomor Rekening'?'active':'' }}">
                 <a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
                     <i class="align-middle" data-feather="table"></i> <span class="align-middle">Master Data</span>
@@ -32,6 +33,7 @@
                 <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse
                     {{ $title=='Master Bank'?'show':'' }}
                     {{ $title=='Master Jenis Hewan'?'show':'' }}
+                    {{ $title=='Master Ras Hewan'?'show':'' }}
                     {{ $title=='Master Nomor Rekening'?'show':'' }}"
                     data-bs-parent="#sidebar" style="">
                     <li class="sidebar-item">
@@ -53,7 +55,7 @@
                     </li>
 
                     <li class="sidebar-item {{ $title=='Master Ras Hewan'?'active':'' }}">
-                        <a class="sidebar-link" href="{{ route('master-data.jenis-hewan') }}">Ras Hewan</a>
+                        <a class="sidebar-link" href="{{ route('master-data.ras-hewan') }}">Ras Hewan</a>
                     </li>
                 </ul>
             </li>
