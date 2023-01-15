@@ -13,4 +13,9 @@ class MasterJenisHewan extends Model
     protected $fillable = ['nama','deskripsi'];
     public $timestamps = true;
     protected $primaryKey = 'id';
+
+    public function ras_hewan()
+    {
+        return $this->hasMany(MasterRasHewan::class, 'ras_hewan_id');
+    }
 }

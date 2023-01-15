@@ -26,10 +26,16 @@
         <li><a href="#">Drop Down 4</a></li>
         </ul>
     </li> --}}
-    @if (auth()->user()->role==2)
-    <li><a href="{{ route('member.dashboard') }}"><i class="bi bi-person fs-5"></i> <span class="fw-light ms-2" style="font-size: 15px;">{{ auth()->user()->username }}</span></a></li>
-    @else
-    <li><a href="{{ route('sign-in.member') }}"><i class="bi bi-person fs-5"></i></a></li>
-    @endif
+    @guest
+        <li><a href="{{ route('sign-in.member') }}"><i class="bi bi-person fs-5"></i></a></li>
+    @endguest
+    
+    @auth
+        @if (auth()->user()->role==2)
+            <li><a href="{{ route('member.dashboard') }}"><i class="bi bi-person fs-5"></i> <span class="fw-light ms-2" style="font-size: 15px;">{{ auth()->user()->username }}</span></a></li>
+        @else
+            <li><a href="#"><i class="bi bi-person fs-5"></i></a></li>
+        @endif
+    @endauth
     </ul>
 </nav>

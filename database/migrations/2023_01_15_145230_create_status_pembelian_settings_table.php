@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('role', function (Blueprint $table) {
+        Schema::create('status_pembelian_setting', function (Blueprint $table) {
             $table->id();
-            $table->char('nama_role');
-            $table->timestamps();
+            $table->char('status');
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('status_pembelian_setting');
     }
 };

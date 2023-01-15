@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             FaqSeeder::class,
             TNCSeeder::class,
             BankMemberSeeder::class,
+            StatusSeeder::class,
         ]);
     }
 }

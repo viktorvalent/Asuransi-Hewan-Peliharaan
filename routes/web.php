@@ -89,5 +89,6 @@ Route::middleware(['auth','is_admin'])->group(function(){
 Route::middleware(['auth','is_member'])->group(function(){
     Route::controller(MemberDashboardController::class)->prefix('/member')->group(function(){
         Route::get('/dashboard', 'index')->name('member.dashboard');
+        Route::post('/add-member-data', 'store_member')->name('member.create');
     });
 });

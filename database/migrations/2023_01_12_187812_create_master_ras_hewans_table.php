@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('role', function (Blueprint $table) {
+        Schema::create('master_ras_hewan', function (Blueprint $table) {
             $table->id();
-            $table->char('nama_role');
+            $table->foreignId('jenis_hewan_id')->constrained('master_jenis_hewan');
+            $table->bigInteger('harga_hewan');
+            $table->integer('persen_per_umur');
+            $table->string('deskripsi')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role');
+        Schema::dropIfExists('master_ras_hewan');
     }
 };

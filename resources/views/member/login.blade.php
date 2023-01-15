@@ -79,7 +79,7 @@
                 _ajax.post("{{ route('authenticating.member') }}",data,
                     (response) => {
                         if (response.status == 200) {
-                            window.location.href = "{{ route('home') }}";
+                            window.location.href = "{{ route('member.dashboard') }}";
                         }
                     },
                     (response) => {

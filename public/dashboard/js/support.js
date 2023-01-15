@@ -143,9 +143,7 @@ const _swalert = (resp) => {
 const _input = {
     loading: {
         start: (element) => {
-            $(element).html(`<div class="spinner-border text-white" style="width:15.5px;height:15.5px;" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>`);
+            $(element).html(`<div class="spinner-border text-white" style="width:15.5px;height:15.5px;" role="status"></div>`);
             $(element).attr('disabled','disabled');
         },
         stop: (element, title='Log In') => {
