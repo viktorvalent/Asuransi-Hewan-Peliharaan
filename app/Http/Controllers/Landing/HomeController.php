@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Landing;
 
-use App\Models\Faq;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Faq;
+use App\Models\ProdukAsuransi;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -14,6 +15,15 @@ class HomeController extends Controller
         return view('landing.home', [
             'title'=>'Home',
             'faqs'=>$faq
+        ]);
+    }
+
+    public function paket()
+    {
+        $paket = ProdukAsuransi::all();
+        return view('landing.paket', [
+            'title'=>'Paket Asuransi',
+            'pakets'=>$paket
         ]);
     }
 }

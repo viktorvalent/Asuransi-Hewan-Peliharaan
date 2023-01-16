@@ -43,6 +43,9 @@ class MasterJenisHewanController extends Controller
         $validator = Validator::make($request->all(), [
             'nama' => 'required|unique:master_jenis_hewan',
             'deskripsi' => 'nullable',
+        ],
+        [
+            '*.required' => 'Wajib diisi!'
         ]);
         if ($validator->fails()) {
             return response()->json([

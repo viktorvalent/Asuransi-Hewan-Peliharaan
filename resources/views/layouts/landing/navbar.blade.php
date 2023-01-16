@@ -1,9 +1,9 @@
 <nav id="navbar" class="navbar">
     <ul>
-        <li><a href="{{ url('/le') }}">Home</a></li>
+        <li><a href="{{ route('home') }}">Home</a></li>
         <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
             <ul>
-                <li><a href="#">Package</a></li>
+                <li><a href="{{ route('home.package') }}">Package</a></li>
                 <li><a href="#">Claim</a></li>
             </ul>
         </li>

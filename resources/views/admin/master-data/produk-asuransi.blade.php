@@ -10,7 +10,7 @@
 <div class="row">
     <div class="card">
         <div class="card-header">
-            <button type="button" class="btn btn-primary add" data-bs-toggle="modal" data-bs-target="#modal_create">
+            <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('master-data.add-produk') }}'">
                 <i class="align-middle" data-feather="plus"></i> Tambah Data
             </button>
         </div>
@@ -18,11 +18,7 @@
             <table id="datatable" class="table w-100 table-hover">
                 <thead>
                     <tr>
-                        <th>Nama Ras</th>
-                        <th>Jenis Hewan</th>
-                        <th>Harga Hewan</th>
-                        <th>Persen per Tahun</th>
-                        <th>Deskripsi</th>
+                        <th>Nama Produk</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -48,9 +44,6 @@
                                 <label class="form-label required">Jenis Hewan <i class="text-danger">*</i></label>
                                 <select class="form-control form-control-sm choice jenis_hewan" name="jenis_hewan" id="jenis_hewan">
                                     <option value="">Pilih Jenis Hewan</option>
-                                    @foreach ($jenis_hewans as $jenis)
-                                        <option value="{{ $jenis->id }}">{{ $jenis->nama }}</option>
-                                    @endforeach
                                 </select>
                                 <small class="text-danger jenis_hewan_error"></small>
                             </div>
@@ -138,13 +131,9 @@
 <script src="{{ asset('dashboard/libs/sweetalert/app.js') }}"></script>
 <script>
     $(document).ready(function () {
-        _table.set("{{ route('ras-hewan.data') }}",
+        _table.set("{{ route('produk-asuransi.data') }}",
             [
-                {data: 'nama_ras', name: 'nama_ras'},
-                {data: 'jenis_hewan_id.nama', name: 'jenis_hewan_id.nama'},
-                {data: 'harga_hewan', name: 'harga_hewan'},
-                {data: 'persen_per_umur', name: 'persen_per_umur'},
-                {data: 'deskripsi', name: 'deskripsi'},
+                {data: 'nama_produk', name: 'nama_produk'},
                 {
                     data: 'action',
                     name: 'action',

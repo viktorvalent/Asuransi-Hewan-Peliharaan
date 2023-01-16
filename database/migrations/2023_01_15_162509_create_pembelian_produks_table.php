@@ -21,8 +21,10 @@ return new class extends Migration
             $table->foreignId('produk_id')->constrained('produk_asuransi');
             $table->foreignId('ras_hewan_id')->constrained('master_ras_hewan');
             $table->char('nama_hewan');
+            $table->enum('jenis_kelamin_hewan', ['Jantan','Betina']);
             $table->date('tgl_lahir_hewan');
-            $table->string('foto_hewan');
+            $table->double('berat_badan_kg');
+            $table->string('foto');
             $table->integer('harga_dasar_premi');
             $table->foreignId('status')->constrained('status_pembelian_setting');
             $table->timestamps();

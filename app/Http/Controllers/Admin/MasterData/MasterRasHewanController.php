@@ -39,6 +39,12 @@ class MasterRasHewanController extends Controller
                 ->editColumn('jenis_hewan_id.nama', function($row){
                     return $row->jenis_hewan->nama;
                 })
+                ->editColumn('harga_hewan', function($row){
+                    return 'Rp '.number_format($row->harga_hewan,0,"",".");
+                })
+                ->editColumn('persen_per_umur', function($row){
+                    return $row->persen_per_umur.' %';
+                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -47,11 +53,14 @@ class MasterRasHewanController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|unique:master_ras_hewan',
+            'nama' => 'required|unique:master_ras_hewan,nama_ras',
             'persen' => 'required|numeric',
             'harga_hewan' => 'required|numeric',
             'jenis_hewan' => 'required|',
             'deskripsi' => 'nullable',
+        ],
+        [
+            '*.required' => 'Wajib diisi!'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -65,9 +74,9 @@ class MasterRasHewanController extends Controller
                     'jenis_hewan_id' => $request->jenis_hewan,
                     'harga_hewan' => $request->harga_hewan,
                     'persen_per_umur' => $request->persen,
-                    'deskripsi' => $request->deskripsi,
+                    'deskripsi' => $request->deskripsi
                 ]);
-                Helper::createUserLog("Berhasil menambahkan jenis hewan ".$ras->nama, auth()->user()->id, $this->title);
+                Helper::createUserLog("Berhasil menambahkan ras hewan ".$request->nama, auth()->user()->id, $this->title);
                 DB::commit();
                 return response()->json([
                     'status'=>200,
@@ -75,7 +84,7 @@ class MasterRasHewanController extends Controller
                 ]);
             } catch (Exception $e) {
                 DB::rollBack();
-                Helper::createUserLog("Gagal menambah jenis hewan", auth()->user()->id, $this->title);
+                Helper::createUserLog("Gagal menambah ras hewan", auth()->user()->id, $this->title);
                 return response()->json([
                     'message'=>$e->getMessage()
                 ],422);
@@ -86,10 +95,12 @@ class MasterRasHewanController extends Controller
     public function edit($id)
     {
         $data = MasterRasHewan::find($id);
+        $jenis = MasterJenisHewan::all();
         if ($data) {
             return response()->json([
                 'status' => 200,
                 'data' => $data,
+                'jeniss' => $jenis
             ]);
         } else {
             return response()->json([
@@ -102,6 +113,9 @@ class MasterRasHewanController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
+            'persen' => 'required|numeric',
+            'harga_hewan' => 'required|numeric',
+            'jenis_hewan' => 'required',
             'deskripsi' => 'nullable',
         ]);
         if ($validator->fails()) {
@@ -112,29 +126,37 @@ class MasterRasHewanController extends Controller
             try {
                 DB::beginTransaction();
                 $data = MasterRasHewan::find($id);
-                if ($data->nama==$request->nama) {
+                if ($data->nama_ras==$request->nama) {
                     $data->update([
-                        'nama' => $request->nama,
-                        'deskripsi' => $request->deskripsi,
+                        'nama_ras' => $request->nama,
+                        'jenis_hewan_id' => $request->jenis_hewan,
+                        'harga_hewan' => $request->harga_hewan,
+                        'persen_per_umur' => $request->persen,
+                        'deskripsi' => $request->deskripsi
                     ]);
-                    Helper::createUserLog("Berhasil mengubah jenis hewan", auth()->user()->id, $this->title);
+                    Helper::createUserLog("Berhasil mengubah ras hewan", auth()->user()->id, $this->title);
                     DB::commit();
                     return response()->json([
                         'status'=>200,
                         'message'=>'Berhasil mengubah data'
                     ]);
                 } else {
-                    $cek = MasterRasHewan::where('nama',$request->nama)->whereNot('id',$id)->first();
+                    $cek = MasterRasHewan::where(function($q)use($request){
+                            $q->where('nama_ras','=',$request->nama)->where('jenis_hewan_id','=',$request->jenis_hewan);
+                        })->whereNot('id',$id)->first();
                     if ($cek) {
                         return response()->json([
-                            'message'=>'Nama sudah digunakan!'
+                            'message'=>'Nama ras sudah digunakan!'
                         ],404);
                     } else {
                         $data->update([
-                            'nama' => $request->nama,
-                            'deskripsi' => $request->deskripsi,
+                            'nama_ras' => $request->nama,
+                            'jenis_hewan_id' => $request->jenis_hewan,
+                            'harga_hewan' => $request->harga_hewan,
+                            'persen_per_umur' => $request->persen,
+                            'deskripsi' => $request->deskripsi
                         ]);
-                        Helper::createUserLog("Berhasil mengubah jenis hewan ", auth()->user()->id, $this->title);
+                        Helper::createUserLog("Berhasil mengubah ras hewan ", auth()->user()->id, $this->title);
                         DB::commit();
                         return response()->json([
                             'status'=>200,
@@ -143,8 +165,9 @@ class MasterRasHewanController extends Controller
                     }
                 }
             } catch (Exception $e) {
-                Helper::createUserLog("Gagal mengubah data jenis hewan", auth()->user()->id, $this->title);
+                Helper::createUserLog("Gagal mengubah data ras hewan", auth()->user()->id, $this->title);
                 return response()->json([
+                    'status'=>422,
                     'message'=>$e->getMessage()
                 ],422);
             }
@@ -155,15 +178,16 @@ class MasterRasHewanController extends Controller
     {
         $data = MasterRasHewan::find($id);
         if ($data) {
-            Helper::createUserLog("Berhasil menghapus jenis hewan ".$data->nama, auth()->user()->id, $this->title);
+            Helper::createUserLog("Berhasil menghapus ras hewan ".$data->nama, auth()->user()->id, $this->title);
             $data->delete();
             return response()->json([
                 'status'=>200,
                 'message'=>'Berhasil menghapus data'
             ]);
         } else {
-            Helper::createUserLog("Gagal menghapus data jenis hewan", auth()->user()->id, $this->title);
+            Helper::createUserLog("Gagal menghapus data ras hewan", auth()->user()->id, $this->title);
             return response()->json([
+                'status'=>422,
                 'message'=>'Gagal menghapus'
             ],422);
         }

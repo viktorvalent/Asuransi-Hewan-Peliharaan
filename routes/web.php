@@ -12,9 +12,11 @@ use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Admin\MasterData\MasterBankController;
 use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
+use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
 
 // Login Admin
 Route::controller(AdminController::class)->prefix('/auth')->group(function(){
@@ -67,6 +69,17 @@ Route::middleware(['auth','is_admin'])->group(function(){
         Route::get('/','index')->name('master-data.ras-hewan');
         Route::get('/list-data','data')->name('ras-hewan.data');
         Route::post('/create','store')->name('master-data.ras-hewan.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(ProdukAsuransiController::class)->prefix('/auth/dashboard/produk-asuransi')->group(function(){
+        Route::get('/','index')->name('master-data.produk-asuransi');
+        Route::get('/tambah','addProduk')->name('master-data.add-produk');
+        Route::get('/list-data','data')->name('produk-asuransi.data');
+        Route::post('/create','store')->name('master-data.produk-asuransi.create');
+        Route::get('/detail/{id}','detail')->name('master-data.produk-asuransi.detail');
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');

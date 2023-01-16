@@ -42,7 +42,7 @@
 
     <header id="header" class="header d-flex align-items-center">
         <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
-            <a href="{{ url('/le') }}" class="logo d-flex align-items-center">
+            <a href="{{ url('/') }}" class="logo d-flex align-items-center">
                 <img src="{{ asset('landing') }}/img/mypet-logo.png" alt="">
                 <h1 style="font-family: 'Fredoka One', cursive;">MYPETT<span>.</span></h1>
             </a>
@@ -541,7 +541,7 @@
 
     @include('layouts.landing.footer')
 
-    <a href="{{ url('/le') }}#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a id="top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <div id="preloader"></div>
     <script src="{{ asset('landing') }}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -553,6 +553,9 @@
     <script src="{{ asset('landing') }}/vendor/php-email-form/validate.js"></script>
     <script src="{{ asset('landing') }}/js/main.js"></script>
     @stack('js')
+    <script>
+        document.getElementById("top").addEventListener("click",()=>{window.scrollTo(0, 0)})
+    </script>
 </body>
 
 </html>

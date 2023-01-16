@@ -26,6 +26,8 @@
                 {{ $title=='Master Bank'?'active':'' }}
                 {{ $title=='Master Jenis Hewan'?'active':'' }}
                 {{ $title=='Master Ras Hewan'?'active':'' }}
+                {{ $title=='Produk Asuransi'?'active':'' }}
+                {{ $title=='Tambah Produk Asuransi'?'active':'' }}
                 {{ $title=='Master Nomor Rekening'?'active':'' }}">
                 <a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
                     <i class="align-middle" data-feather="table"></i> <span class="align-middle">Master Data</span>
@@ -34,6 +36,8 @@
                     {{ $title=='Master Bank'?'show':'' }}
                     {{ $title=='Master Jenis Hewan'?'show':'' }}
                     {{ $title=='Master Ras Hewan'?'show':'' }}
+                    {{ $title=='Produk Asuransi'?'show':'' }}
+                    {{ $title=='Tambah Produk Asuransi'?'show':'' }}
                     {{ $title=='Master Nomor Rekening'?'show':'' }}"
                     data-bs-parent="#sidebar" style="">
                     <li class="sidebar-item">
@@ -56,6 +60,13 @@
 
                     <li class="sidebar-item {{ $title=='Master Ras Hewan'?'active':'' }}">
                         <a class="sidebar-link" href="{{ route('master-data.ras-hewan') }}">Ras Hewan</a>
+                    </li>
+
+                    <li class="sidebar-item
+                    {{ $title=='Produk Asuransi'?'active':'' }}
+                    {{ $title=='Tambah Produk Asuransi'?'active':'' }}
+                    ">
+                        <a class="sidebar-link" href="{{ route('master-data.produk-asuransi') }}">Produk Asuransi</a>
                     </li>
                 </ul>
             </li>

@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('produk_asuransi', function (Blueprint $table) {
             $table->id();
             $table->char('nama_produk');
-            $table->integer('tipe_produk');
             $table->char('kelas_kamar');
             $table->char('limit_kamar');
             $table->char('limit_obat');

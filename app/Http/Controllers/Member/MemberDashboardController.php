@@ -56,6 +56,9 @@ class MemberDashboardController extends Controller
             'alamat' => 'required',
             'bank' => 'required',
             'rek' => 'required',
+        ],
+        [
+            '*.required' => 'Wajib diisi!'
         ]);
         if ($validator->fails()) {
             return response()->json([

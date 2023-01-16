@@ -51,6 +51,9 @@ class MasterBankController extends Controller
             'nama' => 'required',
             'deskripsi' => 'nullable',
             'logo' => 'required|mimes:png,jpg,jpeg|max:2048'
+        ],
+        [
+            '*.required' => 'Wajib diisi!'
         ]);
         if ($validator->fails()) {
             return response()->json([

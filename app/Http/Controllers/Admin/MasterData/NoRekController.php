@@ -49,6 +49,9 @@ class NoRekController extends Controller
         $validator = Validator::make($request->all(), [
             'bank' => 'required',
             'nomor_rekening' => 'required|unique:nomor_rekening_bank,nomor_rekening',
+        ],
+        [
+            '*.required' => 'Wajib diisi!'
         ]);
         if ($validator->fails()) {
             return response()->json([
