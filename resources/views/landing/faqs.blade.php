@@ -36,7 +36,7 @@
                                 {{ $faq->jawaban }}
                             </div>
                             </div>
-                        </div><!-- # Faq item-->
+                        </div>
                     @php($num++)
                     @endforeach
                     </div>

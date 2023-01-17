@@ -48,7 +48,7 @@ class NoRekController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'bank' => 'required',
-            'nomor_rekening' => 'required|unique:nomor_rekening_bank,nomor_rekening',
+            'nomor_rekening' => 'required|unique:nomor_rekening_bank_payment,nomor_rekening',
         ],
         [
             '*.required' => 'Wajib diisi!'

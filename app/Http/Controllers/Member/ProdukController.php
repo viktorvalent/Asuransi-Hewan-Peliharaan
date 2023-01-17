@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Member;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MasterRasHewan;
 use App\Models\ProdukAsuransi;
+use App\Models\PembelianProduk;
 use App\Models\MasterJenisHewan;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\MasterBank;
+use Illuminate\Support\Facades\Validator;
 
 class ProdukController extends Controller
 {
@@ -24,7 +29,7 @@ class ProdukController extends Controller
 
     public function get_ras($id)
     {
-        $ras = MasterRasHewan::select('id','nama_ras')->where('jenis_hewan_id',$id)->get();
+        $ras = MasterRasHewan::select('id','nama_ras','harga_hewan')->where('jenis_hewan_id',$id)->get();
             if ($ras) {
                 return response()->json([
                     'status'=>200,
@@ -36,5 +41,78 @@ class ProdukController extends Controller
                     'message'=>'Data tidak ditemukan'
                 ],404);
             }
+    }
+
+    public function pembelian(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'produk_id' => 'required',
+            'nama_hewan' => 'required',
+            'nama_pemilik' => 'required',
+            'bobot' => 'required',
+            'tgl_lahir' => 'required',
+            'jenis_kelamin' => 'required',
+            'ras_hewan' => 'required',
+            'foto' => 'required|mimes:png,jpg,jpeg|max:2048',
+        ],
+        [
+            '*.required' => 'Wajib diisi!'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            try {
+                DB::beginTransaction();
+                $foto = $request->file('foto')->store('public/data-pembelian/foto-hewan');
+                $ras = MasterRasHewan::select('harga_hewan')->where('id',$request->ras_hewan)->first();
+                $dasar_premi = $ras->harga_hewan*(5/100);
+                PembelianProduk::create([
+                    'produk_id'=>$request->produk_id,
+                    'nama_hewan'=>$request->nama_hewan,
+                    'nama_pemilik'=>$request->nama_pemilik,
+                    'tgl_lahir_hewan'=>$request->tgl_lahir,
+                    'member_id'=>auth()->user()->member->id,
+                    'berat_badan_kg'=>$request->bobot,
+                    'jenis_kelamin_hewan'=>$request->jenis_kelamin,
+                    'ras_hewan_id'=>$request->ras_hewan,
+                    'biaya_pendaftaran'=>138000,
+                    'harga_dasar_premi'=>$dasar_premi,
+                    'tgl_daftar_asuransi'=>Carbon::now('Asia/Jakarta')->format('Y-m-d'),
+                    'foto'=>$foto,
+                    'status'=>1,
+                    'pay_status'=>false
+                ]);
+                DB::commit();
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Berhasil melakukan pembelian'
+                ]);
+            } catch(Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'=>422,
+                    'message'=>$e->getMessage()
+                ],422);
+            }
+        }
+    }
+
+    public function form_bayar()
+    {
+        $notpayed = PembelianProduk::with('produk','ras_hewan.jenis_hewan')
+                    ->select('id','harga_dasar_premi','biaya_pendaftaran','produk_id','ras_hewan_id')
+                    ->where(function($q){
+                        $q->where('pay_status',false)
+                            ->where('member_id',auth()->user()->member->id);
+                            // ->where('tgl_daftar_asuransi', Carbon::now('Asia/Jakarta')->format('Y-m-d'));
+                    })->latest()->first();
+        $bank = MasterBank::with('nomor_rekening_bank')->get();
+        return view('member.form-pembayaran',[
+            'title'=>'Form Pembayaran',
+            'notpayed'=>$notpayed,
+            'banks'=>$bank
+        ]);
     }
 }

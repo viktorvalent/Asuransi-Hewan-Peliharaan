@@ -121,5 +121,7 @@ Route::middleware(['auth','is_member'])->group(function(){
     Route::controller(ProdukController::class)->prefix('/pembelian')->group(function(){
         Route::get('/','index')->name('pembelian.produk');
         Route::get('/getRas/{id}','get_ras');
+        Route::post('/beli','pembelian')->name('pembelian.create');
+        Route::get('/bayar','form_bayar')->name('pembelian.bayar');
     });
 });

@@ -12,7 +12,7 @@
                     <strong>Pemberitahuan!</strong> Anda belum melakukan pembelian asuransi.
                 </div>
                 <div class="d-flex justify-content-center">
-                    <a href="javascript:void(0)" class="btn btn-primary btn-sm"><i class="bi bi-cart3 fs-5"></i> Paket Asuransi</a>
+                    <a href="{{ route('home.package') }}" class="btn btn-primary btn-sm"><i class="bi bi-cart3 fs-5"></i> Paket Asuransi</a>
                 </div>
                 @else
                 @endif

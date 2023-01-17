@@ -52,7 +52,7 @@
                     <div class="mb-3">
                         <label for="foto" class="form-label">Foto Hewan <span class="text-danger">*</span></label>
                         <input class="form-control" type="file" id="foto" name="foto">
-                        <small class="text-danger nama_pemilik_error"></small>
+                        <small class="text-danger foto_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="gender" class="form-label">Jenis Kelamin Hewan <span class="text-danger">*</span></label>
@@ -66,15 +66,15 @@
                         <div class="col-md-6">
                             <div class="">
                                 <label for="tgl_lahir_hewan" class="form-label">Tanggal Lahir Hewan <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" id="tgl_lahir_hewan" placeholder="Tanggal Lahir">
-                                <small class="text-danger tgl_lahir_hewan_error"></small>
+                                <input type="date" class="form-control" id="tgl_lahir" placeholder="Tanggal Lahir">
+                                <small class="text-danger tgl_lahir_error"></small>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="">
                                 <label for="berat_badan" class="form-label">Bobot Hewan (Kg) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="berat_badan" placeholder="Berat">
-                                <small class="text-danger berat_badan_error"></small>
+                                <input type="number" class="form-control" id="bobot" placeholder="Berat">
+                                <small class="text-danger bobot_error"></small>
                             </div>
                         </div>
                     </div>
@@ -116,22 +116,77 @@
                             let option = [];
 
                             response.ras.map(e => {
-                                option.push(`<option value='${e.id}'>${e.nama_ras}</option>`);
+                                let premi = e.harga_hewan*(5/100);
+                                option.push(`<option value='${e.id}'>${e.nama_ras} (premi Rp${premi.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")})</option>`);
                             })
                             $('.ras_select').html(`<select class="form-select ras" aria-label="Default select example" name="ras" id="ras">
                                 <option value="">Pilih Ras</option>
                                 ${option.join('')}
                             </select>`);
                         }
-                    },
-                    (response) => {
-                        if (response.status == 404) {
-
-                        }
                     }
                 );
             }
-        })
+        });
+
+        $(document).on('click','.create', function (e) {
+            e.preventDefault();
+            var files = $('#foto')[0].files;
+            let data = new FormData();
+            data.append('foto',files[0]);
+            data.append('produk_id',$('#produk option:selected').val());
+            data.append('jenis_hewan',$('#jenis option:selected').val());
+            data.append('ras_hewan',$('#ras option:selected').val());
+            data.append('nama_hewan',$('#nama_hewan').val());
+            data.append('nama_pemilik',$('#nama_pemilik').val());
+            data.append('jenis_kelamin',$('#gender option:selected').val());
+            data.append('tgl_lahir',$('#tgl_lahir').val());
+            data.append('bobot',$('#bobot').val());
+            _input.loading.start(this);
+            Swal.fire({
+                title: 'Biaya Pendaftaran',
+                html:'<span class="badge text-bg-success fs-5 py-3">IDR 138.000,00</span>',
+                showConfirmButton: true,
+                confirmButtonText: 'Lanjutkan Pembayaran',
+                showCancelButton: true,
+                cancelButtonText: 'Batalkan'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    _input.loading.stop('.create','Kirim');
+                    _ajax.postWithFile("{{ route('pembelian.create') }}",data,
+                        (response) => {
+                            if (response.status == 200) {
+                                _swalert(response);
+                                setTimeout(() => {
+                                    window.location.href="{{ route('pembelian.bayar') }}";
+                                }, 1500);
+                            }
+                        },
+                        (response) => {
+                            if (response.status == 400) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Perhatikan inputan anda dengan benar',
+                                })
+                                _validation.action(response.responseJSON)
+                            } else if (response.status == 404) {
+                                _swalert(response);
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Terjadi Kesalahan!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                })
+                            }
+                        }
+                    );
+                } else {
+                    _input.loading.stop('.create','Kirim');
+                }
+            })
+        });
     });
 </script>
 @endpush
