@@ -9,7 +9,7 @@
                         <strong>Peringatan!</strong> Lengkapi dulu data anda sebelum melakukan pembelian asuransi.
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <div class="card shadow">
+                    <div class="card shadow" style="opacity: 0.955 !important;">
                         <div class="card-header py-3">
                             <h4 class="text-center">Silahkan isi dengan benar.</h4>
                         </div>
@@ -70,7 +70,7 @@
             <div class="col-md-2 col-sm-0"></div>
             <div class="col-md-8 col-sm-12">
                 <div class="card shadow">
-                    <div class="card-body">
+                    <div class="card-body" style="opacity: 0.955 !important;">
                         <h5 class="text-center border-bottom pb-3 mb-3">Member Profile <a class="btn btn-sm btn-warning" href="javascript:void(0)" role="button"><i class="bi bi-pencil"></i></a></h5>
                         <div class="row">
                             <div class="col-12 mb-2">

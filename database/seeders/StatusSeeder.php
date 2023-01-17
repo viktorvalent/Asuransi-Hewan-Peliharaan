@@ -27,6 +27,10 @@ class StatusSeeder extends Seeder
             [
                 'id'=>3,
                 'status'=>'ACCEPTED'
+            ],
+            [
+                'id'=>4,
+                'status'=>'NEED REVISION'
             ]
         ]);
     }

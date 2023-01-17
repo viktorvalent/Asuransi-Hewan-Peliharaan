@@ -10,9 +10,23 @@
         <img src="{{ asset('img/paket-bg.jpg') }}" class="w-100 h-100 rounded" alt="">
     </div>
     <div class="card bg-light my-3">
-        <div class="card-body text-center">
-            <h5 class="fw-bold">Mypett Insurance.</h5>
-            <p class="text-danger">Perlindungan untuk hewan peliharaan kesayangan anda.</p>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5 class="fw-bold">Mypett Insurance.</h5>
+                    <p class="text-danger">Perlindungan untuk hewan peliharaan kesayangan anda.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="{{ route('home.faqs') }}" class="btn btn-warning fw-bold">FAQs</a>
+                    @guest
+                        <a href="{{ route('sign-in.member') }}" class="btn btn-success fw-bold" >BELI SEKARANG</a>
+                    @endguest
+
+                    @can('is_member')
+                        <a href="{{ route('pembelian.produk') }}" class="btn btn-success fw-bold" >BELI SEKARANG</a>
+                    @endcan
+                </div>
+            </div>
         </div>
     </div>
     <div class="">

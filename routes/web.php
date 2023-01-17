@@ -14,9 +14,11 @@ use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
+use App\Http\Controllers\Member\ProdukController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
+Route::get('/faqs', [HomeController::class, 'faqs'])->name('home.faqs');
 
 // Login Admin
 Route::controller(AdminController::class)->prefix('/auth')->group(function(){
@@ -114,5 +116,10 @@ Route::middleware(['auth','is_member'])->group(function(){
         Route::get('/profile', 'index')->name('member.dashboard');
         Route::get('/my-insurance', 'my_insurance')->name('member.my-insurance');
         Route::post('/add-member-data', 'store_member')->name('member.create');
+    });
+
+    Route::controller(ProdukController::class)->prefix('/pembelian')->group(function(){
+        Route::get('/','index')->name('pembelian.produk');
+        Route::get('/getRas/{id}','get_ras');
     });
 });

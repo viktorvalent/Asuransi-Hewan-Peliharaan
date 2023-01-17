@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             TNCSeeder::class,
             BankMemberSeeder::class,
             StatusSeeder::class,
-            HewanSeeder::class
+            HewanSeeder::class,
+            PaketAsuransiSeeder::class,
         ]);
     }
 }
