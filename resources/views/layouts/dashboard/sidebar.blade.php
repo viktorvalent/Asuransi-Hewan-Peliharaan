@@ -22,6 +22,18 @@
                 </a>
             </li>
 
+            <li class="sidebar-item {{ $title=='Pembelian Asuransi Member'?'active':'' }}{{ $title=='Detail Pembelian Asuransi Member'?'active':'' }}">
+                <a class="sidebar-link" href="{{ route('pembelian') }}">
+                    <i class="align-middle" data-feather="shopping-cart"></i> <span class="align-middle">Pembelian</span>
+                </a>
+            </li>
+
+            <li class="sidebar-item {{ $title=='Klaim Asuransi Member'?'active':'' }}">
+                <a class="sidebar-link" href="{{ route('klaim') }}">
+                    <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Klaim</span>
+                </a>
+            </li>
+
             <li class="sidebar-item
                 {{ $title=='Master Bank'?'active':'' }}
                 {{ $title=='Master Jenis Hewan'?'active':'' }}
@@ -30,7 +42,7 @@
                 {{ $title=='Tambah Produk Asuransi'?'active':'' }}
                 {{ $title=='Master Nomor Rekening'?'active':'' }}">
                 <a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
-                    <i class="align-middle" data-feather="table"></i> <span class="align-middle">Master Data</span>
+                    <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Master Data</span>
                 </a>
                 <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse
                     {{ $title=='Master Bank'?'show':'' }}
@@ -76,7 +88,7 @@
                 {{ $title=='Term & Conditions'?'active':'' }}
                 {{ $title=='Tambah Term & Conditions'?'active':'' }}">
                 <a data-bs-target="#webcontents" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
-                    <i class="align-middle" data-feather="airplay"></i> <span class="align-middle">Web Content</span>
+                    <i class="align-middle" data-feather="monitor"></i> <span class="align-middle">Konten Web</span>
                 </a>
                 <ul id="webcontents" class="sidebar-dropdown list-unstyled collapse
                     {{ $title=='FAQ'?'show':'' }}
@@ -107,6 +119,19 @@
                     <li class="sidebar-item {{ $title=='FAQ'?'active':'' }}">
                         <a class="sidebar-link" href="{{ route('web-content.faq') }}">FAQ</a>
                     </li>
+                </ul>
+            </li>
+
+            <li class="sidebar-item">
+                <a href="#auth" data-bs-toggle="collapse" class="sidebar-link collapsed">
+                    <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Manajemen User</span>
+                </a>
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">Sign In</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-up.html">Sign Up</a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="pages-reset-password.html">Reset Password <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="pages-404.html">404 Page <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="pages-500.html">500 Page <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
                 </ul>
             </li>
 

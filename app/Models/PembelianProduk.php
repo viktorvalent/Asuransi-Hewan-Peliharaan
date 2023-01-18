@@ -24,7 +24,7 @@ class PembelianProduk extends Model
         return $this->belongsTo(ProdukAsuransi::class, 'produk_id');
     }
 
-    public function status()
+    public function status_pembelian()
     {
         return $this->belongsTo(StatusPembelianSetting::class, 'status');
     }

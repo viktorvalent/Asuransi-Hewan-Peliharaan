@@ -16,8 +16,8 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!auth()->user()->role==1){
-            abort(403, 'ANDA TIDAK MEMPUNYAI AKSES');
+        if((!auth()->check() && !$request->expectsJson()) || !auth()->user()->role==1) {
+            return redirect()->route('sign-in.admin');
         }
         return $next($request);
     }

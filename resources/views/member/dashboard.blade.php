@@ -2,6 +2,7 @@
 
 @push('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.3/font/bootstrap-icons.min.css" />
+@stack('member_css')
 <style>
     #member-dashboard {
         background: url('/img/PetInsurance.jpg');

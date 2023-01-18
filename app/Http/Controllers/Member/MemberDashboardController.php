@@ -35,7 +35,10 @@ class MemberDashboardController extends Controller
     {
         if(auth()->user()->member) {
             $member = Member::where('user_id',auth()->user()->id)->first();
-            $pembelian = PembelianProduk::where('member_id','=',$member->id)->get();
+            $pembelian = PembelianProduk::where(function($q)use($member){
+                $q->where('member_id',$member->id)
+                    ->where('pay_status',true);
+            })->latest()->get();
         } else {
             $member = null;
         }

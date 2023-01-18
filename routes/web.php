@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\MemberController;
 use App\Http\Controllers\Landing\HomeController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MasterData\KlaimController;
 use App\Http\Controllers\Admin\WebContent\FaqController;
 use App\Http\Controllers\Admin\WebContent\HeroController;
 use App\Http\Controllers\Admin\MasterData\NoRekController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Member\MemberDashboardController;
 use App\Http\Controllers\Admin\MasterData\MasterBankController;
 use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
+use App\Http\Controllers\Admin\MasterData\PembelianController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
 use App\Http\Controllers\Member\ProdukController;
@@ -35,7 +37,7 @@ Route::controller(MemberController::class)->prefix('/member')->group(function(){
     Route::get('/sign-out','logout')->name('sign-out.member');
 });
 
-Route::middleware(['auth','is_admin'])->group(function(){
+Route::middleware(['is_admin'])->group(function(){
     Route::controller(DashboardController::class)->prefix('/auth/dashboard')->group(function(){
         Route::get('/','index')->name('auth.dashboard');
     });
@@ -76,6 +78,26 @@ Route::middleware(['auth','is_admin'])->group(function(){
         Route::get('/delete/{id}','destroy');
     });
 
+    Route::controller(PembelianController::class)->prefix('/auth/dashboard/pembelian-asuransi')->group(function(){
+        Route::get('/','index')->name('pembelian');
+        Route::get('/list-data','data')->name('pembelian.data');
+        Route::post('/create','store')->name('pembelian.create');
+        Route::post('/confirm','confirm_pembelian')->name('pembelian.confirm');
+        Route::get('/detail/{id}','check_detail')->name('pembelian.detail');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(KlaimController::class)->prefix('/auth/dashboard/klaim-asuransi')->group(function(){
+        Route::get('/','index')->name('klaim');
+        Route::get('/list-data','data')->name('klaim.data');
+        Route::post('/create','store')->name('klaim.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
     Route::controller(ProdukAsuransiController::class)->prefix('/auth/dashboard/produk-asuransi')->group(function(){
         Route::get('/','index')->name('master-data.produk-asuransi');
         Route::get('/tambah','addProduk')->name('master-data.add-produk');
@@ -111,7 +133,7 @@ Route::middleware(['auth','is_admin'])->group(function(){
     });
 });
 
-Route::middleware(['auth','is_member'])->group(function(){
+Route::middleware(['is_member'])->group(function(){
     Route::controller(MemberDashboardController::class)->prefix('/member')->group(function(){
         Route::get('/profile', 'index')->name('member.dashboard');
         Route::get('/my-insurance', 'my_insurance')->name('member.my-insurance');
@@ -123,5 +145,6 @@ Route::middleware(['auth','is_member'])->group(function(){
         Route::get('/getRas/{id}','get_ras');
         Route::post('/beli','pembelian')->name('pembelian.create');
         Route::get('/bayar','form_bayar')->name('pembelian.bayar');
+        Route::post('/bayar/konfirmasi','konfirmasi_bayar')->name('pembelian.bayar.konfirmasi');
     });
 });

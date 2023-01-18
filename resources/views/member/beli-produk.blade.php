@@ -78,6 +78,12 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="tnc" value="1" id="tnc">
+                        <label class="form-check-label" for="tnc" style="font-size: .8em;">
+                            Dengan ini saya menyetujui <a href="{{ URL::current() }}#" class="fw-bold text-dark">Term & Conditions.</a>
+                        </label>
+                    </div>
 
                     {{-- <div class="mb-3">
                         <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
@@ -86,7 +92,7 @@
                     </div> --}}
 
                     <div class="d-flex justify-content-center py-3">
-                        <button type="submit" class="btn btn-primary shadow create" style="width: 150px;">Kirim</button>
+                        <button type="submit" class="btn btn-primary shadow create" style="width: 150px;" disabled="disabled">Kirim</button>
                     </div>
                 </form>
             </div>
@@ -102,6 +108,9 @@
 <script src="{{ asset('dashboard/js/support.js') }}"></script>
 <script>
     $(document).ready(function () {
+        $('#tnc').on('change', function () {
+            $(this).prop('checked')?$('.create').removeAttr('disabled'):$('.create').attr('disabled','disabled');
+        });
         $(document).on('change','#jenis',function(e){
             e.preventDefault()
             let id = $(this).val();

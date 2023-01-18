@@ -8,6 +8,17 @@
 
 @section('container')
 <div class="row">
+    <div class="col-md-12 ">
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert-icon">
+                <i class="align-middle" data-feather="user"></i>
+            </div>
+            <div class="alert-message fs-4">
+                Selamat datang, <strong>{{ auth()->user()->username }}</strong>
+            </div>
+        </div>
+    </div>
     <div class="col-sm-6">
         <div class="card">
             <div class="card-body">

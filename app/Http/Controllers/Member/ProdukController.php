@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Member;
 
 use Exception;
 use Carbon\Carbon;
+use App\Models\MasterBank;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\MasterRasHewan;
 use App\Models\ProdukAsuransi;
@@ -11,7 +13,6 @@ use App\Models\PembelianProduk;
 use App\Models\MasterJenisHewan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\MasterBank;
 use Illuminate\Support\Facades\Validator;
 
 class ProdukController extends Controller
@@ -65,7 +66,7 @@ class ProdukController extends Controller
         } else {
             try {
                 DB::beginTransaction();
-                $foto = $request->file('foto')->store('public/data-pembelian/foto-hewan');
+                $foto = $request->file('foto')->store('public/data-pembelian/foto-hewan/member_'.Str::slug(auth()->user()->member->nama_lengkap));
                 $ras = MasterRasHewan::select('harga_hewan')->where('id',$request->ras_hewan)->first();
                 $dasar_premi = $ras->harga_hewan*(5/100);
                 PembelianProduk::create([
@@ -104,15 +105,46 @@ class ProdukController extends Controller
         $notpayed = PembelianProduk::with('produk','ras_hewan.jenis_hewan')
                     ->select('id','harga_dasar_premi','biaya_pendaftaran','produk_id','ras_hewan_id')
                     ->where(function($q){
-                        $q->where('pay_status',false)
-                            ->where('member_id',auth()->user()->member->id);
-                            // ->where('tgl_daftar_asuransi', Carbon::now('Asia/Jakarta')->format('Y-m-d'));
-                    })->latest()->first();
+                                $q->where('pay_status',false)
+                                    ->where('member_id',auth()->user()->member->id);
+                            })->latest()->first();
         $bank = MasterBank::with('nomor_rekening_bank')->get();
         return view('member.form-pembayaran',[
             'title'=>'Form Pembayaran',
             'notpayed'=>$notpayed,
             'banks'=>$bank
         ]);
+    }
+
+    public function konfirmasi_bayar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'bukti' => 'required|mimes:png,jpg,jpeg|max:2048',
+            'pembelian_id' => 'required',
+        ],['*.required' => 'Wajib diisi!']);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            try {
+                $pembelian = PembelianProduk::find($request->pembelian_id);
+                $bukti = $request->file('bukti')->store('public/data-pembelian/bukti-bayar/member_'.Str::slug(auth()->user()->member->nama_lengkap));
+                $pembelian->bukti_bayar = $bukti;
+                $pembelian->pay_status = true;
+                $pembelian->save();
+                DB::commit();
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Berhasil melakukan konfirmasi'
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json([
+                    'status'=>422,
+                    'message'=>$e->getMessage()
+                ],422);
+            }
+        }
     }
 }

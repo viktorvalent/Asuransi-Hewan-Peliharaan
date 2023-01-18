@@ -36,22 +36,22 @@
                 <h6>Transfer pembayaran ke salah satu bank dibawah ini :</h6>
                 <div class="row justify-content-center">
                     @foreach ($banks as $item)
-                        <div class="col-md-6 shadow m-4 p-2 rounded" style="width:17rem;">
+                        <div class="col-md-6 shadow m-3 px-2 rounded" style="width:17rem;">
                             <div class="d-flex">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center ps-2">
                                     <img src="{{ asset(Storage::url($item->logo)) }}" style="width: 50px;" alt="">
                                 </div>
-                                <div class="row ps-3">
+                                <div class="row ps-4 py-2">
                                     <div class="col-12">Bank {{ $item->nama }}</div>
-                                    <div class="col-12 text-primary">{{ $item->nomor_rekening_bank[0]->nomor_rekening }}</div>
+                                    <div class="col-12 text-primary fw-semibold">{{ $item->nomor_rekening_bank[0]->nomor_rekening }}</div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
-                <form id="create">
+                <form id="create" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="bukti" class="form-label">Bukti Pembayaran <span class="text-danger">*</span> <em>(img/pdf)</em></label>
+                        <label for="bukti" class="form-label">Bukti Pembayaran <span class="text-danger">*</span> <em>(jpg/png)</em></label>
                         <input type="hidden" name="pembelian_id" class="pembelian_id" value="{{ $notpayed->id }}">
                         <input class="form-control" type="file" id="bukti" name="bukti">
                         <small class="text-danger bukti_error"></small>
@@ -72,6 +72,42 @@
 <script src="{{ asset('dashboard/js/support.js') }}"></script>
 <script>
     $(document).ready(function () {
+        $(document).on('click','.create', function(e){
+            e.preventDefault();
+            var files = $('#bukti')[0].files;
+            let data = new FormData();
+            data.append('bukti',files[0]);
+            data.append('pembelian_id',$('.pembelian_id').val());
+            _ajax.postWithFile("{{ route('pembelian.bayar.konfirmasi') }}",data,
+                (response) => {
+                    if(response.status == 200) {
+                        _swalert(response);
+                        setTimeout(() => {
+                            window.location.href="{{ route('member.my-insurance') }}";
+                        }, 2000);
+                    }
+                },
+                (response) => {
+                    if (response.status == 400) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Perhatikan inputan anda dengan benar',
+                        })
+                        _validation.action(response.responseJSON)
+                    } else if (response.status == 404) {
+                        _swalert(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                }
+            );
+        })
     });
 </script>
 @endpush

@@ -16,8 +16,8 @@ class IsMember
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!auth()->user()->role==2){
-            abort(403, 'ANDA TIDAK MEMPUNYAI AKSES');
+        if((!auth()->check() && !$request->expectsJson()) || !auth()->user()->role==2){
+            return redirect()->route('sign-in.member');
         }
         return $next($request);
     }
