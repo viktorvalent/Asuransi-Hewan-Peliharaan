@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\MasterData;
 
 use Exception;
+use PDF;
 use App\Helper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,6 +21,14 @@ class PembelianController extends Controller
         return view('admin.master-data.pembelian', [
             'title'=>$this->title
         ]);
+    }
+
+    public function test_pdf($id)
+    {
+        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member')->find($id);
+        view()->share('data',['data'=>$data]);
+        $pdf = PDF::loadView('template.polis-asuransi', ['data'=>$data]);
+        return $pdf->download('polis.pdf');
     }
 
     public function data(Request $request)
@@ -87,10 +96,8 @@ class PembelianController extends Controller
             try {
                 DB::beginTransaction();
                 $data = PembelianProduk::find($request->pembelian_id);
-
-                // Generate Polis dalam bentuk pdf
-
-                
+                $data->status = 3;
+                $data->save();
                 Helper::createUserLog("Berhasil konfirmasi pembelian untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
                 DB::commit();
                 return response()->json([

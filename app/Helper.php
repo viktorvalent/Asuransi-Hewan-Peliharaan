@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
+
 class Helper {
     public static function createUserLog($a,$b,$c)
     {
@@ -27,6 +29,20 @@ class Helper {
 		$log['menu'] = $c;
 
 		\App\Models\UserLog::create($log);
+    }
+
+    public static function generatePolisNumber()
+    {
+        $inv['waktu_dibuat'] = \Carbon\Carbon::now()->format('Y');
+        $getLast = \App\Models\PolisNumber::where('waktu_dibuat',\Carbon\Carbon::now()->format('Y'))->latest()->first();
+        if (!$getLast) {
+            $inv['nomor'] = 1;
+        } else {
+            $inv['nomor'] = $getLast->nomor + 1;
+        }
+        \App\Models\PolisNumber::create($inv);
+        $polis_number = strval(Str::padLeft($inv['nomor'], 8, '0'));
+        return $polis_number;
     }
 
 }

@@ -33,4 +33,9 @@ class PembelianProduk extends Model
     {
         return $this->belongsTo(MasterRasHewan::class, 'ras_hewan_id');
     }
+
+    public function polis()
+    {
+        return $this->hasOne(PolisAsuransi::class, 'pembelian_id');
+    }
 }

@@ -28,6 +28,12 @@
                 </a>
             </li>
 
+            <li class="sidebar-item {{ $title=='Polis Asuransi Member'?'active':'' }}">
+                <a class="sidebar-link" href="{{ route('klaim') }}">
+                    <i class="align-middle" data-feather="file-text"></i> <span class="align-middle">Polis</span>
+                </a>
+            </li>
+
             <li class="sidebar-item {{ $title=='Klaim Asuransi Member'?'active':'' }}">
                 <a class="sidebar-link" href="{{ route('klaim') }}">
                     <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Klaim</span>

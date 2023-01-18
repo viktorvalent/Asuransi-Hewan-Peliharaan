@@ -23,7 +23,7 @@ Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.pack
 Route::get('/faqs', [HomeController::class, 'faqs'])->name('home.faqs');
 
 // Login Admin
-Route::controller(AdminController::class)->prefix('/auth')->group(function(){
+Route::controller(AdminController::class)->prefix('/auth/admin')->group(function(){
     Route::get('/sign-in','index')->name('sign-in.admin');
     Route::post('/authenticating','authenticate')->name('authenticating.admin');
     Route::get('/sign-out','logout')->name('sign-out.admin');
@@ -85,6 +85,7 @@ Route::middleware(['is_admin'])->group(function(){
         Route::post('/confirm','confirm_pembelian')->name('pembelian.confirm');
         Route::get('/detail/{id}','check_detail')->name('pembelian.detail');
         Route::get('/edit/{id}','edit');
+        Route::get('/test_pdf/{id}','test_pdf')->name('test.pdf');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
     });

@@ -170,7 +170,48 @@
     <div class="card shadow">
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <button class="btn btn-success confirm" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Konfirmasi Terima</button>
+                <button class="btn btn-success" style="width: 200px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_create"><i class="bi bi-check2-square"></i> Terima & Buat Polis</button>
+                <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Terima & Buat Polis</a>
+            </div>
+
+            <div class="modal fade" id="modal_create" tabindex="-1" aria-modal="true" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Buat Polis Asuransi</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body m-3">
+                            <form id="create">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label required">Tanggal Mulai <i class="text-danger">*</i></label>
+                                            <input id="tgl_mulai" type="date" name="tgl_mulai" class="form-control" placeholder="Tanggal Mulai">
+                                            <small class="text-danger tgl_mulai_error"></small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label required">Jangka Waktu (Tahun) <i class="text-danger">*</i></label>
+                                            <input id="jangka_waktu" type="number" name="jangka_waktu" class="form-control" placeholder="Jangka Waktu">
+                                            <small class="text-danger jangka_waktu_error"></small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Deskripsi</label>
+                                    <textarea id="deskripsi" class="form-control deskripsi" name="deskripsi" placeholder="Deskripsi" rows="2"></textarea>
+                                </div>
+                                <div class="d-flex justify-content-center mt-5">
+                                    <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary ms-2 create">Kirim</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

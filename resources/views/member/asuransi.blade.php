@@ -2,6 +2,7 @@
 
 @push('member_css')
 <link href="{{ asset('dashboard/css/jquery-datatable.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 <style>
     .dataTables_scroll {
         padding: 1rem 0;
@@ -32,6 +33,7 @@
                                 <th>Nama Hewan (Ras)</th>
                                 <th>Premi</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                             @php($no=1)
@@ -52,6 +54,18 @@
                                         <span class="badge text-bg-warning shadow-sm">{{ $item->status_pembelian->status }}</span>
                                     @endif
                                 </td>
+                                <td>
+                                    @if ($item->status_pembelian->id==1)
+                                        <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</button>
+                                    @elseif ($item->status_pembelian->id==2)
+                                        <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</button>
+                                    @elseif ($item->status_pembelian->id==3)
+                                        <button class="btn btn-sm btn-success" style="font-size: .825rem;"><<i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</button>
+                                    @else
+                                        <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</button>
+                                    @endif
+                                </td>
+
                             </tr>
                             @php($no++)
                             @endforeach
