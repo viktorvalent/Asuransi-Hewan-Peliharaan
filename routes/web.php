@@ -139,6 +139,7 @@ Route::middleware(['is_member'])->group(function(){
         Route::get('/profile', 'index')->name('member.dashboard');
         Route::get('/my-insurance', 'my_insurance')->name('member.my-insurance');
         Route::post('/add-member-data', 'store_member')->name('member.create');
+        Route::get('/download-polis/{id}', 'get_polis')->name('member.download.polis');
     });
 
     Route::controller(ProdukController::class)->prefix('/pembelian')->group(function(){

@@ -34,9 +34,9 @@
                                 @if ($data->status_pembelian->id==1)
                                     <span class="badge text-bg-light shadow-sm">{{ $data->status_pembelian->status }}</span>
                                 @elseif ($data->status_pembelian->id==2)
-                                    <span class="badge text-bg-danger shadow-sm">{{ $data->status_pembelian->status }}</span>
+                                    <span class="badge text-bg-danger text-white shadow-sm">{{ $data->status_pembelian->status }}</span>
                                 @elseif ($data->status_pembelian->id==3)
-                                    <span class="badge text-bg-success shadow-sm">{{ $data->status_pembelian->status }}</span>
+                                    <span class="badge text-bg-success text-white shadow-sm">{{ $data->status_pembelian->status }}</span>
                                 @else
                                     <span class="badge text-bg-warning shadow-sm">{{ $data->status_pembelian->status }}</span>
                                 @endif
@@ -170,8 +170,12 @@
     <div class="card shadow">
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <button class="btn btn-success" style="width: 200px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_create"><i class="bi bi-check2-square"></i> Terima & Buat Polis</button>
-                <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Terima & Buat Polis</a>
+                @if ($data->status==3)
+                    <button class="btn btn-success" style="width: 200px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Polis</button>
+                @else
+                    <button class="btn btn-success" style="width: 200px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_create"><i class="bi bi-check2-square"></i> Terima & Buat Polis</button>
+                @endif
+                {{-- <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Terima & Buat Polis</a> --}}
             </div>
 
             <div class="modal fade" id="modal_create" tabindex="-1" aria-modal="true" role="dialog">
@@ -199,11 +203,10 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="mb-3">
+                                {{-- <div class="mb-3">
                                     <label class="form-label">Deskripsi</label>
                                     <textarea id="deskripsi" class="form-control deskripsi" name="deskripsi" placeholder="Deskripsi" rows="2"></textarea>
-                                </div>
+                                </div> --}}
                                 <div class="d-flex justify-content-center mt-5">
                                     <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
                                     <button type="submit" class="btn btn-primary ms-2 create">Kirim</button>
@@ -227,14 +230,17 @@
 <script>
     $(document).ready(function () {
         new Zooming().listen('.img-zoomable');
-
-        $(document).on('click','.confirm', function(e){
+        $(document).on('click','.create', function(e){
             e.preventDefault();
-            let data = {'id': $('.pembelian_id').val()}
+            let data = {
+                'id': $('.pembelian_id').val(),
+                'tgl_mulai':$('#tgl_mulai').val(),
+                'jangka_waktu':$('#jangka_waktu').val()
+            }
             _input.loading.start(this);
             _ajax.post("{{ route('pembelian.confirm') }}",data,
                 (response) => {
-                    _input.loading.stop('.confirm','<i class="bi bi-check2-square"></i> Konfirmasi Terima');
+                    _input.loading.stop('.create','Kirim');
                     if (response.status == 200) {
                         _swalert(response);
                         setTimeout(() => {
@@ -243,7 +249,7 @@
                     }
                 },
                 (response) => {
-                    _input.loading.stop('.confirm','<i class="bi bi-check2-square"></i> Konfirmasi Terima');
+                    _input.loading.stop('.create','Kirim');
                     if (response.status == 400) {
                         _validation.action(response.responseJSON)
                     } else if (response.status == 404) {

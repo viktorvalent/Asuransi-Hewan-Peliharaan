@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Admin\MasterData;
 
-use Exception;
 use PDF;
+use Exception;
 use App\Helper;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\PolisAsuransi;
 use App\Models\PembelianProduk;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class PembelianController extends Controller
 {
@@ -25,7 +29,7 @@ class PembelianController extends Controller
 
     public function test_pdf($id)
     {
-        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member')->find($id);
+        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member','polis')->find($id);
         view()->share('data',['data'=>$data]);
         $pdf = PDF::loadView('template.polis-asuransi', ['data'=>$data]);
         return $pdf->download('polis.pdf');
@@ -40,13 +44,13 @@ class PembelianController extends Controller
                 ->addColumn('action', function($row){
                     $link = URL::route('pembelian.detail',['id'=>$row->id]);
                     if ($row->status_pembelian->id==1) {
-                        return '<a href="'.$link.'" class="btn btn-success btn-sm">Check <i class="bi bi-search"></i></a>';
+                        return '<a href="'.$link.'" class="btn btn-success btn-sm"><i class="bi bi-search"></i> Check</a>';
                     } elseif ($row->status_pembelian->id==2) {
-                        return '<span class="badge text-bg-danger shadow-sm">'.$row->status_pembelian->status.'</span>';
+                        return '<a href="'.$link.'" class="btn btn-success btn-sm"><i class="bi bi-search"></i> Check</a>';
                     } elseif ($row->status_pembelian->id==3) {
-                        return '<span class="badge text-bg-success shadow-sm">'.$row->status_pembelian->status.'</span>';
+                        return '<a href="'.$link.'" class="btn btn-success btn-sm"><i class="bi bi-search"></i> Check</a>';
                     } else {
-                        return '<span class="badge text-bg-warning shadow-sm">'.$row->status_pembelian->status.'</span>';
+                        return '<a href="'.$link.'" class="btn btn-success btn-sm"><i class="bi bi-search"></i> Check</a>';
                     }
                 })
                 ->editColumn('tgl_daftar_asuransi', function($row){
@@ -68,9 +72,9 @@ class PembelianController extends Controller
                     if ($row->status_pembelian->id==1) {
                         return '<span class="badge text-bg-light shadow-sm">'.$row->status_pembelian->status.'</span>';
                     } elseif ($row->status_pembelian->id==2) {
-                        return '<span class="badge text-bg-danger shadow-sm">'.$row->status_pembelian->status.'</span>';
+                        return '<span class="badge text-bg-danger text-white shadow-sm">'.$row->status_pembelian->status.'</span>';
                     } elseif ($row->status_pembelian->id==3) {
-                        return '<span class="badge text-bg-success shadow-sm">'.$row->status_pembelian->status.'</span>';
+                        return '<span class="badge text-bg-success text-white shadow-sm">'.$row->status_pembelian->status.'</span>';
                     } else {
                         return '<span class="badge text-bg-warning shadow-sm">'.$row->status_pembelian->status.'</span>';
                     }
@@ -92,30 +96,70 @@ class PembelianController extends Controller
 
     public function confirm_pembelian(Request $request)
     {
-        if (!empty($request->id)){
-            try {
-                DB::beginTransaction();
-                $data = PembelianProduk::find($request->pembelian_id);
-                $data->status = 3;
-                $data->save();
-                Helper::createUserLog("Berhasil konfirmasi pembelian untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
-                DB::commit();
-                return response()->json([
-                    'status'=>200,
-                    'message'=>'Berhasil menambahkan data rekening'
-                ]);
-            } catch (Exception $e) {
-                DB::rollBack();
-                Helper::createUserLog("Gagal konfirmasi pembelian", auth()->user()->id, $this->title);
-                return response()->json([
-                    'message'=>$e->getMessage()
-                ],422);
-            }
-        } else {
+        $validator = Validator::make($request->all(),[
+            'tgl_mulai' => 'required',
+            'jangka_waktu' => 'required'
+        ],
+        [
+            '*.required' => 'Wajib diisi!'
+        ]);
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>404,
-                'message'=>'Data pembelian expired!'
-            ],404);
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            if (!empty($request->id)){
+                try {
+                    DB::beginTransaction();
+                    $polis = PolisAsuransi::create([
+                        'nomor_polis'=>Helper::generatePolisNumber(),
+                        'pembelian_id'=>$request->id,
+                        'tgl_polis_mulai'=>$request->tgl_mulai,
+                        'tgl_polis_dibuat'=>Carbon::now('Asia/Jakarta')->format('Y-m-d'),
+                        'jangka_waktu'=>$request->jangka_waktu,
+                        'status_polis'=>'Aktif',
+                        'biaya_polis'=>null,
+                        'tgl_bayar_polis'=>null,
+                        'path'=>'-'
+                    ]);
+
+                    if ($polis) {
+                        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member','polis')->find($request->id);
+                        if ($data) {
+                            view()->share('data',['data'=>$data]);
+                            $pdf = PDF::loadView('template.polis-asuransi', ['data'=>$data]);
+                            $date = Str::remove('-', strval(Carbon::now()->format('Y-m-d')));
+                            $pdf_file = $pdf->download()->getOriginalContent();
+                            $member = Str::slug($data->member->nama_lengkap,'-');
+                            $path = strval('public/polis-asuransi/'.$member.'/MYPETT_POLIS_'.$date.'_'.strval(md5($data->member_id)).'.pdf');
+                            Storage::put($path, $pdf_file);
+                            if (Storage::exists($path)) {
+                                PembelianProduk::where('id',$request->id)->update(['status'=>3]);
+                                $polis->path = $path;
+                                $polis->save();
+                            }
+                        }
+                    }
+
+                    Helper::createUserLog("Berhasil konfirmasi pembelian untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
+                    DB::commit();
+                    return response()->json([
+                        'status'=>200,
+                        'message'=>'Berhasil menambahkan data rekening'
+                    ]);
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Helper::createUserLog("Gagal konfirmasi pembelian", auth()->user()->id, $this->title);
+                    return response()->json([
+                        'message'=>$e->getMessage()
+                    ],422);
+                }
+            } else {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'Data pembelian expired!'
+                ],404);
+            }
         }
     }
 }

@@ -6,10 +6,13 @@ use Exception;
 use App\Helper;
 use App\Models\Member;
 use Illuminate\Http\Request;
+use App\Models\PolisAsuransi;
+use App\Models\PembelianProduk;
 use App\Models\MasterBankMember;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\PembelianProduk;
+use App\Models\KlaimAsuransi;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class MemberDashboardController extends Controller
@@ -47,6 +50,25 @@ class MemberDashboardController extends Controller
             'title'=>'My Insurance',
             'member'=>$member,
             'pembelians'=>$pembelian
+        ]);
+    }
+
+    public function klaim()
+    {
+        if(auth()->user()->member) {
+            $member = Member::where('user_id',auth()->user()->id)->first();
+            $klaim = KlaimAsuransi::where(function($q)use($member){
+                $q->where('member_id',$member->id)
+                    ->where('pay_status',true);
+            })->latest()->get();
+        } else {
+            $member = null;
+        }
+
+        return view('member.klaim',[
+            'title'=>'Klaim Asuransi',
+            'member'=>$member,
+            'klaims'=>$klaim
         ]);
     }
 
@@ -93,5 +115,23 @@ class MemberDashboardController extends Controller
                 ],422);
             }
         }
+    }
+
+    public function get_polis($id)
+    {
+        $unduh = PolisAsuransi::select('pembelian_id','path')->where('pembelian_id',$id)->first();
+        if ($unduh) {
+            Helper::createUserLog("Berhasil download polis untuk member ".$unduh->pembelian->member->nama_lengkap, auth()->user()->id, $this->title);
+            if (Storage::exists($unduh->path)) {
+                return Storage::download($unduh->path);
+            }
+        } else {
+            Helper::createUserLog("Gagal download polis untuk member ".$unduh->pembelian->member->nama_lengkap, auth()->user()->id, $this->title);
+            return response()->json([
+                'status'=>422,
+                'message'=>'Polis tidak tersedia/rusak'
+            ],422);
+        }
+
     }
 }

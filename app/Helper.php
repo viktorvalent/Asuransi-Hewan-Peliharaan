@@ -33,8 +33,8 @@ class Helper {
 
     public static function generatePolisNumber()
     {
-        $inv['waktu_dibuat'] = \Carbon\Carbon::now()->format('Y');
-        $getLast = \App\Models\PolisNumber::where('waktu_dibuat',\Carbon\Carbon::now()->format('Y'))->latest()->first();
+        $inv['tanggal_dibuat'] = \Carbon\Carbon::now()->format('Y-m-d');
+        $getLast = \App\Models\PolisNumber::latest()->first();
         if (!$getLast) {
             $inv['nomor'] = 1;
         } else {
