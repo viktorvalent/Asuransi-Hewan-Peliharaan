@@ -15,7 +15,7 @@ class StatusSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('status_pembelian_setting')->insert([
+        DB::table('status_set')->insert([
             [
                 'id'=>1,
                 'status'=>'AWAITING'

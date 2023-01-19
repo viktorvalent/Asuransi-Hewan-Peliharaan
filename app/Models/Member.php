@@ -26,4 +26,9 @@ class Member extends Model
     {
         return $this->hasMany(PembelianProduk::class, 'member_id');
     }
+
+    public function klaims()
+    {
+        return $this->hasMany(KlaimAsuransi::class, 'member_id');
+    }
 }

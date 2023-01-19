@@ -57,10 +57,7 @@ class MemberDashboardController extends Controller
     {
         if(auth()->user()->member) {
             $member = Member::where('user_id',auth()->user()->id)->first();
-            $klaim = KlaimAsuransi::where(function($q)use($member){
-                $q->where('member_id',$member->id)
-                    ->where('pay_status',true);
-            })->latest()->get();
+            $klaim = KlaimAsuransi::where('member_id',$member->id)->latest()->get();
         } else {
             $member = null;
         }
@@ -69,6 +66,17 @@ class MemberDashboardController extends Controller
             'title'=>'Klaim Asuransi',
             'member'=>$member,
             'klaims'=>$klaim
+        ]);
+    }
+
+    public function form_klaim()
+    {
+        $member = Member::where('user_id',auth()->user()->id)->first();
+        $pembelian = PembelianProduk::with('polis')->where('member_id',$member->id)->where('status',3)->get();
+        return view('member.form-klaim',[
+            'title'=>'Form Klaim',
+            'poliss'=>$polis,
+            'member'=>$member
         ]);
     }
 

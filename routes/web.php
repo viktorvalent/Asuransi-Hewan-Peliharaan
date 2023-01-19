@@ -4,19 +4,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\MemberController;
 use App\Http\Controllers\Landing\HomeController;
+use App\Http\Controllers\Member\ProdukController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\MasterData\KlaimController;
 use App\Http\Controllers\Admin\WebContent\FaqController;
 use App\Http\Controllers\Admin\WebContent\HeroController;
+use App\Http\Controllers\Admin\MasterData\KlaimController;
 use App\Http\Controllers\Admin\MasterData\NoRekController;
+use App\Http\Controllers\Admin\MasterData\PolisController;
 use App\Http\Controllers\Member\MemberDashboardController;
+use App\Http\Controllers\Admin\MasterData\PembelianController;
 use App\Http\Controllers\Admin\MasterData\MasterBankController;
 use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
-use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
-use App\Http\Controllers\Admin\MasterData\PembelianController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
+use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
-use App\Http\Controllers\Member\ProdukController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
@@ -85,15 +86,15 @@ Route::middleware(['is_admin'])->group(function(){
         Route::post('/confirm','confirm_pembelian')->name('pembelian.confirm');
         Route::get('/detail/{id}','check_detail')->name('pembelian.detail');
         Route::get('/edit/{id}','edit');
-        Route::get('/test_pdf/{id}','test_pdf')->name('test.pdf');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
     });
 
-    Route::controller(KlaimController::class)->prefix('/auth/dashboard/klaim-asuransi')->group(function(){
-        Route::get('/','index')->name('klaim');
-        Route::get('/list-data','data')->name('klaim.data');
-        Route::post('/create','store')->name('klaim.create');
+    Route::controller(PolisController::class)->prefix('/auth/dashboard/polis-asuransi')->group(function(){
+        Route::get('/','index')->name('polis');
+        Route::get('/list-data','data')->name('polis.data');
+        Route::post('/create','store')->name('polis.create');
+        Route::get('/preview/{id}','polis_preview')->name('polis.preview');
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
@@ -140,6 +141,8 @@ Route::middleware(['is_member'])->group(function(){
         Route::get('/my-insurance', 'my_insurance')->name('member.my-insurance');
         Route::post('/add-member-data', 'store_member')->name('member.create');
         Route::get('/download-polis/{id}', 'get_polis')->name('member.download.polis');
+        Route::get('/claim', 'klaim')->name('member.claim');
+        Route::get('/claim/form', 'form_klaim')->name('member.claim.form');
     });
 
     Route::controller(ProdukController::class)->prefix('/pembelian')->group(function(){

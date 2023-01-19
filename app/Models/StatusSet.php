@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StatusPembelianSetting extends Model
+class StatusSet extends Model
 {
     use HasFactory;
 
-    protected $table = 'status_pembelian_setting';
+    protected $table = 'status_set';
     protected $fillable = ['status'];
     public $timestamps = true;
     protected $primaryKey = 'id';
@@ -17,5 +17,10 @@ class StatusPembelianSetting extends Model
     public function pembelian_produk()
     {
         return $this->hasMany(PembelianProduk::class, 'status');
+    }
+
+    public function klaim_asuransi()
+    {
+        return $this->hasMany(KlaimAsuransi::class, 'status_klaim');
     }
 }

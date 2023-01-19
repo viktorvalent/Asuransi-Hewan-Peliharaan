@@ -13,8 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('klaim_asuransis', function (Blueprint $table) {
+        Schema::create('klaim_asuransi', function (Blueprint $table) {
             $table->id();
+            $table->date('tgl_klaim');
+            $table->foreignId('member_id')->constrained('member');
+            $table->foreignId('polis_id')->constrained('polis_asuransi');
+            $table->foreignId('status_klaim')->constrained('status_set');
+            $table->string('history_klaim')->nullable();
+            $table->string('foto_bukti_bayar')->nullable();
+            $table->string('foto_resep_obat')->nullable();
+            $table->string('foto_diagnosa_dokter')->nullable();
+            $table->integer('nominal_klaim')->nullable();
+            $table->integer('nominal_disetujui')->nullable();
+            $table->string('keterangan_klaim')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('klaim_asuransis');
+        Schema::dropIfExists('klaim_asuransi');
     }
 };

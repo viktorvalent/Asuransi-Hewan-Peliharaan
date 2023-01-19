@@ -26,7 +26,7 @@ class PembelianProduk extends Model
 
     public function status_pembelian()
     {
-        return $this->belongsTo(StatusPembelianSetting::class, 'status');
+        return $this->belongsTo(StatusSet::class, 'status');
     }
 
     public function ras_hewan()

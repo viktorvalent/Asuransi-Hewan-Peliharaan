@@ -2,7 +2,6 @@
 
 @push('member_css')
 <link href="{{ asset('dashboard/css/jquery-datatable.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 <style>
     .dataTables_scroll {
         padding: 1rem 0;
@@ -17,12 +16,12 @@
         <div class="card shadow" style="opacity: .955 !important;">
             <div class="card-body">
                 <h5 class="text-center border-bottom pb-3 mb-3">Daftar Asuransi Anda</a></h5>
-                @if ($member!=null && count($member->pembelian_produk)<1)
+                @if ($member!=null && count($member->klaims)<1)
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>Pemberitahuan!</strong> Anda belum melakukan pembelian asuransi.
+                        <strong>Pemberitahuan!</strong> Anda belum mempunyai klaim.
                     </div>
                     <div class="d-flex justify-content-center">
-                        <a href="{{ route('home.package') }}" class="btn btn-primary btn-sm"><i class="bi bi-cart3 fs-5"></i> Paket Asuransi</a>
+                        <a href="{{ route('member.claim.form') }}" class="btn btn-primary btn-sm"><i class="bi bi-file-earmark-lock fs-5"></i> Ajukan Klaim</a>
                     </div>
                 @else
                     <table id="datatable" class="table table-bordered table-hover w-100" style="font-size: .9rem">

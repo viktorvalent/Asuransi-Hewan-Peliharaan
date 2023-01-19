@@ -22,17 +22,9 @@ class PembelianController extends Controller
     public $title = 'Pembelian Asuransi Member';
     public function index()
     {
-        return view('admin.master-data.pembelian', [
+        return view('admin.transaksi.pembelian', [
             'title'=>$this->title
         ]);
-    }
-
-    public function test_pdf($id)
-    {
-        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member','polis')->find($id);
-        view()->share('data',['data'=>$data]);
-        $pdf = PDF::loadView('template.polis-asuransi', ['data'=>$data]);
-        return $pdf->download('polis.pdf');
     }
 
     public function data(Request $request)
@@ -88,7 +80,7 @@ class PembelianController extends Controller
     {
         $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member')->find($id);
 
-        return view('admin.master-data.detail-pembelian', [
+        return view('admin.transaksi.detail-pembelian', [
             'title'=>'Detail Pembelian Asuransi Member',
             'data'=>$data
         ]);

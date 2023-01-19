@@ -27,7 +27,7 @@ return new class extends Migration
             $table->double('berat_badan_kg');
             $table->string('foto');
             $table->integer('harga_dasar_premi');
-            $table->foreignId('status')->constrained('status_pembelian_setting');
+            $table->foreignId('status')->constrained('status_set');
             $table->timestamps();
         });
     }
