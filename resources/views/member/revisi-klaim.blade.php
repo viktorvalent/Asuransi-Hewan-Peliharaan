@@ -6,54 +6,56 @@
     <div class="col-sm-10 col-md-8 col-12">
         <div class="card shadow" style="opacity: 0.955 !important;">
             <div class="card-header py-3">
-                <h4 class="text-center">Silahkan isi form dengan benar.</h4>
+                <h4 class="text-center">Revisi Klaim Asuransi.</h4>
             </div>
             <div class="card-body mx-2">
-
                 <form enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="polis" class="form-label">Polis <span class="text-danger">*</span></label>
-                        <input type="hidden" class="member_id" value="{{ $member->id || auth()->user()->member->id }}">
+                        <input type="hidden" class="klaim_id" value="{{ $data->id }}">
                         <select class="form-select polis" name="polis" id="polis">
                             @foreach ($pembelians as $item)
-                                <option value="{{ $item->polis->nomor_polis }}">{{ $item->produk->nama_produk }} - Nomor Polis : {{ $item->polis->nomor_polis }}</option>
+                                <option value="{{ $item->polis->nomor_polis }}" {{ $data->polis_id==$item->polis->id?'selected':'' }}>{{ $item->produk->nama_produk }} - Nomor Polis : {{ $item->polis->nomor_polis }}</option>
                             @endforeach
                         </select>
                         <small class="text-danger polis_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="nominal_rs" class="form-label">Nominal Bayar Rumah Sakit <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" id="nominal_rs" placeholder="Rp">
+                        <input type="number" class="form-control" id="nominal_rs" placeholder="Rp" value="{{ $data->nominal_bayar_rs }}">
                         <small class="text-danger nominal_rs_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="foto" class="form-label">Foto Bukti Bayar Rumah Sakit<span class="text-danger">*</span></label>
                         <input class="form-control" type="file" id="bukti" name="bukti">
+                        <img id="old-logo" src="{{ asset(Storage::url($data->foto_bukti_bayar)) }}" width="100" class="mt-3 img-zoomable" alt="Foto Bukti Bayar Rumah Sakit">
                         <small class="text-danger bukti_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="nominal_obat" class="form-label">Nominal Bayar Obat <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" id="nominal_obat" placeholder="Rp">
+                        <input type="number" class="form-control" id="nominal_obat" placeholder="Rp" value="{{ $data->nominal_bayar_obat }}">
                         <small class="text-danger nominal_obat_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="resep" class="form-label">Foto Bayar Resep Obat <span class="text-danger">*</span></label>
                         <input class="form-control" type="file" id="resep" name="resep">
+                        <img id="old-logo" src="{{ asset(Storage::url($data->foto_resep_obat)) }}" width="100" class="mt-3 img-zoomable" alt="Foto Bukti Bayar Rumah Sakit">
                         <small class="text-danger resep_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="nominal_dokter" class="form-label">Nominal Bayar Diagnosa Dokter <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" id="nominal_dokter" placeholder="Rp">
+                        <input type="number" class="form-control" id="nominal_dokter" placeholder="Rp" value="{{ $data->nominal_bayar_dokter }}">
                         <small class="text-danger nominal_dokter_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="diagnosa" class="form-label">Foto Diagnosa Dokter <span class="text-danger">*</span></label>
                         <input class="form-control" type="file" id="diagnosa" name="diagnosa">
+                        <img id="old-logo" src="{{ asset(Storage::url($data->foto_diagnosa_dokter)) }}" width="100" class="mt-3 img-zoomable" alt="Foto Bukti Bayar Rumah Sakit">
                         <small class="text-danger diagnosa_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="ket" class="form-label">Keterangan Klaim <span class="text-danger">*</span></label>
-                        <textarea name="ket" class="form-control" id="ket" rows="3" placeholder="Keterangan"></textarea>
+                        <textarea name="ket" class="form-control" id="ket" rows="3" placeholder="Keterangan">{{ $data->keterangan_klaim }}</textarea>
                         <small class="text-danger ket_error"></small>
                     </div>
 
@@ -72,6 +74,7 @@
 <script src="{{ asset('dashboard/js/jquery.js') }}"></script>
 <script src="{{ asset('dashboard/libs/sweetalert/app.js') }}"></script>
 <script src="{{ asset('dashboard/js/support.js') }}"></script>
+
 <script>
     $(document).ready(function () {
 
@@ -84,7 +87,7 @@
             data.append('bukti',bukti[0]);
             data.append('resep',resep[0]);
             data.append('diagnosa',diagnosa[0]);
-            data.append('member_id',$('.member_id').val());
+            data.append('klaim_id',$('.klaim_id').val());
             data.append('polis',$('#polis option:selected').val());
             data.append('nominal_rs',$('#nominal_rs').val());
             data.append('nominal_obat',$('#nominal_obat').val());
@@ -92,7 +95,7 @@
             data.append('ket',$('#ket').val());
             _input.loading.start(this);
 
-            _ajax.postWithFile("{{ route('claim.make') }}",data,
+            _ajax.postWithFile("{{ route('claim.revisi') }}",data,
                 (response) => {
                     _input.loading.stop('.create','Kirim');
                     if (response.status == 200) {

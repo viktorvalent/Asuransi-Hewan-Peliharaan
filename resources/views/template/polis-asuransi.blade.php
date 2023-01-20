@@ -45,7 +45,7 @@
     <tr class="align-top">
         <td>ID Member</td>
         <td>:</td>
-        <td>&nbsp;{{ $data->member->id }}</td>
+        <td>&nbsp;{{ $data->member->no_ktp }}</td>
     </tr>
     <tr class="align-top">
         <td>Jenis Hewan (Ras)</td>

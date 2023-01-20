@@ -8,16 +8,17 @@ use App\Http\Controllers\Member\ProdukController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\WebContent\FaqController;
 use App\Http\Controllers\Admin\WebContent\HeroController;
-use App\Http\Controllers\Admin\MasterData\KlaimController;
+use App\Http\Controllers\Admin\Transaksi\KlaimController;
 use App\Http\Controllers\Admin\MasterData\NoRekController;
-use App\Http\Controllers\Admin\MasterData\PolisController;
+use App\Http\Controllers\Admin\Transaksi\PolisController;
 use App\Http\Controllers\Member\MemberDashboardController;
-use App\Http\Controllers\Admin\MasterData\PembelianController;
+use App\Http\Controllers\Admin\Transaksi\PembelianController;
 use App\Http\Controllers\Admin\MasterData\MasterBankController;
 use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
+use App\Http\Controllers\Member\KlaimAsuransiController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
@@ -100,6 +101,20 @@ Route::middleware(['is_admin'])->group(function(){
         Route::get('/delete/{id}','destroy');
     });
 
+    Route::controller(KlaimController::class)->prefix('/auth/dashboard/klaim-asuransi')->group(function(){
+        Route::get('/','index')->name('klaim');
+        Route::get('/list-data','data')->name('klaim.data');
+        Route::post('/create','store')->name('klaim.create');
+        Route::get('/preview/{id}','klaim_preview')->name('klaim.preview');
+        Route::get('/detail/{id}','check_detail')->name('klaim.detail');
+        Route::post('/confirm','confirm_klaim')->name('klaim.confirm');
+        Route::post('/reject','reject_klaim')->name('klaim.reject');
+        Route::get('/edit/{id}','edit');
+        Route::get('/testpdf/{id}','pdf')->name('test.pdf');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
     Route::controller(ProdukAsuransiController::class)->prefix('/auth/dashboard/produk-asuransi')->group(function(){
         Route::get('/','index')->name('master-data.produk-asuransi');
         Route::get('/tambah','addProduk')->name('master-data.add-produk');
@@ -138,11 +153,15 @@ Route::middleware(['is_admin'])->group(function(){
 Route::middleware(['is_member'])->group(function(){
     Route::controller(MemberDashboardController::class)->prefix('/member')->group(function(){
         Route::get('/profile', 'index')->name('member.dashboard');
+        Route::get('/profile/edit/{id}', 'edit')->name('member.edit');
+        Route::post('/profile/update/', 'update')->name('member.update');
         Route::get('/my-insurance', 'my_insurance')->name('member.my-insurance');
         Route::post('/add-member-data', 'store_member')->name('member.create');
         Route::get('/download-polis/{id}', 'get_polis')->name('member.download.polis');
+        Route::get('/download-nota-klaim/{id}', 'get_nota_klaim')->name('member.download.nota_klaim');
         Route::get('/claim', 'klaim')->name('member.claim');
         Route::get('/claim/form', 'form_klaim')->name('member.claim.form');
+        Route::get('/claim/revisi/{id}', 'revisi_klaim')->name('member.claim.revisi');
     });
 
     Route::controller(ProdukController::class)->prefix('/pembelian')->group(function(){
@@ -151,5 +170,10 @@ Route::middleware(['is_member'])->group(function(){
         Route::post('/beli','pembelian')->name('pembelian.create');
         Route::get('/bayar','form_bayar')->name('pembelian.bayar');
         Route::post('/bayar/konfirmasi','konfirmasi_bayar')->name('pembelian.bayar.konfirmasi');
+    });
+
+    Route::controller(KlaimAsuransiController::class)->prefix('/claim')->group(function(){
+        Route::post('/make-claim','klaim')->name('claim.make');
+        Route::post('/make-revisi','revisi')->name('claim.revisi');
     });
 });

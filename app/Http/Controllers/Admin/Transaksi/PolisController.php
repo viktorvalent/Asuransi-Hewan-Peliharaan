@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\MasterData;
+namespace App\Http\Controllers\Admin\Transaksi;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;

@@ -17,7 +17,7 @@
                 @auth
                     @can('is_member')
                         <li><a href="{{ route('member.dashboard') }}">Profile</a></li>
-                        <li><a href="{{ route('member.claim') }}">Cart</a></li>
+                        {{-- <li><a href="{{ route('member.claim') }}">Cart</a></li> --}}
                         <li><a href="{{ route('member.my-insurance') }}">My Insurance</a></li>
                         <li><a href="{{ route('member.claim') }}">Claim</a></li>
                         <hr class="py-0">

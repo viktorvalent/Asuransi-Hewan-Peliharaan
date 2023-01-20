@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\MasterData;
+namespace App\Http\Controllers\Admin\Transaksi;
 
 use PDF;
 use Exception;
@@ -137,7 +137,7 @@ class PembelianController extends Controller
                     DB::commit();
                     return response()->json([
                         'status'=>200,
-                        'message'=>'Berhasil menambahkan data rekening'
+                        'message'=>'Berhasil membuat polis'
                     ]);
                 } catch (Exception $e) {
                     DB::rollBack();

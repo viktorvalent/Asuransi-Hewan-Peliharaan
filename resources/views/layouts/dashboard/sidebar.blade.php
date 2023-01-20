@@ -28,14 +28,14 @@
                 </a>
             </li>
 
-            <li class="sidebar-item {{ $title=='Polis Asuransi Member'?'active':'' }}">
+            <li class="sidebar-item {{ $title=='Polis Asuransi Member'?'active':'' }}{{ $title=='Polis Preview'?'active':'' }}">
                 <a class="sidebar-link" href="{{ route('polis') }}">
                     <i class="align-middle" data-feather="file-text"></i> <span class="align-middle">Polis</span>
                 </a>
             </li>
 
-            <li class="sidebar-item {{ $title=='Klaim Asuransi Member'?'active':'' }}">
-                <a class="sidebar-link" href="#">
+            <li class="sidebar-item {{ $title=='Klaim Asuransi Member'?'active':'' }}{{ $title=='Detail Klaim Asuransi Member'?'active':'' }}">
+                <a class="sidebar-link" href="{{ route('klaim') }}">
                     <i class="align-middle" data-feather="credit-card"></i> <span class="align-middle">Klaim</span>
                 </a>
             </li>
@@ -133,11 +133,8 @@
                     <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Manajemen User</span>
                 </a>
                 <ul id="auth" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">Sign In</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-up.html">Sign Up</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-reset-password.html">Reset Password <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-404.html">404 Page <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-500.html">500 Page <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">Akun Member</a></li>
+                    {{-- <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-up.html">Sign Up</a></li> --}}
                 </ul>
             </li>
 

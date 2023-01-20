@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PembelianProduk extends Model
 {
-    use HasFactory;
-
     protected $table = 'pembelian_produk';
     protected $fillable = ['tgl_daftar_asuransi','berat_badan_kg','biaya_pendaftaran','member_id','ras_hewan_id','produk_id','nama_hewan','nama_pemilik','tgl_lahir_hewan','foto','harga_dasar_premi','status','pay_status'];
     public $timestamps = true;

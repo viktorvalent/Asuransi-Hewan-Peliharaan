@@ -15,13 +15,26 @@
 <body>
 <div class="container d-flex flex-wrap" id="container">
     <div class="form-container sign-up-container col-sm-12">
-        <form id="up">
+        <form id="up" method="POST" action="{{ route('register.member') }}">
+            @csrf
             <h3>Create Account</h3>
             <span>or use your email for registration</span>
-            <input type="text" name="name" id="reg-name" required placeholder="Name">
-            <input type="email" name="email" id="reg-email" required placeholder="email">
-            <input type="password" name="password" id="reg-password" required placeholder="Passowrd">
-            <input type="password" name="confirmpassword" id="reg-confirmpassword" required placeholder="Re-Password">
+            <input type="text" name="regname" id="reg-name" value="{{ old('regname') }}" required placeholder="Name">
+            @if ($errors->has('regname'))
+                <span class="text-danger text-left">{{ $errors->first('email') }}</span>
+            @endif
+            <input type="email" name="regemail" id="reg-email" value="{{ old('regemail') }}" required placeholder="email">
+            @if ($errors->has('regemail'))
+                <span class="text-danger text-left">{{ $errors->first('email') }}</span>
+            @endif
+            <input type="password" name="regpassword" id="reg-password" value="{{ old('regpassword') }}" required placeholder="Passowrd">
+            @if ($errors->has('regpassword'))
+                <span class="text-danger text-left">{{ $errors->first('email') }}</span>
+            @endif
+            <input type="password" name="regconfirmpassword" id="reg-confirmpassword" value="{{ old('regconfirmpassword') }}" required placeholder="Re-Password">
+            @if ($errors->has('regconfirmpassword'))
+                <span class="text-danger text-left">{{ $errors->first('email') }}</span>
+            @endif
             <button type="submit" class="mt-5 signup">Sign Up</button>
         </form>
     </div>
@@ -29,6 +42,18 @@
         <form id="in">
             <h3>Sign in</h3>
             <span  class="mb-3">or use your account</span>
+            @if (Session::has('errors'))
+                <div class="alert alert-danger" align="center">
+                    @foreach ($errors->all() as $error)
+                        - {{ $error }}<br/>
+                    @endforeach
+                </div>
+            @endif
+            @if (Session::has('success'))
+                <div class="alert alert-success" align="center">
+                    <p>Berhasil sign up</p>
+                </div>
+            @endif
             <div class="invalid_message"></div>
             <input type="text" name="email" id="email" required placeholder="email">
             <small class="text-danger email_error" style="font-size: 12px;"></small>
@@ -73,31 +98,63 @@
         $(document).on('click','.signin', function(e){
             e.preventDefault();
             let data = {
-                    'email': $('#email').val(),
-                    'password': $('#password').val()
-                };
-                _ajax.post("{{ route('authenticating.member') }}",data,
-                    (response) => {
-                        if (response.status == 200) {
-                            window.location.href = "{{ route('member.dashboard') }}";
-                        }
-                    },
-                    (response) => {
-                        if (response.status == 400) {
-                            _validation.action(response.responseJSON)
-                        } else if (response.status == 422) {
-                            $('.invalid_message').html(`<div class="alert alert-danger alert-dismissible" role="alert">
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        <div class="alert-message">
-                                            ${response.responseJSON.message}
-                                        </div>
-                                    </div>`)
-                        } else {
-                            _swalert(response);
-                        }
+                'email': $('#email').val(),
+                'password': $('#password').val()
+            };
+            _ajax.post("{{ route('authenticating.member') }}",data,
+                (response) => {
+                    if (response.status == 200) {
+                        window.location.href = "{{ route('member.dashboard') }}";
                     }
-                );
+                },
+                (response) => {
+                    if (response.status == 400) {
+                        _validation.action(response.responseJSON)
+                    } else if (response.status == 422) {
+                        $('.invalid_message').html(`<div class="alert alert-danger alert-dismissible" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    <div class="alert-message">
+                                        ${response.responseJSON.message}
+                                    </div>
+                                </div>`)
+                    } else {
+                        _swalert(response);
+                    }
+                }
+            );
         });
+
+        // $(document).on('click','.signup', function(e){
+        //     e.preventDefault();
+        //     let data = {
+        //         'username':$('#reg-name').val()
+        //         'email': $('#reg-email').val(),
+        //         'password': $('#reg-password').val(),
+        //         're-password':$('#reg-confirmpassword').val()
+        //     };
+        //     console.log(data);
+        //     _ajax.post("{{ route('register.member') }}",data,
+        //         (response) => {
+        //             if (response.status == 200) {
+        //                 window.location.reload();
+        //             }
+        //         },
+        //         (response) => {
+        //             if (response.status == 400) {
+        //                 _validation.action(response.responseJSON)
+        //             } else if (response.status == 422) {
+        //                 $('.invalid_message').html(`<div class="alert alert-danger alert-dismissible" role="alert">
+        //                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        //                             <div class="alert-message">
+        //                                 ${response.responseJSON.message}
+        //                             </div>
+        //                         </div>`)
+        //             } else {
+        //                 _swalert(response);
+        //             }
+        //         }
+        //     );
+        // });
     });
 </script>
 </body>
