@@ -35,15 +35,6 @@ class KlaimController extends Controller
         ]);
     }
 
-    public function pdf($id)
-    {
-        $data = KlaimAsuransi::with('polis','member','status_set')->find($id);
-        view()->share('data',['data'=>$data]);
-        $pdf = PDF::loadView('template.klaim-asuransi', ['data'=>$data]);
-        return $pdf->download('polis.pdf');
-
-    }
-
     public function data(Request $request)
     {
         if ($request->ajax()) {
