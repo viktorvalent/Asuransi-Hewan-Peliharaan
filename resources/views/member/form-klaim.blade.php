@@ -13,7 +13,7 @@
                 <form enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="polis" class="form-label">Polis <span class="text-danger">*</span></label>
-                        <input type="hidden" class="member_id" value="{{ $member->id || auth()->user()->member->id }}">
+                        <input type="hidden" class="member_id" value="{{ auth()->user()->member->id }}">
                         <select class="form-select polis" name="polis" id="polis">
                             @foreach ($pembelians as $item)
                                 <option value="{{ $item->polis->nomor_polis }}">{{ $item->produk->nama_produk }} - Nomor Polis : {{ $item->polis->nomor_polis }}</option>

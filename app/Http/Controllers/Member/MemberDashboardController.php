@@ -136,13 +136,9 @@ class MemberDashboardController extends Controller
 
     public function klaim()
     {
-        if(auth()->user()->member) {
-            $member = Member::where('user_id',auth()->user()->id)->first();
-            $klaim = KlaimAsuransi::with('status_set','polis')->where('member_id',$member->id)->latest()->get();
-            $pembelian = PembelianProduk::with('polis','produk')->where('member_id',$member->id)->where('status',3)->get();
-        } else {
-            $member = null;
-        }
+        $member = Member::with('klaims')->where('user_id',auth()->user()->id)->first();
+        $klaim = KlaimAsuransi::with('status_set','polis')->where('member_id',$member->id)->latest()->get();
+        $pembelian = PembelianProduk::with('polis','produk')->where('member_id',$member->id)->where('status',3)->get();
         return view('member.klaim',[
             'title'=>'Klaim Asuransi',
             'member'=>$member,

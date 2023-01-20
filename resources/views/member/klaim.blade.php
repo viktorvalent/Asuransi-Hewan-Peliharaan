@@ -16,7 +16,7 @@
         <div class="card shadow" style="opacity: .955 !important;">
             <div class="card-body">
                 <h5 class="text-center border-bottom pb-3 mb-3">Daftar Asuransi Anda</a></h5>
-                @if ($member!=null && count($member->klaims)<1)
+                @if (count($member->klaims)<1)
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
                         <strong>Pemberitahuan!</strong> Anda belum mempunyai klaim.
                     </div>
@@ -49,6 +49,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
+                        <tbody>
                             @php($no=1)
                             @foreach ($klaims as $item)
                             <tr class="text-center align-middle" style="height: 5rem">
@@ -77,12 +78,9 @@
                                         <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Nota</button>
                                     @endif
                                 </td>
-
                             </tr>
                             @php($no++)
                             @endforeach
-                        <tbody>
-
                         </tbody>
                     </table>
                 @endif
