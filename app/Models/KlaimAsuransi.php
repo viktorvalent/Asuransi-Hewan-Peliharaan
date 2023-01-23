@@ -28,4 +28,14 @@ class KlaimAsuransi extends Model
     {
         return $this->belongsTo(StatusSet::class, 'status_klaim');
     }
+
+    public function tolak_klaim_asuransi()
+    {
+        return $this->hasOne(TolakKlaimAsuransi::class, 'klaim_id');
+    }
+
+    public function terima_klaim_asuransi()
+    {
+        return $this->hasOne(TolakKlaimAsuransi::class, 'klaim_id');
+    }
 }

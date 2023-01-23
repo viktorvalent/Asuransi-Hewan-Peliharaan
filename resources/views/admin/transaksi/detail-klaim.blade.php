@@ -138,9 +138,32 @@
                 <button class="btn btn-danger" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @else
                     <button class="btn btn-success me-2 accept" style="width: 300px;height: 35px;"><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
-                    <button class="btn btn-danger reject" style="width: 300px;height: 35px;"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                    <button class="btn btn-danger" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_create"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @endif
-                {{-- <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Terima & Buat Polis</a> --}}
+                <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Test PDF</a>
+            </div>
+            <div class="modal fade" id="modal_create" tabindex="-1" aria-modal="true" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Tolak Klaim Asuransi</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form id="create">
+                                <div class="mb-3">
+                                    <label class="form-label">Alasan menolak</label>
+                                    <textarea id="alasan" class="form-control alasan" name="alasan" placeholder="Alasan menolak" rows="3"></textarea>
+                                    <small class="text-danger alasan_error"></small>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary ms-2 create">Kirim</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -156,15 +179,16 @@
 <script>
     $(document).ready(function () {
         new Zooming().listen('.img-zoomable');
-        $(document).on('click','.reject', function(e){
+        $(document).on('click','.create', function(e){
             e.preventDefault();
             let data = {
-                'id': $('.klaim_id').val()
+                'id': $('.klaim_id').val(),
+                'alasan':$('#alasan').val()
             }
             _input.loading.start(this);
             _ajax.post("{{ route('klaim.reject') }}",data,
                 (response) => {
-                    _input.loading.stop('.create','<i class="bi bi-x-circle"></i> Tolak & Butuh Revisi');
+                    _input.loading.stop('.create','Kirim');
                     if (response.status == 200) {
                         _swalert(response);
                         setTimeout(() => {
@@ -173,7 +197,7 @@
                     }
                 },
                 (response) => {
-                    _input.loading.stop('.create','<i class="bi bi-x-circle"></i> Tolak & Butuh Revisi');
+                    _input.loading.stop('.create','Kirim');
                     if (response.status == 400) {
                         _validation.action(response.responseJSON)
                     } else if (response.status == 404) {
@@ -188,6 +212,7 @@
                     }
                 }
             );
+
         })
 
         $(document).on('click','.accept', function(e){

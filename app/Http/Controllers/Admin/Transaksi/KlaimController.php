@@ -13,7 +13,9 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use App\Models\TolakKlaimAsuransi;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class KlaimController extends Controller
 {
@@ -33,6 +35,15 @@ class KlaimController extends Controller
             'title'=>'Detail Klaim Asuransi Member',
             'data'=>$data
         ]);
+    }
+
+    // for testing template pdf klaim
+    public function pdf($id)
+    {
+        $data = KlaimAsuransi::with('polis','member','status_set')->find($id);
+        view()->share('data',['data'=>$data]);
+        $pdf = PDF::loadView('template.klaim-asuransi', ['data'=>$data]);
+        return $pdf->download('polis.pdf');
     }
 
     public function data(Request $request)
@@ -120,24 +131,40 @@ class KlaimController extends Controller
         }
     }
 
-    public function reject_klaim(Request $request) {
-        try {
-            DB::beginTransaction();
-            $data = KlaimAsuransi::find($request->id);
-            $data->update(['status_klaim'=>2]);
-            Helper::createUserLog("Berhasil konfirmasi klaim untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
-            DB::commit();
+    public function reject_klaim(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'alasan' => 'required',
+        ],
+        [
+            '*.required' => 'Tidak boleh kosong!'
+        ]);
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>200,
-                'message'=>'Berhasil menolak klaim'
-            ]);
-        } catch (Exception $e) {
-            DB::rollBack();
-            Helper::createUserLog("Gagal menolak klaim", auth()->user()->id, $this->title);
-            return response()->json([
-                'message'=>$e->getMessage()
-            ],422);
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            try {
+                DB::beginTransaction();
+                $data = KlaimAsuransi::find($request->id);
+                TolakKlaimAsuransi::create([
+                    'klaim_id'=>$data->id,
+                    'alasan_menolak'=>$request->alasan
+                ]);
+                $data->update(['status_klaim'=>2]);
+                Helper::createUserLog("Berhasil konfirmasi klaim untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
+                DB::commit();
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Berhasil menolak klaim'
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                Helper::createUserLog("Gagal menolak klaim", auth()->user()->id, $this->title);
+                return response()->json([
+                    'message'=>$e->getMessage()
+                ],422);
+            }
         }
-
     }
 }
