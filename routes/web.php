@@ -121,8 +121,8 @@ Route::middleware(['is_admin'])->group(function(){
         Route::get('/list-data','data')->name('produk-asuransi.data');
         Route::post('/create','store')->name('master-data.produk-asuransi.create');
         Route::get('/detail/{id}','detail')->name('master-data.produk-asuransi.detail');
-        Route::get('/edit/{id}','edit');
-        Route::put('/update/{id}','update');
+        Route::get('/edit/{id}','edit')->name('produk-asuransi.edit');
+        Route::post('/update','update')->name('master-data.produk-asuransi.update');;
         Route::get('/delete/{id}','destroy');
     });
 

@@ -86,6 +86,20 @@
                     ">
                         <a class="sidebar-link" href="{{ route('master-data.produk-asuransi') }}">Produk Asuransi</a>
                     </li>
+
+                    <li class="sidebar-item
+                    {{ $title=='Produk Asuransi'?'active':'' }}
+                    {{ $title=='Tambah Produk Asuransi'?'active':'' }}
+                    ">
+                        <a class="sidebar-link" href="{{ route('master-data.produk-asuransi') }}">Provinsi</a>
+                    </li>
+
+                    <li class="sidebar-item
+                    {{ $title=='Produk Asuransi'?'active':'' }}
+                    {{ $title=='Tambah Produk Asuransi'?'active':'' }}
+                    ">
+                        <a class="sidebar-link" href="{{ route('master-data.produk-asuransi') }}">Kabupaten/Kota</a>
+                    </li>
                 </ul>
             </li>
 

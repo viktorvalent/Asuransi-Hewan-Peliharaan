@@ -1,10 +1,8 @@
 @extends('layouts.dashboard.app')
 
-@section('title', 'Tambah '.$title)
+@section('title', 'Edit '.$title)
 
 @push('css')
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
-<script type="text/javascript" src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
 @endpush
 
 @section('container')
@@ -20,14 +18,15 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nama" class="form-label">Nama Produk <span class="text-danger">*</span></label>
-                                    <input type="text" name="nama" class="form-control" id="nama_produk" placeholder="Nama">
+                                    <input type="hidden" name="id" class="produk_id" value="{{ $data->id }}">
+                                    <input type="text" name="nama" class="form-control" id="nama_produk" placeholder="Nama" value="{{ $data->nama_produk }}">
                                     <small class="text-danger nama_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nik" class="form-label">Kelas Kamar <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="kelas_kamar" placeholder="Kelas Kamar">
+                                    <input type="text" class="form-control" id="kelas_kamar" placeholder="Kelas Kamar" value="{{ $data->kelas_kamar }}">
                                     <small class="text-danger kelas_kamar_error"></small>
                                 </div>
                             </div>
@@ -36,14 +35,14 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Limit Kamar <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="limit_kamar" placeholder="Limit Kamar">
+                                    <input type="text" class="form-control rupiah_format" id="limit_kamar" placeholder="Limit Kamar" value="{{ number_format($data->limit_kamar,0,'','.') }}">
                                     <small class="text-danger limit_kamar_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Limit Obat <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="limit_obat" placeholder="Limit obat">
+                                    <input type="text" class="form-control rupiah_format" id="limit_obat" placeholder="Limit obat" value="{{ number_format($data->limit_obat,0,'','.') }}">
                                     <small class="text-danger limit_obat_error"></small>
                                 </div>
                             </div>
@@ -52,21 +51,21 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Satuan Limit Kamar <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="satuan_limit_kamar" placeholder="Satuan">
+                                    <input type="text" class="form-control rupiah_format" id="satuan_limit_kamar" placeholder="Satuan" value="{{ number_format($data->satuan_limit_kamar,0,'','.') }}">
                                     <small class="text-danger satuan_limit_kamar_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Satuan Limit Obat <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="satuan_limit_obat" placeholder="Satuan">
+                                    <input type="text" class="form-control rupiah_format" id="satuan_limit_obat" placeholder="Satuan" value="{{ number_format($data->satuan_limit_obat,0,'','.') }}">
                                     <small class="text-danger satuan_limit_obat_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Satuan Limit Dokter <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="satuan_limit_dokter" placeholder="Satuan">
+                                    <input type="text" class="form-control rupiah_format" id="satuan_limit_dokter" placeholder="Satuan" value="{{ number_format($data->satuan_limit_dokter,0,'','.') }}">
                                     <small class="text-danger satuan_limit_dokter_error"></small>
                                 </div>
                             </div>
@@ -77,14 +76,14 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Nilai Pertanggungan Minimal <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="nilai_pertanggungan_min" name="nilai_pertanggungan_min" placeholder="Rp.">
+                                    <input type="text" class="form-control rupiah_format" id="nilai_pertanggungan_min" name="nilai_pertanggungan_min" placeholder="Rp." value="{{ number_format($data->produk_benefit->nilai_pertanggungan_min,0,'','.') }}">
                                     <small class="text-danger nilai_pertanggungan_min_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Nilai Pertanggungan Maksimal <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="nilai_pertanggungan_max" name="nilai_pertanggungan_max" placeholder="Rp.">
+                                    <input type="text" class="form-control rupiah_format" id="nilai_pertanggungan_max" name="nilai_pertanggungan_max" placeholder="Rp." value="{{ number_format($data->produk_benefit->nilai_pertanggungan_max,0,'','.') }}">
                                     <small class="text-danger nilai_pertanggungan_max_error"></small>
                                 </div>
                             </div>
@@ -93,14 +92,14 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Santunan Mati Kecelakaan <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="santunan_mati_kecelakaan" name="santunan_mati_kecelakaan" placeholder="Rp.">
+                                    <input type="text" class="form-control rupiah_format" id="santunan_mati_kecelakaan" name="santunan_mati_kecelakaan" placeholder="Rp." value="{{ number_format($data->produk_benefit->santunan_mati_kecelakaan_max,0,'','.') }}">
                                     <small class="text-danger santunan_mati_kecelakaan_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Santunan untuk Kecurian <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" id="santunan_kecurian" name="santunan_kecurian" placeholder="%">
+                                    <input type="text" class="form-control" id="santunan_kecurian" name="santunan_kecurian" placeholder="%" value="{{ $data->produk_benefit->santunan_pencurian_max }}">
                                     <small class="text-danger santunan_kecurian_error"></small>
                                 </div>
                             </div>
@@ -109,21 +108,21 @@
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Tanggung jawab hukum pihak ketiga <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="tanggung_jawab_hukum" name="tanggung_jawab_hukum" placeholder="Rp.">
+                                    <input type="text" class="form-control rupiah_format" id="tanggung_jawab_hukum" name="tanggung_jawab_hukum" placeholder="Rp." value="{{ number_format($data->produk_benefit->hukum_pihak_ketiga_max,0,'','.') }}">
                                     <small class="text-danger tanggung_jawab_hukum_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Maksimal Santunan Kremasi <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="santunan_kremasi" placeholder="Rp.">
+                                    <input type="text" class="form-control rupiah_format" id="santunan_kremasi" placeholder="Rp." value="{{ number_format($data->produk_benefit->santunan_kremasi_max,0,'','.') }}">
                                     <small class="text-danger santunan_kremasi_error"></small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="nohp" class="form-label">Maksimal Santunan Rawat Inap <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control rupiah_format" id="santunan_rawat_inap" placeholder="Rp.">
+                                    <input type="text" class="form-control rupiah_format" id="santunan_rawat_inap" placeholder="Rp." value="{{ number_format($data->produk_benefit->santunan_rawat_inap_max,0,'','.') }}">
                                     <small class="text-danger santunan_rawat_inap_error"></small>
                                 </div>
                             </div>
@@ -154,6 +153,7 @@
         $(document).on('click','.create', function(e) {
             e.preventDefault();
             let data = {
+                'id':$('.produk_id').val(),
                 'nama_produk':$('#nama_produk').val(),
                 'kelas_kamar':$('#kelas_kamar').val(),
                 'limit_kamar':parseFloat((($('#limit_kamar').val()).split('.').join(''))),
@@ -170,7 +170,7 @@
                 'santunan_rawat_inap':parseFloat((($('#santunan_rawat_inap').val()).split('.').join(''))),
             }
             _input.loading.start(this);
-            _ajax.post("{{ route('master-data.produk-asuransi.create') }}",data,
+            _ajax.post("{{ route('master-data.produk-asuransi.update') }}",data,
                 (response)=>{
                     _input.loading.stop('.create','Kirim');
                     if (response.status == 200) {

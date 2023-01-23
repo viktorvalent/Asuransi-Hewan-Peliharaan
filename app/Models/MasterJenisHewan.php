@@ -16,6 +16,6 @@ class MasterJenisHewan extends Model
 
     public function ras_hewan()
     {
-        return $this->hasMany(MasterRasHewan::class, 'ras_hewan_id');
+        return $this->hasMany(MasterRasHewan::class, 'jenis_hewan_id');
     }
 }
