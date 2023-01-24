@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MasterJenisHewan extends Model
+class MasterProvinsi extends Model
 {
-    protected $table = 'master_jenis_hewan';
+    protected $table = 'master_provinsi';
     protected $fillable = ['nama','deskripsi'];
     public $timestamps = true;
     protected $primaryKey = 'id';
 
-    public function ras_hewan()
+    public function kab_kota()
     {
-        return $this->hasMany(MasterRasHewan::class, 'jenis_hewan_id');
+        return $this->hasMany(MasterKabKota::class, 'provinsi_id');
     }
 }

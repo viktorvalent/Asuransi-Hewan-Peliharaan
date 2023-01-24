@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ProdukAsuransi extends Model
 {
-    use HasFactory;
-
     protected $table = 'produk_asuransi';
     protected $fillable = ['nama_produk','tipe_produk','kelas_kamar','limit_kamar','limit_obat','satuan_limit_kamar','satuan_limit_obat','satuan_limit_dokter'];
     public $timestamps = true;

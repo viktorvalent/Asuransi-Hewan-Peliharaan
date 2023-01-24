@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TerimaKlaimAsuransi extends Model
 {
-    use HasFactory;
-
     protected $table = 'terima_klaim_asuransi';
     protected $fillable = ['klaim_id','bukti_bayar_klaim'];
     public $timestamps = true;

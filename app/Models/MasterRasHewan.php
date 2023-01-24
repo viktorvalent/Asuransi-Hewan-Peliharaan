@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class MasterRasHewan extends Model
 {
-    use HasFactory;
-
     protected $table = 'master_ras_hewan';
     protected $fillable = ['nama_ras','deskripsi','jenis_hewan_id','harga_hewan','persen_per_umur'];
     public $timestamps = true;
