@@ -127,14 +127,17 @@
         data.append('logo',files[0]);
         data.append('nama',$('#nama').val());
         data.append('deskripsi',$('#deskripsi').val());
+        _input.loading.start(this);
         _ajax.postWithFile("{{ route('master-data.bank.create') }}",data,
             (response) => {
+                _input.loading.stop('.create','Kirim');
                 if (response.status == 200) {
                     _swalert(response);
                     _table.reload();
                 }
             },
             (response) => {
+                _input.loading.stop('.create','Kirim');
                 if (response.status == 400) {
                     _validation.action(response.responseJSON)
                 } else if (response.status == 404) {
@@ -190,14 +193,17 @@
         data.append('nama',$('.edit_nama').val());
         data.append('deskripsi',$('.edit_deskripsi').val());
         console.log(data);
+        _input.loading.start(this);
         _ajax.postWithFile("{{ route('master-data.bank.update') }}",data,
             (response) => {
+                _input.loading.stop('.update','Kirim');
                 if (response.status == 200) {
                     _swalert(response);
                     _table.reload();
                 }
             },
             (response) => {
+                _input.loading.stop('.update','Kirim');
                 if (response.status == 400) {
                     _validation.action(response.responseJSON)
                 } else if (response.status == 404) {

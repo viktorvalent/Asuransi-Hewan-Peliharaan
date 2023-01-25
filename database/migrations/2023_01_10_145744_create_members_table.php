@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('bank_id')->constrained('master_bank');
+            $table->foreignId('kab_kota_id')->constrained('master_kab_kota');
             $table->char('nama_lengkap');
             $table->char('no_hp', 15);
             $table->char('no_ktp', 20);

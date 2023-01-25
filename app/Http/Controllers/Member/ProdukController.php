@@ -116,6 +116,19 @@ class ProdukController extends Controller
         ]);
     }
 
+    public function form_bayar_cart($id)
+    {
+        $notpayed = PembelianProduk::with('produk','ras_hewan.jenis_hewan')
+                    ->select('id','harga_dasar_premi','biaya_pendaftaran','produk_id','ras_hewan_id')
+                    ->find($id);
+        $bank = MasterBank::with('nomor_rekening_bank')->get();
+        return view('member.form-pembayaran',[
+            'title'=>'Form Pembayaran',
+            'notpayed'=>$notpayed,
+            'banks'=>$bank
+        ]);
+    }
+
     public function konfirmasi_bayar(Request $request)
     {
         $validator = Validator::make($request->all(), [

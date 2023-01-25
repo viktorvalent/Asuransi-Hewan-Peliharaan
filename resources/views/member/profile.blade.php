@@ -33,6 +33,21 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
+                                    <div class="mb-3">
+                                        <select class="form-select provinsi" aria-label="Default select example" name="provinsi" id="provinsi">
+                                            <option value="" disabled selected>Pilih Provinsi</option>
+                                            @foreach ($provinsis as $provinsi)
+                                                <option value="{{ $provinsi->id }}">{{ $provinsi->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                        <small class="text-danger provinsi_error"></small>
+                                    </div>
+                                    <div class="mb-3 select_kabkota">
+                                        <select class="form-select kab_kota" aria-label="Default select example" name="kab_kota" id="kab_kota" disabled="disabled">
+                                            <option value="" disabled selected>Pilih Kabupaten/Kota</option>
+                                        </select>
+                                        <small class="text-danger provinsi_id_error"></small>
+                                    </div>
                                     <textarea name="alamat" class="form-control" id="alamat" rows="3" placeholder="Alamat"></textarea>
                                     <small class="text-danger alamat_error"></small>
                                 </div>
@@ -130,6 +145,8 @@
                 nama: $('#nama').val(),
                 nik: $('#nik').val(),
                 nohp: $('#nohp').val(),
+                kab_kota:$('#kab_kota option:selected').val(),
+                provinsi:$('#provinsi option:selected').val(),
                 alamat: $('#alamat').val(),
                 bank: $('#bank').val(),
                 rek: $('#rek').val(),
@@ -162,6 +179,21 @@
                 }
             );
         });
+
+        $(document).on('change','#provinsi', function(e){
+            e.preventDefault();
+            let id = $('#provinsi option:selected').val();
+            _ajax.get(`{{ url('/member/get-kab-kota') }}/${id}`,
+                (response) => {
+                    if (response.status == 200) {
+                        let option = [];(response.data).forEach(e => {option.push(`<option value="${e.id}">${e.nama}</option>`)});$('.select_kabkota').html(`<select class="form-select kab_kota" aria-label="Default select example" name="kab_kota" id="kab_kota"><option value="" disabled selected>Pilih Kabupaten/Kota</option>${option.join('')}</select><small class="text-danger kab_kota_error"></small>`);
+                    }
+                },(response) => {if (response.status == 404) {
+                        _swalert(response);
+                    }
+                }
+            )
+        })
     });
 </script>
 @endpush

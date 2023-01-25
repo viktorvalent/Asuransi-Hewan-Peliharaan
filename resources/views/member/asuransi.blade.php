@@ -38,7 +38,7 @@
                         </thead>
                             @php($no=1)
                             @foreach ($pembelians as $item)
-                            <tr class="text-center align-middle" style="height: 5rem">
+                            <tr class="text-center align-middle" style="height: 3.75rem">
                                 <td class="fw-bold">{{ $no }}</td>
                                 <td>{{ $item->produk->nama_produk }}</td>
                                 <td>{{ $item->nama_hewan }} ({{ $item->ras_hewan->jenis_hewan->nama }} - {{ $item->ras_hewan->nama_ras }})</td>

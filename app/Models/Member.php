@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     protected $table = 'member';
-    protected $fillable = ['user_id','bank_id','nama_lengkap','no_ktp','alamat','no_hp','no_rekening'];
+    protected $fillable = ['user_id','bank_id','nama_lengkap','no_ktp','alamat','no_hp','no_rekening','kab_kota_id'];
     public $timestamps = true;
     protected $primaryKey = 'id';
 
@@ -19,6 +19,11 @@ class Member extends Model
     public function master_bank()
     {
         return $this->belongsTo(MasterBankMember::class, 'bank_id');
+    }
+
+    public function kab_kota()
+    {
+        return $this->belongsTo(MasterKabKota::class, 'kab_kota_id');
     }
 
     public function pembelian_produk()

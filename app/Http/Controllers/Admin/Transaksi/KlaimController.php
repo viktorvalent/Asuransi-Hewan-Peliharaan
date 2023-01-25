@@ -13,6 +13,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use App\Models\TerimaKlaimAsuransi;
 use App\Models\TolakKlaimAsuransi;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -93,41 +94,60 @@ class KlaimController extends Controller
 
     public function confirm_klaim(Request $request)
     {
-        if (!empty($request->id)) {
-            try {
-                DB::beginTransaction();
-                $data = KlaimAsuransi::with('polis','member','status_set')->find($request->id);
-                view()->share('data',['data'=>$data]);
-                $pdf = PDF::loadView('template.klaim-asuransi', ['data'=>$data]);
-                $date = Str::remove('-', strval(Carbon::now()->format('Y-m-d')));
-                $pdf_file = $pdf->download()->getOriginalContent();
-                $member = Str::slug($data->member->nama_lengkap,'-');
-                $path = strval('public/klaim-asuransi/'.$member.'/MYPETT_CLAIM_'.$date.'_'.strval(md5($data->id)).'.pdf');
-                Storage::put($path, $pdf_file);
-                if (Storage::exists($path)) {
-                    KlaimAsuransi::where('id',$request->id)->update([
-                        'status_klaim'=>3,
-                        'path'=>$path
-                    ]);
-                }
-                Helper::createUserLog("Berhasil konfirmasi klaim untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
-                DB::commit();
-                return response()->json([
-                    'status'=>200,
-                    'message'=>'Berhasil membuat nota klaim'
-                ]);
-            } catch (Exception $e) {
-                DB::rollBack();
-                Helper::createUserLog("Gagal konfirmasi klaim", auth()->user()->id, $this->title);
-                return response()->json([
-                    'message'=>$e->getMessage()
-                ],422);
-            }
-        } else {
+        $validator = Validator::make($request->all(),[
+            'bukti_bayar_klaim' => 'required|mimes:png,jpg,jpeg|max:2048',
+        ],
+        [
+            '*.required' => 'Tidak boleh kosong!'
+        ]);
+        if ($validator->fails()) {
             return response()->json([
-                'status'=>404,
-                'message'=>'Data pembelian expired!'
-            ],404);
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            if (!empty($request->id)) {
+                try {
+                    DB::beginTransaction();
+                    $data = KlaimAsuransi::with('polis','member','status_set')->find($request->id);
+                    if ($request->hasFile('bukti_bayar_klaim')) {
+                        $bukti = $request->file('bukti_bayar_klaim')->store('public/konfirmasi-klaim/member_'.Str::slug($data->member->nama_lengkap));
+                        TerimaKlaimAsuransi::create([
+                            'klaim_id'=>$request->id,
+                            'bukti_bayar_klaim'=>$bukti
+                        ]);
+                    }
+                    view()->share('data',['data'=>$data]);
+                    $pdf = PDF::loadView('template.klaim-asuransi', ['data'=>$data]);
+                    $date = Str::remove('-', strval(Carbon::now()->format('Y-m-d')));
+                    $pdf_file = $pdf->download()->getOriginalContent();
+                    $member = Str::slug($data->member->nama_lengkap,'-');
+                    $path = strval('public/klaim-asuransi/'.$member.'/MYPETT_CLAIM_'.$date.'_'.strval(md5($data->id)).'.pdf');
+                    Storage::put($path, $pdf_file);
+                    if (Storage::exists($path)) {
+                        KlaimAsuransi::where('id',$request->id)->update([
+                            'status_klaim'=>3,
+                            'path'=>$path
+                        ]);
+                    }
+                    Helper::createUserLog("Berhasil konfirmasi klaim untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
+                    DB::commit();
+                    return response()->json([
+                        'status'=>200,
+                        'message'=>'Berhasil membuat nota klaim'
+                    ]);
+                } catch (Exception $e) {
+                    DB::rollBack();
+                    Helper::createUserLog("Gagal konfirmasi klaim", auth()->user()->id, $this->title);
+                    return response()->json([
+                        'message'=>$e->getMessage()
+                    ],422);
+                }
+            } else {
+                return response()->json([
+                    'status'=>404,
+                    'message'=>'Data pembelian expired!'
+                ],404);
+            }
         }
     }
 

@@ -22,7 +22,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="nominal_rs" class="form-label">Nominal Bayar Rumah Sakit <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" id="nominal_rs" placeholder="Rp" value="{{ $data->nominal_bayar_rs }}">
+                        <input type="text" class="form-control rupiah_format" id="nominal_rs" placeholder="Rp" value="{{ number_format($data->nominal_bayar_rs,0,'','.') }}">
                         <small class="text-danger nominal_rs_error"></small>
                     </div>
                     <div class="mb-3">
@@ -33,7 +33,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="nominal_obat" class="form-label">Nominal Bayar Obat <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" id="nominal_obat" placeholder="Rp" value="{{ $data->nominal_bayar_obat }}">
+                        <input type="text" class="form-control rupiah_format" id="nominal_obat" placeholder="Rp" value="{{ number_format($data->nominal_bayar_obat,0,'','.') }}">
                         <small class="text-danger nominal_obat_error"></small>
                     </div>
                     <div class="mb-3">
@@ -44,7 +44,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="nominal_dokter" class="form-label">Nominal Bayar Diagnosa Dokter <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" id="nominal_dokter" placeholder="Rp" value="{{ $data->nominal_bayar_dokter }}">
+                        <input type="text" class="form-control rupiah_format" id="nominal_dokter" placeholder="Rp" value="{{ number_format($data->nominal_bayar_dokter,0,'','.') }}">
                         <small class="text-danger nominal_dokter_error"></small>
                     </div>
                     <div class="mb-3">
@@ -77,6 +77,9 @@
 
 <script>
     $(document).ready(function () {
+        $('.rupiah_format').on('keyup',function (e) {
+            this.value = _input.rupiah(this.value);
+        });
 
         $(document).on('click','.create', function (e) {
             e.preventDefault();
@@ -89,9 +92,9 @@
             data.append('diagnosa',diagnosa[0]);
             data.append('klaim_id',$('.klaim_id').val());
             data.append('polis',$('#polis option:selected').val());
-            data.append('nominal_rs',$('#nominal_rs').val());
-            data.append('nominal_obat',$('#nominal_obat').val());
-            data.append('nominal_dokter',$('#nominal_dokter').val());
+            data.append('nominal_rs',parseFloat($('#nominal_rs').val().split('.').join('')));
+            data.append('nominal_obat',parseFloat($('#nominal_obat').val().split('.').join('')));
+            data.append('nominal_dokter',parseFloat($('#nominal_dokter').val().split('.').join('')));
             data.append('ket',$('#ket').val());
             _input.loading.start(this);
 

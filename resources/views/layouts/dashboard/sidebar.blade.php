@@ -42,6 +42,9 @@
 
             <li class="sidebar-item
                 {{ $title=='Master Bank'?'active':'' }}
+                {{ $title=='Petshop Terdekat'?'active':'' }}
+                {{ $title=='Master Provinsi'?'active':'' }}
+                {{ $title=='Master Kabupaten/Kota'?'active':'' }}
                 {{ $title=='Master Jenis Hewan'?'active':'' }}
                 {{ $title=='Master Ras Hewan'?'active':'' }}
                 {{ $title=='Produk Asuransi'?'active':'' }}
@@ -52,6 +55,9 @@
                 </a>
                 <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse
                     {{ $title=='Master Bank'?'show':'' }}
+                    {{ $title=='Petshop Terdekat'?'show':'' }}
+                    {{ $title=='Master Kabupaten/Kota'?'show':'' }}
+                    {{ $title=='Master Provinsi'?'show':'' }}
                     {{ $title=='Master Jenis Hewan'?'show':'' }}
                     {{ $title=='Master Ras Hewan'?'show':'' }}
                     {{ $title=='Produk Asuransi'?'show':'' }}
@@ -88,17 +94,21 @@
                     </li>
 
                     <li class="sidebar-item
-                    {{ $title=='Produk Asuransi'?'active':'' }}
-                    {{ $title=='Tambah Produk Asuransi'?'active':'' }}
+                    {{ $title=='Master Provinsi'?'active':'' }}
                     ">
-                        <a class="sidebar-link" href="{{ route('master-data.produk-asuransi') }}">Provinsi</a>
+                        <a class="sidebar-link" href="{{ route('master-data.provinsi') }}">Provinsi</a>
                     </li>
 
                     <li class="sidebar-item
-                    {{ $title=='Produk Asuransi'?'active':'' }}
-                    {{ $title=='Tambah Produk Asuransi'?'active':'' }}
+                    {{ $title=='Master Kabupaten/Kota'?'active':'' }}
                     ">
-                        <a class="sidebar-link" href="{{ route('master-data.produk-asuransi') }}">Kabupaten/Kota</a>
+                        <a class="sidebar-link" href="{{ route('master-data.kab-kota') }}">Kabupaten/Kota</a>
+                    </li>
+
+                    <li class="sidebar-item
+                    {{ $title=='Petshop Terdekat'?'active':'' }}
+                    ">
+                        <a class="sidebar-link" href="{{ route('master-data.petshop-terdekat') }}">Petshop Terdekat</a>
                     </li>
                 </ul>
             </li>

@@ -145,4 +145,21 @@ class KlaimAsuransiController extends Controller
             }
         }
     }
+
+    public function accept_detail($id)
+    {
+        $data = KlaimAsuransi::with('terima_klaim_asuransi','tolak_klaim_asuransi')->select('id')->find($id);
+        $cek = false;
+        if ($data->terima_klaim_asuransi()->exists()) {
+            $cek = true;
+            $data->terima_klaim_asuransi->bukti_bayar_klaim = asset(Storage::url($data->terima_klaim_asuransi->bukti_bayar_klaim));
+        }
+        if ($data) {
+            return response()->json([
+                'status'=>200,
+                'data'=>$data,
+                'cek'=>$cek
+            ]);
+        }
+    }
 }

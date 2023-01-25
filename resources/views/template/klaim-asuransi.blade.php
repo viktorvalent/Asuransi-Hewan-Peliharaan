@@ -6,7 +6,8 @@
         font-size: 15px;
     }
     .letter {
-        padding: 0.5cm 1cm;
+        padding: 0cm 1cm;
+        padding-top: 2.25cm;
     }
     td {
         font-size: 14px;
@@ -25,6 +26,9 @@
         margin: 0;
         padding: 0;
     }
+    div.logo img {
+        margin-top: 2cm;
+    }
     img.pattern-top {
         pointer-events: none;
         position: absolute;
@@ -32,7 +36,7 @@
         left: 0;
         margin: -1.25cm;
         padding: -1.25cm;
-        margin-top: -1.5cm;
+        margin-top: -1.25cm;
         width: 100vw;
         z-index: -9;
     }
@@ -59,7 +63,7 @@
     <img class="pattern-top" src="{{ asset('img/pattern/up.png') }}" />
 </div>
 <div class="letter">
-    <div class="position-absolute left-0 top-0"><img src="{{ asset('img/polis/logo.png') }}" style="width: 85px;" alt=""></div>
+    <div class="position-absolute left-0 top-0 logo"><img src="{{ asset('img/polis/logo.png') }}" style="width: 85px;" alt=""></div>
     <div class="text-center title fw-bold text-underline">Surat Pengajuan Klaim Asuransi Hewan MYPETT</div>
     <div class="mt-5">Kepada YTH,</div>
     <div class="">{{ $data->member->nama_lengkap }}</div>

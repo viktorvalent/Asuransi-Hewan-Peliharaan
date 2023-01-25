@@ -17,6 +17,9 @@ use App\Http\Controllers\Admin\MasterData\MasterBankController;
 use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
+use App\Http\Controllers\Admin\MasterData\MasterKabKotaController;
+use App\Http\Controllers\Admin\MasterData\MasterProvinsiController;
+use App\Http\Controllers\Admin\MasterData\PetshopController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
 use App\Http\Controllers\Member\KlaimAsuransiController;
 
@@ -75,6 +78,33 @@ Route::middleware(['is_admin'])->group(function(){
         Route::get('/','index')->name('master-data.ras-hewan');
         Route::get('/list-data','data')->name('ras-hewan.data');
         Route::post('/create','store')->name('master-data.ras-hewan.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(MasterProvinsiController::class)->prefix('/auth/dashboard/master-provinsi')->group(function(){
+        Route::get('/','index')->name('master-data.provinsi');
+        Route::get('/list-data','data')->name('provinsi.data');
+        Route::post('/create','store')->name('master-data.provinsi.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(MasterKabKotaController::class)->prefix('/auth/dashboard/master-kab-kota')->group(function(){
+        Route::get('/','index')->name('master-data.kab-kota');
+        Route::get('/list-data','data')->name('kab-kota.data');
+        Route::post('/create','store')->name('master-data.kab-kota.create');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(PetshopController::class)->prefix('/auth/dashboard/petshop-terdekat')->group(function(){
+        Route::get('/','index')->name('master-data.petshop-terdekat');
+        Route::get('/list-data','data')->name('petshop-terdekat.data');
+        Route::post('/create','store')->name('master-data.petshop-terdekat.create');
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
@@ -155,6 +185,7 @@ Route::middleware(['is_member'])->group(function(){
         Route::get('/profile', 'index')->name('member.dashboard');
         Route::get('/profile/edit/{id}', 'edit')->name('member.edit');
         Route::post('/profile/update/', 'update')->name('member.update');
+        Route::get('/get-kab-kota/{id}', 'get_kab_kota');
         Route::get('/my-insurance', 'my_insurance')->name('member.my-insurance');
         Route::post('/add-member-data', 'store_member')->name('member.create');
         Route::get('/download-polis/{id}', 'get_polis')->name('member.download.polis');
@@ -162,6 +193,8 @@ Route::middleware(['is_member'])->group(function(){
         Route::get('/claim', 'klaim')->name('member.claim');
         Route::get('/claim/form', 'form_klaim')->name('member.claim.form');
         Route::get('/claim/revisi/{id}', 'revisi_klaim')->name('member.claim.revisi');
+        Route::get('/cart', 'cart')->name('member.cart');
+        Route::get('/nearest-petshop', 'nearest_petshop')->name('member.nearest-petshop');
     });
 
     Route::controller(ProdukController::class)->prefix('/pembelian')->group(function(){
@@ -169,11 +202,13 @@ Route::middleware(['is_member'])->group(function(){
         Route::get('/getRas/{id}','get_ras');
         Route::post('/beli','pembelian')->name('pembelian.create');
         Route::get('/bayar','form_bayar')->name('pembelian.bayar');
+        Route::get('/bayar/{id}','form_bayar_cart')->name('pembelian.bayar.cart');
         Route::post('/bayar/konfirmasi','konfirmasi_bayar')->name('pembelian.bayar.konfirmasi');
     });
 
     Route::controller(KlaimAsuransiController::class)->prefix('/claim')->group(function(){
         Route::post('/make-claim','klaim')->name('claim.make');
         Route::post('/make-revisi','revisi')->name('claim.revisi');
+        Route::get('/cek-detail/{id}','accept_detail');
     });
 });

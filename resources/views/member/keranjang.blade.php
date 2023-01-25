@@ -16,8 +16,8 @@
     <div class="col-md-10 col-sm-12">
         <div class="card shadow" style="opacity: .955 !important;">
             <div class="card-body">
-                <h5 class="text-center border-bottom pb-3 mb-3">Daftar Asuransi Anda</a></h5>
-                @if ($member!=null && count($member->pembelian_produk)<1)
+                <h5 class="text-center border-bottom pb-3 mb-3">Keranjang Pembelian Asuransi</a></h5>
+                @if ($member!=null && !$member->pembelian_produk()->exists())
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
                         <strong>Pemberitahuan!</strong> Anda belum melakukan pembelian asuransi.
                     </div>
@@ -31,46 +31,28 @@
                                 <th>No.</th>
                                 <th>Paket Asuransi</th>
                                 <th>Nama Hewan (Ras)</th>
-                                <th>Premi</th>
+                                <th>Total Pembayaran</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
+                        <tbody>
                             @php($no=1)
                             @foreach ($pembelians as $item)
                             <tr class="text-center align-middle" style="height: 5rem">
                                 <td class="fw-bold">{{ $no }}</td>
                                 <td>{{ $item->produk->nama_produk }}</td>
                                 <td>{{ $item->nama_hewan }} ({{ $item->ras_hewan->jenis_hewan->nama }} - {{ $item->ras_hewan->nama_ras }})</td>
-                                <td>Rp{{ number_format($item->harga_dasar_premi,0,'','.') }}</td>
+                                <td class="text-danger fw-bold">Rp {{ number_format(($item->harga_dasar_premi+$item->biaya_pendaftaran),0,'','.') }}</td>
                                 <td>
-                                    @if ($item->status_pembelian->id==1)
-                                        <span class="badge text-bg-light shadow-sm">{{ $item->status_pembelian->status }}</span>
-                                    @elseif ($item->status_pembelian->id==2)
-                                        <span class="badge text-bg-danger shadow-sm">{{ $item->status_pembelian->status }}</span>
-                                    @elseif ($item->status_pembelian->id==3)
-                                        <span class="badge text-bg-success shadow-sm">{{ $item->status_pembelian->status }}</span>
-                                    @else
-                                        <span class="badge text-bg-warning shadow-sm">{{ $item->status_pembelian->status }}</span>
-                                    @endif
+                                    <span class="badge text-bg-secondary shadow-sm">UNPAID</span>
                                 </td>
                                 <td>
-                                    @if ($item->status_pembelian->id==1)
-                                        <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</button>
-                                    @elseif ($item->status_pembelian->id==2)
-                                        <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</button>
-                                    @elseif ($item->status_pembelian->id==3)
-                                        <a href="{{ URL::route('member.download.polis', ['id'=>$item->id]) }}" class="btn btn-sm btn-success" style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</a>
-                                    @else
-                                        <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Polis</button>
-                                    @endif
+                                    <a href="{{ URL::route('pembelian.bayar.cart', ['id'=>$item->id]) }}" class="btn btn-sm btn-success" style="font-size: .825rem;"><i class="bi bi-cash"></i>&nbsp;&nbsp;BAYAR</a>
                                 </td>
-
                             </tr>
                             @php($no++)
                             @endforeach
-                        <tbody>
-
                         </tbody>
                     </table>
                 @endif

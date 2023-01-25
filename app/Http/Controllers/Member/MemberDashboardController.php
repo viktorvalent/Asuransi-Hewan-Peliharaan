@@ -12,6 +12,9 @@ use App\Models\MasterBankMember;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\KlaimAsuransi;
+use App\Models\MasterKabKota;
+use App\Models\MasterProvinsi;
+use App\Models\PetshopTerdekat;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,7 +24,8 @@ class MemberDashboardController extends Controller
 
     public function index()
     {
-        $bank = MasterBankMember::all();
+        $bank = MasterBankMember::select('id','nama')->get();
+        $provinsi = MasterProvinsi::select('id','nama')->get();
         if(auth()->user()->member) {
             $member = Member::where('user_id',auth()->user()->id)->first();
         } else {
@@ -30,18 +34,39 @@ class MemberDashboardController extends Controller
         return view('member.profile', [
             'title'=>'Member Profile',
             'banks'=>$bank,
-            'member'=>$member
+            'member'=>$member,
+            'provinsis'=>$provinsi
         ]);
+    }
+
+    public function get_kab_kota($id)
+    {
+        $data = MasterKabKota::select('id','nama')->where('provinsi_id',$id)->get();
+        if ($data) {
+            return response()->json([
+                'status'=>200,
+                'data'=>$data
+            ]);
+        } else {
+            return response()->json([
+                'status'=>404,
+                'message'=>'Data tidak ditemukan!'
+            ]);
+        }
     }
 
     public function edit($id)
     {
         $bank = MasterBankMember::all();
-        $member = Member::find($id);
+        $member = Member::with('kab_kota')->find($id);
+        $provinsi = MasterProvinsi::select('id','nama')->get();
+        $kabkota = MasterKabKota::select('id','nama')->where('provinsi_id','=',$member->kab_kota->provinsi_id)->get();
         return view('member.edit-profile', [
             'title'=>'Edit Member Profile',
             'banks'=>$bank,
-            'data'=>$member
+            'data'=>$member,
+            'provinsis'=>$provinsi,
+            'kabkotas'=>$kabkota
         ]);
     }
 
@@ -54,6 +79,8 @@ class MemberDashboardController extends Controller
             'alamat' => 'required',
             'bank' => 'required',
             'rek' => 'required',
+            'provinsi' => 'required',
+            'kab_kota' => 'required',
         ],
         [
             '*.required' => 'Tidak boleh kosong!'
@@ -74,6 +101,7 @@ class MemberDashboardController extends Controller
                         'alamat' => $request->alamat,
                         'bank_id' => $request->bank,
                         'no_rekening' => $request->rek,
+                        'kab_kota_id' => $request->kab_kota,
                     ]);
                     Helper::createUserLog("Berhasil update data member ".$request->nama, auth()->user()->id, $this->title);
                     DB::commit();
@@ -96,6 +124,7 @@ class MemberDashboardController extends Controller
                             'alamat' => $request->alamat,
                             'bank_id' => $request->bank,
                             'no_rekening' => $request->rek,
+                            'kab_kota_id' => $request->kab_kota,
                         ]);
                         Helper::createUserLog("Berhasil update data member ".$request->nama, auth()->user()->id, $this->title);
                         DB::commit();
@@ -180,6 +209,8 @@ class MemberDashboardController extends Controller
             'alamat' => 'required',
             'bank' => 'required',
             'rek' => 'required',
+            'provinsi' => 'required',
+            'kab_kota' => 'required',
         ],
         [
             '*.required' => 'Tidak boleh kosong!'
@@ -199,6 +230,7 @@ class MemberDashboardController extends Controller
                     'alamat' => $request->alamat,
                     'bank_id' => $request->bank,
                     'no_rekening' => $request->rek,
+                    'kab_kota_id' => $request->kab_kota
                 ]);
                 Helper::createUserLog("Berhasil menambahkan data member ".$request->nama, auth()->user()->id, $this->title);
                 DB::commit();
@@ -249,5 +281,40 @@ class MemberDashboardController extends Controller
                 'message'=>'Polis tidak tersedia/rusak'
             ],422);
         }
+    }
+
+    public function cart()
+    {
+        if(auth()->user()->member) {
+            $member = Member::where('user_id',auth()->user()->id)->first();
+            $pembelian = PembelianProduk::where(function($q)use($member){
+                $q->where('member_id',$member->id)
+                    ->where('pay_status',false);
+            })->latest()->get();
+        } else {
+            $member = null;
+        }
+
+        return view('member.keranjang', [
+            'title'=>'Cart',
+            'member'=>$member,
+            'pembelians'=>$pembelian
+        ]);
+    }
+
+    public function nearest_petshop()
+    {
+        if(auth()->user()->member) {
+            $member = Member::where('user_id',auth()->user()->id)->first();
+            $petshop = PetshopTerdekat::where('kab_kota_id',$member->kab_kota_id)->latest()->get();
+        } else {
+            $member = null;
+        }
+
+        return view('member.petshop-terdekat', [
+            'title'=>'Nearest Petshop',
+            'member'=>$member,
+            'petshops'=>$petshop
+        ]);
     }
 }

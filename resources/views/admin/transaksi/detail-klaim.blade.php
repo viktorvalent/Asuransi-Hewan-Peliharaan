@@ -131,18 +131,19 @@
         <div class="card-body">
             <div class="d-flex justify-content-center">
                 @if ($data->status_klaim==3)
-                <button class="btn btn-success me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
-                <button class="btn btn-danger" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
+                <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @elseif ($data->status_klaim==2)
-                <button class="btn btn-success me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
-                <button class="btn btn-danger" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
+                <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @else
-                    <button class="btn btn-success me-2 accept" style="width: 300px;height: 35px;"><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
-                    <button class="btn btn-danger" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_create"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                    <button class="btn btn-success me-2" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_accept"><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
+                    <button class="btn btn-danger" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_reject"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @endif
-                <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Test PDF</a>
+                {{-- <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Test PDF</a> --}}
             </div>
-            <div class="modal fade" id="modal_create" tabindex="-1" aria-modal="true" role="dialog">
+
+            <div class="modal fade" id="modal_reject" tabindex="-1" aria-modal="true" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -152,19 +153,63 @@
                         <div class="modal-body mx-3">
                             <form id="create">
                                 <div class="mb-3">
-                                    <label class="form-label">Alasan menolak</label>
                                     <textarea id="alasan" class="form-control alasan" name="alasan" placeholder="Alasan menolak" rows="3"></textarea>
                                     <small class="text-danger alasan_error"></small>
                                 </div>
                                 <div class="d-flex justify-content-center mt-3">
                                     <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-primary ms-2 create">Kirim</button>
+                                    <button type="submit" class="btn btn-primary ms-2 btn-default reject">Kirim</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="modal fade" id="modal_accept" tabindex="-1" aria-modal="true" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Terima Klaim Asuransi</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="row mb-2">
+                                        <div class="col-md-6 fw-bold">
+                                            Member Bank Tujuan
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ $data->member->master_bank->nama }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 fw-bold">
+                                            Nomor Rekening
+                                        </div>
+                                        <div class="col-md-6">
+                                            {{ $data->member->no_rekening }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <form id="create">
+                                <div class="mb-3">
+                                    <label for="foto" class="form-label">Foto Bukti Bayar Klaim <i class="text-danger">*</i></label>
+                                    <input class="form-control" type="file" id="bukti_bayar_klaim" name="bukti_bayar_klaim">
+                                    <small class="text-danger bukti_bayar_klaim_error"></small>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary btn-default ms-2 accept">Kirim</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -179,7 +224,7 @@
 <script>
     $(document).ready(function () {
         new Zooming().listen('.img-zoomable');
-        $(document).on('click','.create', function(e){
+        $(document).on('click','.reject', function(e){
             e.preventDefault();
             let data = {
                 'id': $('.klaim_id').val(),
@@ -188,7 +233,7 @@
             _input.loading.start(this);
             _ajax.post("{{ route('klaim.reject') }}",data,
                 (response) => {
-                    _input.loading.stop('.create','Kirim');
+                    _input.loading.stop('.reject','Kirim');
                     if (response.status == 200) {
                         _swalert(response);
                         setTimeout(() => {
@@ -197,7 +242,7 @@
                     }
                 },
                 (response) => {
-                    _input.loading.stop('.create','Kirim');
+                    _input.loading.stop('.reject','Kirim');
                     if (response.status == 400) {
                         _validation.action(response.responseJSON)
                     } else if (response.status == 404) {
@@ -212,18 +257,18 @@
                     }
                 }
             );
-
-        })
+        });
 
         $(document).on('click','.accept', function(e){
             e.preventDefault();
-            let data = {
-                'id': $('.klaim_id').val(),
-            }
+            let data = new FormData();
+            let bukti = $('#bukti_bayar_klaim')[0].files;
+            data.append('bukti_bayar_klaim',bukti[0]);
+            data.append('id',$('.klaim_id').val());
             _input.loading.start(this);
-            _ajax.post("{{ route('klaim.confirm') }}",data,
+            _ajax.postWithFile("{{ route('klaim.confirm') }}",data,
                 (response) => {
-                    _input.loading.stop('.accept','<i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim');
+                    _input.loading.stop('.accept','Kirim');
                     if (response.status == 200) {
                         _swalert(response);
                         setTimeout(() => {
@@ -232,7 +277,7 @@
                     }
                 },
                 (response) => {
-                    _input.loading.stop('.accept','<i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim');
+                    _input.loading.stop('.accept','Kirim');
                     if (response.status == 400) {
                         _validation.action(response.responseJSON)
                     } else if (response.status == 404) {

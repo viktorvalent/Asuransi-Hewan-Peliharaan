@@ -15,4 +15,14 @@ class MasterKabKota extends Model
     {
         return $this->belongsTo(MasterProvinsi::class, 'provinsi_id');
     }
+
+    public function petshop_terdekat()
+    {
+        return $this->hasMany(PetshopTerdekat::class, 'kab_kota_id');
+    }
+
+    public function members()
+    {
+        return $this->hasMany(Member::class, 'kab_kota_id');
+    }
 }

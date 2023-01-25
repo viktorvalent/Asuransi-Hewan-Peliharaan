@@ -17,9 +17,10 @@
                 @auth
                     @can('is_member')
                         <li><a href="{{ route('member.dashboard') }}">Profile</a></li>
-                        {{-- <li><a href="{{ route('member.claim') }}">Cart</a></li> --}}
+                        <li><a href="{{ route('member.cart') }}">My Cart</a></li>
                         <li><a href="{{ route('member.my-insurance') }}">My Insurance</a></li>
-                        <li><a href="{{ route('member.claim') }}">Claim</a></li>
+                        <li><a href="{{ route('member.claim') }}">My Claim</a></li>
+                        <li><a href="{{ route('member.nearest-petshop') }}">Nearest Petshop</a></li>
                         <hr class="py-0">
                         <li><a href="{{ route('sign-out.member') }}">Sign Out</a></li>
                     @endcan

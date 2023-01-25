@@ -33,6 +33,6 @@ class KlaimAsuransi extends Model
 
     public function terima_klaim_asuransi()
     {
-        return $this->hasOne(TolakKlaimAsuransi::class, 'klaim_id');
+        return $this->hasOne(TerimaKlaimAsuransi::class, 'klaim_id');
     }
 }
