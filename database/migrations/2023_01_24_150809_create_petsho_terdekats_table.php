@@ -18,6 +18,7 @@ return new class extends Migration
             $table->char('nama_petshop',255);
             $table->string('keterangan_petshop')->nullable();
             $table->foreignId('kab_kota_id')->constrained('master_kab_kota');
+            $table->text('alamat');
             $table->text('gmaps_iframe');
             $table->timestamps();
         });

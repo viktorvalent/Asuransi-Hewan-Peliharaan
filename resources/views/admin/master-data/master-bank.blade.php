@@ -48,7 +48,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Deskripsi</label>
-                                <textarea id="deskripsi" class="form-control" name="deskripsi" placeholder="Textarea" rows="2"></textarea>
+                                <textarea id="deskripsi" class="form-control" name="deskripsi" placeholder="Deskripsi" rows="2"></textarea>
                             </div>
                             <div class="d-flex justify-content-center mt-5">
                                 <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PetshopTerdekat extends Model
 {
     protected $table = 'petshop_terdekat';
-    protected $fillable = ['nama_petshop','keterangan_petshop','gmaps_iframe','kab_kota_id'];
+    protected $fillable = ['nama_petshop','keterangan_petshop','gmaps_iframe','kab_kota_id','alamat'];
     public $timestamps = true;
     protected $primaryKey = 'id';
 

@@ -57,7 +57,6 @@
     }
 </style>
 @endpush
-
 @section('template_body')
 <div class="uppattern">
     <img class="pattern-top" src="{{ asset('img/pattern/up.png') }}" />
@@ -112,11 +111,4 @@
 <div class="bottompattern">
     <img src="{{ asset('img/pattern/bottom.png') }}" class="pattern-bottom">
 </div>
-
-
 @endsection
-
-
-@push('template_js')
-
-@endpush

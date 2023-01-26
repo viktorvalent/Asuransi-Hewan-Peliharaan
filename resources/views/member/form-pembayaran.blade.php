@@ -36,17 +36,21 @@
                 <h6>Transfer pembayaran ke salah satu bank dibawah ini :</h6>
                 <div class="row justify-content-center">
                     @foreach ($banks as $item)
-                        <div class="col-md-6 shadow m-3 px-2 rounded" style="width:17rem;">
-                            <div class="d-flex">
-                                <div class="d-flex align-items-center ps-2">
-                                    <img src="{{ asset(Storage::url($item->logo)) }}" style="width: 50px;" alt="">
-                                </div>
-                                <div class="row ps-4 py-2">
-                                    <div class="col-12">Bank {{ $item->nama }}</div>
-                                    <div class="col-12 text-primary fw-semibold">{{ $item->nomor_rekening_bank[0]->nomor_rekening }}</div>
+                        @if (count($item->nomor_rekening_bank)<1)
+                            <em class="my-3">Metode Pembayaran belum tersedia...</em>
+                        @else
+                            <div class="col-md-6 shadow m-3 px-2 rounded" style="width:17rem;">
+                                <div class="d-flex">
+                                    <div class="d-flex align-items-center ps-2">
+                                        <img src="{{ asset(Storage::url($item->logo)) }}" style="width: 50px;" alt="">
+                                    </div>
+                                    <div class="row ps-4 py-2">
+                                        <div class="col-12">Bank {{ $item->nama }}</div>
+                                        <div class="col-12 text-primary fw-semibold">{{ $item->nomor_rekening_bank[0]->nomor_rekening }}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                     @endforeach
                 </div>
                 <form id="create" enctype="multipart/form-data">

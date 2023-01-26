@@ -19,32 +19,14 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6">
+</div>
+<div class="row">
+    <div class="col-sm-6 col-xl-3">
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
-                        <h5 class="card-title">Sales</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck align-middle"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">2.382</h1>
-                <div class="mb-0">
-                    <span class="badge badge-primary-light"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
-                    <span class="text-muted">Since last week</span>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Visitors</h5>
+                        <h5 class="card-title">Member</h5>
                     </div>
 
                     <div class="col-auto">
@@ -53,20 +35,63 @@
                         </div>
                     </div>
                 </div>
-                <h1 class="mt-1 mb-3">14.212</h1>
+                <h1 class="mt-1 mb-3">{{ number_format($data['member'],0,'','.') }}</h1>
                 <div class="mb-0">
-                    <span class="badge badge-success-light"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
+                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
                     <span class="text-muted">Since last week</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6 col-xl-3">
         <div class="card">
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
-                        <h5 class="card-title">Earnings</h5>
+                        <h5 class="card-title">Pembelian</h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart align-middle"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="mt-1 mb-3">{{ number_format($data['asuransi'],0,'','.') }}</h1>
+                <div class="mb-0">
+                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
+                    <span class="text-muted">Since last week</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col mt-0">
+                        <h5 class="card-title">Polis</h5>
+                    </div>
+
+                    <div class="col-auto">
+                        <div class="stat text-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail align-middle"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        </div>
+                    </div>
+                </div>
+                <h1 class="mt-1 mb-3">{{ number_format($data['polis'],0,'','.') }}</h1>
+                <div class="mb-0">
+                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
+                    <span class="text-muted">Since last week</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col mt-0">
+                        <h5 class="card-title">Klaim</h5>
                     </div>
 
                     <div class="col-auto">
@@ -75,30 +100,24 @@
                         </div>
                     </div>
                 </div>
-                <h1 class="mt-1 mb-3">$21.300</h1>
+                <h1 class="mt-1 mb-3">{{ number_format($data['klaim'],0,'','.') }}</h1>
                 <div class="mb-0">
-                    <span class="badge badge-success-light"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
+                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
                     <span class="text-muted">Since last week</span>
                 </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Orders</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart align-middle"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">64</h1>
-                <div class="mb-0">
-                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
-                    <span class="text-muted">Since last week</span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-xl-6 col-xxl-7">
+        <div class="card flex-fill w-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Grafik Pembelian Asuransi</h5>
+            </div>
+            <div class="card-body pt-2 pb-3">
+                <div class="chart chart-sm"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartjs-dashboard-line" style="display: block; width: 246px; height: 250px;" width="246" height="250" class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
         </div>
@@ -107,5 +126,65 @@
 @endsection
 
 @push('js')
-
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
+        var gradientLight = ctx.createLinearGradient(0, 0, 0, 225);
+        gradientLight.addColorStop(0, "rgba(215, 227, 244, 1)");
+        gradientLight.addColorStop(1, "rgba(215, 227, 244, 0)");
+        var gradientDark = ctx.createLinearGradient(0, 0, 0, 225);
+        gradientDark.addColorStop(0, "rgba(51, 66, 84, 1)");
+        gradientDark.addColorStop(1, "rgba(51, 66, 84, 0)");
+        var chart = {!! $data['chart'] !!};
+        new Chart(document.getElementById("chartjs-dashboard-line"), {
+            type: "line",
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                datasets: [{
+                    label: "Sales ($)",
+                    fill: true,
+                    backgroundColor: window.theme.id === "light" ? gradientLight : gradientDark,
+                    borderColor: window.theme.primary,
+                    data: chart
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    intersect: false
+                },
+                hover: {
+                    intersect: true
+                },
+                plugins: {
+                    filler: {
+                        propagate: false
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        reverse: true,
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)"
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            stepSize: 1000
+                        },
+                        display: true,
+                        borderDash: [3, 3],
+                        gridLines: {
+                            color: "rgba(0,0,0,0.0)",
+                            fontColor: "#fff"
+                        }
+                    }]
+                }
+            }
+        });
+    });
+</script>
 @endpush

@@ -3,6 +3,10 @@
 @push('member_css')
 <link href="{{ asset('dashboard/css/jquery-datatable.css') }}" rel="stylesheet" />
 <style>
+    iframe {
+        width: 100%;
+        height: 18rem;
+    }
 </style>
 @endpush
 
@@ -10,15 +14,30 @@
 <div class="row">
     <div class="col-md-1 col-sm-0"></div>
     <div class="col-md-10 col-sm-12">
-        <div class="card shadow" style="opacity: .955 !important;">
-            <div class="card-body">
-                @forelse ($petshops as $petshop)
-                    <p>{{ $petshop->nama_petshop }}</p>
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <h5 class="text-center">Pet Shop Terdekat sekitar {{ $member->kab_kota->nama }}</h5>
+        </div>
+        <div class="row">
+            @forelse ($petshops as $petshop)
+            <div class="col-md-6">
+                <div class="card shadow" style="width: 100%;">
                     {!! $petshop->gmaps_iframe !!}
-                @empty
-                    <p>Data Pet Shop Terdekat tidak tersedia...</p>
-                @endforelse
+                    <div class="card-body p-4">
+                        <h5 class="card-title my-2">{{ $petshop->nama_petshop }}</h5>
+                        <p class="card-text" style="font-size: .875rem">{{ $petshop->alamat }}</p>
+                    </div>
+                </div>
             </div>
+            @empty
+            <div class="text-center mt-3">
+                <p class="bg-light d-inline p-3 rounded fst-italic">
+                    Petshop terdekat belum tersedia.
+                </p>
+            </div>
+            @endforelse
+        </div>
+        <div class="my-4 d-flex justify-content-center">
+            {{ $petshops->links() }}
         </div>
     </div>
     <div class="col-md-1 col-sm-0"></div>

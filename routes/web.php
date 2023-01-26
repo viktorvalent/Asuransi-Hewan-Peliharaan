@@ -21,11 +21,13 @@ use App\Http\Controllers\Admin\MasterData\MasterKabKotaController;
 use App\Http\Controllers\Admin\MasterData\MasterProvinsiController;
 use App\Http\Controllers\Admin\MasterData\PetshopController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
+use App\Http\Controllers\Admin\WebContent\TestimoniController;
 use App\Http\Controllers\Member\KlaimAsuransiController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
 Route::get('/faqs', [HomeController::class, 'faqs'])->name('home.faqs');
+Route::get('/term-and-condition', [HomeController::class, 'term_and_condition'])->name('home.tnc');
 
 // Login Admin
 Route::controller(AdminController::class)->prefix('/auth/admin')->group(function(){
@@ -45,6 +47,7 @@ Route::controller(MemberController::class)->prefix('/member')->group(function(){
 Route::middleware(['is_admin'])->group(function(){
     Route::controller(DashboardController::class)->prefix('/auth/dashboard')->group(function(){
         Route::get('/','index')->name('auth.dashboard');
+        Route::get('/profile','profile')->name('auth.profile');
     });
 
     Route::controller(MasterBankController::class)->prefix('/auth/dashboard/master-bank')->group(function(){
@@ -119,6 +122,7 @@ Route::middleware(['is_admin'])->group(function(){
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
+        Route::get('/testpdf/{id}','pdf')->name('test.pdf');
     });
 
     Route::controller(PolisController::class)->prefix('/auth/dashboard/polis-asuransi')->group(function(){
@@ -129,6 +133,8 @@ Route::middleware(['is_admin'])->group(function(){
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
+        Route::get('/testpdf/{id}','pdf')->name('test.pdf.polis');
+
     });
 
     Route::controller(KlaimController::class)->prefix('/auth/dashboard/klaim-asuransi')->group(function(){
@@ -140,7 +146,7 @@ Route::middleware(['is_admin'])->group(function(){
         Route::post('/confirm','confirm_klaim')->name('klaim.confirm');
         Route::post('/reject','reject_klaim')->name('klaim.reject');
         Route::get('/edit/{id}','edit');
-        Route::get('/testpdf/{id}','pdf')->name('test.pdf');
+        Route::get('/testpdf/{id}','pdf')->name('test.pdf.klaim');
         Route::put('/update/{id}','update');
         Route::get('/delete/{id}','destroy');
     });
@@ -162,6 +168,15 @@ Route::middleware(['is_admin'])->group(function(){
         Route::post('/create','store')->name('web-content.faq.create');
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
+        Route::get('/delete/{id}','destroy');
+    });
+
+    Route::controller(TestimoniController::class)->prefix('/auth/dashboard/testimoni')->group(function(){
+        Route::get('/','index')->name('web-content.testimoni');
+        Route::get('/list-data','data')->name('testimoni.data');
+        Route::post('/create','store')->name('web-content.testimoni.create');
+        Route::get('/edit/{id}','edit');
+        Route::post('/update','update');
         Route::get('/delete/{id}','destroy');
     });
 

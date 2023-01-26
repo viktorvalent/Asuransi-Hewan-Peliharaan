@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             HewanSeeder::class,
             PaketAsuransiSeeder::class,
+            ProvinsiSeeder::class,
+            KabKotaSeeder::class,
         ]);
     }
 }

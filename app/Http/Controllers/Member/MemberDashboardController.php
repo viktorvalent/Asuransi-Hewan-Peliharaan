@@ -15,6 +15,7 @@ use App\Models\KlaimAsuransi;
 use App\Models\MasterKabKota;
 use App\Models\MasterProvinsi;
 use App\Models\PetshopTerdekat;
+use App\Models\TermAndConditions;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -306,7 +307,7 @@ class MemberDashboardController extends Controller
     {
         if(auth()->user()->member) {
             $member = Member::where('user_id',auth()->user()->id)->first();
-            $petshop = PetshopTerdekat::where('kab_kota_id',$member->kab_kota_id)->latest()->get();
+            $petshop = PetshopTerdekat::where('kab_kota_id',$member->kab_kota_id)->latest()->paginate(10)->withQueryString();
         } else {
             $member = null;
         }
@@ -317,4 +318,6 @@ class MemberDashboardController extends Controller
             'petshops'=>$petshop
         ]);
     }
+
+    
 }

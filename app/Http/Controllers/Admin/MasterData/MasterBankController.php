@@ -101,11 +101,11 @@ class MasterBankController extends Controller
         if ($data) {
             if (Storage::exists($data->logo)) {
                 $data->logo = asset(Storage::url($data->logo));
-                return response()->json([
-                    'status' => 200,
-                    'data' => $data,
-                ]);
             }
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+            ]);
         } else {
             return response()->json([
                 'message'=>'Data tidak ditemukan!'

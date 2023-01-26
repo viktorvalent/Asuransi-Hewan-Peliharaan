@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Landing;
 
-use App\Http\Controllers\Controller;
 use App\Models\Faq;
+use App\Models\Testimoni;
 use App\Models\PaketContent;
-use App\Models\ProdukAsuransi;
 use Illuminate\Http\Request;
+use App\Models\ProdukAsuransi;
+use App\Models\TermAndConditions;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -14,10 +16,12 @@ class HomeController extends Controller
     {
         $faq = Faq::latest()->limit(5)->get();
         $package = PaketContent::latest()->limit(3)->get();
+        $testimonials = Testimoni::select('nama','pekerjaan','foto','testi_text')->get();
         return view('landing.home', [
             'title'=>'Home',
             'faqs'=>$faq,
-            'packages'=>$package
+            'packages'=>$package,
+            'testimonials'=>$testimonials
         ]);
     }
 
@@ -32,10 +36,19 @@ class HomeController extends Controller
 
     public function faqs()
     {
-        $faq = Faq::latest()->get();
+        $faq = Faq::latest()->paginate(10)->withQueryString();
         return view('landing.faqs', [
             'title'=>'FAQs',
             'faqs'=>$faq
+        ]);
+    }
+
+    public function term_and_condition()
+    {
+        $data = TermAndConditions::select('isi')->first();
+        return view('landing.term-and-condition', [
+            'title'=>'Term & Condition',
+            'data'=>$data
         ]);
     }
 }

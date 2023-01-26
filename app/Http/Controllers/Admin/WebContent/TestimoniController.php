@@ -1,34 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\Admin\MasterData;
+namespace App\Http\Controllers\Admin\WebContent;
 
 use Exception;
 use App\Helper;
+use App\Models\Testimoni;
 use Illuminate\Http\Request;
-use App\Models\MasterKabKota;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\PetshopTerdekat;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
-class PetshopController extends Controller
+class TestimoniController extends Controller
 {
-    public $title = 'Petshop Terdekat';
+    public $title = 'Testimoni';
 
     public function index()
     {
-        $kabkotas = MasterKabKota::all();
-        return view('admin.master-data.petshop-terdekat',[
-            'title' => $this->title,
-            'kabkotas'=>$kabkotas
+        return view('admin.web-content.testimoni',[
+            'title' => $this->title
         ]);
     }
 
     public function data(Request $request)
     {
         if ($request->ajax()) {
-            $data = PetshopTerdekat::latest()->get();
+            $data = Testimoni::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
@@ -40,10 +38,19 @@ class PetshopController extends Controller
                                 </button>';
                     return $action;
                 })
-                ->editColumn('kab_kota_id.nama', function($row){
-                    return $row->kab_kota->nama;
+                ->editColumn('testi_text', function($row){
+                    return substr($row->testi_text,0,45).'...';
                 })
-                ->rawColumns(['action','gmaps_iframe'])
+                ->editColumn('foto', function ($row){
+                    $path = asset(Storage::url($row->foto));
+                    $null = asset('img/avatar.png');
+                    if ($row->foto!=null){
+                        return '<img src="'.$path.'" width="80" class="rounded-circle" />';
+                    } else {
+                        return '<img src="'.$null.'" width="80" class="rounded-circle" />';
+                    }
+                })
+                ->rawColumns(['action','foto'])
                 ->make(true);
         }
     }
@@ -51,11 +58,71 @@ class PetshopController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama_petshop' => 'required|unique:petshop_terdekat',
-            'kab_kota_id' => 'required',
-            'keterangan_petshop' => 'nullable',
-            'gmaps_iframe' => 'required',
-            'alamat' => 'required'
+            'nama' => 'required|unique:testimoni',
+            'pekerjaan' => 'required',
+            'testi_text' => 'required',
+            'foto' => 'required|mimes:png,jpg,jpeg|max:2048'
+        ],
+        [
+            '*.required' => 'Tidak boleh kosong!',
+            '*.unique' => 'Data sudah digunakan!',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            try {
+                DB::beginTransaction();
+                $foto = $request->file('foto')->store('public/web-content/foto-testi');
+                Testimoni::create([
+                    'nama' => $request->nama,
+                    'pekerjaan' => $request->pekerjaan,
+                    'testi_text' => $request->testi_text,
+                    'foto' => $foto
+                ]);
+                Helper::createUserLog("Berhasil menambahkan Testimoni", auth()->user()->id, $this->title);
+                DB::commit();
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Berhasil menambahkan data'
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                Helper::createUserLog("Gagal menambah Testimoni", auth()->user()->id, $this->title);
+                return response()->json([
+                    'message'=>$e->getMessage()
+                ],422);
+            }
+        }
+    }
+
+    public function edit($id)
+    {
+        $data = Testimoni::find($id);
+        if ($data) {
+            if (Storage::exists($data->foto)) {
+                $data->foto = asset(Storage::url($data->foto));
+            }
+            return response()->json([
+                'status' => 200,
+                'data' => $data,
+            ]);
+        } else {
+            return response()->json([
+                'message'=>'Data tidak ditemukan!'
+            ],422);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'pekerjaan' => 'required',
+            'testi_text' => 'required',
+            'foto' => 'nullable'
         ],
         [
             '*.required' => 'Tidak boleh kosong!',
@@ -68,98 +135,48 @@ class PetshopController extends Controller
         } else {
             try {
                 DB::beginTransaction();
-                PetshopTerdekat::create([
-                    'nama_petshop' => $request->nama_petshop,
-                    'kab_kota_id' => $request->kab_kota_id,
-                    'alamat' => $request->alamat,
-                    'keterangan_petshop' => $request->keterangan_petshop,
-                    'gmaps_iframe' => $request->gmaps_iframe,
-                ]);
-                Helper::createUserLog("Berhasil menambahkan petshop terdekat ".$request->nama_petshop, auth()->user()->id, $this->title);
-                DB::commit();
-                return response()->json([
-                    'status'=>200,
-                    'message'=>'Berhasil menambahkan data'
-                ]);
-            } catch (Exception $e) {
-                DB::rollBack();
-                Helper::createUserLog("Gagal menambah petshop terdekat", auth()->user()->id, $this->title);
-                return response()->json([
-                    'message'=>$e->getMessage()
-                ],422);
-            }
-        }
-    }
-
-    public function edit($id)
-    {
-        $data = PetshopTerdekat::find($id);
-        $kabkota = MasterKabKota::all();
-        if ($data) {
-            return response()->json([
-                'status' => 200,
-                'data' => $data,
-                'kabkota' => $kabkota
-            ]);
-        } else {
-            return response()->json([
-                'message'=>'Data tidak ditemukan!'
-            ],422);
-        }
-    }
-
-    public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_petshop' => 'required',
-            'kab_kota_id' => 'required',
-            'keterangan_petshop' => 'nullable',
-            'gmaps_iframe' => 'required',
-            'alamat' => 'required',
-        ],
-        [
-            '*.required' => 'Tidak boleh kosong!',
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->errors()->toArray()
-            ],400);
-        } else {
-            try {
-                DB::beginTransaction();
-                $data = PetshopTerdekat::find($id);
+                $data = Testimoni::find($request->id);
                 if ($data->nama==$request->nama) {
+                    if($request->hasFile('foto')){
+                        if(Storage::exists($data->foto)){
+                            Storage::delete($data->foto);
+                            $foto = $request->file('foto')->store('public/web-content/foto-testi');
+                            $data->foto = $foto;
+                            $data->save();
+                        }
+                    }
                     $data->update([
-                        'nama_petshop' => $request->nama_petshop,
-                        'kab_kota_id' => $request->kab_kota_id,
-                        'alamat' => $request->alamat,
-                        'keterangan_petshop' => $request->keterangan_petshop,
-                        'gmaps_iframe' => $request->gmaps_iframe,
+                        'nama' => $request->nama,
+                        'pekerjaan' => $request->pekerjaan,
+                        'testi_text' => $request->testi_text
                     ]);
-                    Helper::createUserLog("Berhasil mengubah petshop terdekat", auth()->user()->id, $this->title);
+                    Helper::createUserLog("Berhasil mengubah Testimoni", auth()->user()->id, $this->title);
                     DB::commit();
                     return response()->json([
                         'status'=>200,
                         'message'=>'Berhasil mengubah data'
                     ]);
                 } else {
-                    $cek = PetshopTerdekat::where(function($q)use($request){
-                            $q->where('nama_petshop','=',$request->nama_petshop)
-                                ->where('kab_kota_id','=',$request->kab_kota_id);
-                        })->whereNot('id',$id)->first();
+                    $cek = Testimoni::where('nama',$request->nama)->whereNot('id',$request->id)->first();
                     if ($cek) {
                         return response()->json([
-                            'message'=>'Data sudah digunakan!'
+                            'message'=>'Pertanyaan sudah digunakan!'
                         ],404);
                     } else {
+                        if($request->hasFile('foto')){
+                            if(Storage::exists($data->foto)){
+                                Storage::delete($data->foto);
+                                $foto = $request->file('foto')->store('public/web-content/foto-testi');
+                                $data->foto = $foto;
+                                $data->save();
+                            }
+                        }
                         $data->update([
-                            'nama_petshop' => $request->nama_petshop,
-                            'kab_kota_id' => $request->kab_kota_id,
-                            'keterangan_petshop' => $request->keterangan_petshop,
-                            'alamat' => $request->alamat,
-                            'gmaps_iframe' => $request->gmaps_iframe,
+                            'nama' => $request->nama,
+                            'pekerjaan' => $request->pekerjaan,
+                            'testi_text' => $request->testi_text,
                         ]);
-                        Helper::createUserLog("Berhasil mengubah petshop terdekat ", auth()->user()->id, $this->title);
+                        Helper::createUserLog("Berhasil mengubah Testimoni", auth()->user()->id, $this->title);
                         DB::commit();
                         return response()->json([
                             'status'=>200,
@@ -168,9 +185,8 @@ class PetshopController extends Controller
                     }
                 }
             } catch (Exception $e) {
-                Helper::createUserLog("Gagal mengubah data petshop terdekat", auth()->user()->id, $this->title);
+                Helper::createUserLog("Gagal mengubah Testimoni", auth()->user()->id, $this->title);
                 return response()->json([
-                    'status'=>422,
                     'message'=>$e->getMessage()
                 ],422);
             }
@@ -179,19 +195,18 @@ class PetshopController extends Controller
 
     public function destroy($id)
     {
-        $data = PetshopTerdekat::find($id);
-        if ($data) {
-            Helper::createUserLog("Berhasil menghapus petshop terdekat ".$data->nama, auth()->user()->id, $this->title);
+        $data = Testimoni::find($id);
+        try {
+            Helper::createUserLog("Berhasil menghapus Testimoni", auth()->user()->id, $this->title);
             $data->delete();
             return response()->json([
                 'status'=>200,
                 'message'=>'Berhasil menghapus data'
             ]);
-        } else {
-            Helper::createUserLog("Gagal menghapus data petshop terdekat", auth()->user()->id, $this->title);
+        } catch (Exception $e) {
+            Helper::createUserLog("Gagal menghapus Testimoni", auth()->user()->id, $this->title);
             return response()->json([
-                'status'=>422,
-                'message'=>'Gagal menghapus'
+                'message'=>$e->getMessage()
             ],422);
         }
     }

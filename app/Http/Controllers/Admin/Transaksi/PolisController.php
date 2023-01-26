@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin\Transaksi;
 
 use Carbon\Carbon;
+use PDF;
 use Illuminate\Http\Request;
+use App\Models\PolisAsuransi;
+use App\Models\PembelianProduk;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
-use App\Models\KlaimAsuransi;
-use App\Models\PolisAsuransi;
 
 class PolisController extends Controller
 {
@@ -57,5 +58,14 @@ class PolisController extends Controller
                 'title'=>'Polis Preview'
             ]);
         }
+    }
+
+    // for testing template pdf klaim
+    public function pdf($id)
+    {
+        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member','polis')->find($id);
+        view()->share('data',['data'=>$data]);
+        $pdf = PDF::loadView('template.polis-asuransi', ['data'=>$data]);
+        return $pdf->download('polis.pdf');
     }
 }

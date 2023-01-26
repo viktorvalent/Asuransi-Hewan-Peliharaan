@@ -42,10 +42,10 @@
 						<div class="card shadow-lg">
 							<div class="card-body">
 								<div class="m-sm-4">
-                                    <div class="text-center mt-4">
-                                        <h1 class="h2">Mypett Admin Dashboard</h1>
-                                        <p class="lead">
-                                            Sign in to continue
+                                    <div class="text-center">
+                                        <img src="{{ asset('img/polis/logo.png') }}" width="150" alt="">
+                                        <p class="lead mt-3">
+                                            Sign in to Admin Dashboard
                                         </p>
                                     </div>
                                     <div class="invalid_message"></div>
@@ -61,7 +61,7 @@
                                             <small class="invalid-feedback text-danger password_error"></small>
                                         </div>
 										<div class="text-center mt-3">
-											<button type="submit" class="btn btn-lg btn-primary sign">Sign in</button>
+											<button type="submit" class="btn btn-lg btn-primary sign" style="width: 125px;">Sign in</button>
 										</div>
                                         <div class="text-end">
                                             <a class="text-end" href="#">Forgot password?</a>
@@ -87,14 +87,16 @@
                     'email': $('#email').val(),
                     'password': $('#password').val()
                 };
-                console.log(data);
+                _input.loading.start(this);
                 _ajax.post("{{ route('authenticating.admin') }}",data,
                     (response) => {
+                        _input.loading.stop('.sign','Sign In');
                         if (response.status == 200) {
                             window.location.href = "{{ route('auth.dashboard') }}";
                         }
                     },
                     (response) => {
+                        _input.loading.stop('.sign','Sign In');
                         if (response.status == 400) {
                             _validation.action(response.responseJSON)
                         } else if (response.status == 422) {

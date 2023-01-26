@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('testimoni', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
-            $table->string('pekerjaan');
-            $table->text('testi_text');
-            $table->timestamps();
+        Schema::table('testimoni', function (Blueprint $table) {
+            $table->string('foto');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('testimoni');
+        Schema::table('testimoni', function (Blueprint $table) {
+            //
+        });
     }
 };

@@ -4,12 +4,6 @@
 
 @push('css')
 <link href="{{ asset('dashboard/css/jquery-datatable.css') }}" rel="stylesheet" />
-<style>
-    iframe {
-        width: 150px;
-        height: 80px;
-    }
-</style>
 @endpush
 
 @section('container')
@@ -21,13 +15,13 @@
             </button>
         </div>
         <div class="card-body">
-            <table id="datatable" class="table w-100 table-hover">
+            <table id="datatable" class="table w-100">
                 <thead>
                     <tr>
-                        <th>Nama Petshop</th>
-                        <th>Kabupaten/Kota</th>
-                        <th>Keterangan</th>
-                        <th>Google Maps</th>
+                        <th>Foto</th>
+                        <th>Nama</th>
+                        <th>Pekerjaan</th>
+                        <th>Teks</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -45,33 +39,24 @@
                     <div class="modal-body m-3">
                         <form id="create">
                             <div class="mb-3">
-                                <label class="form-label required">Kabupaten/Kota <i class="text-danger">*</i></label>
-                                <select class="form-control form-control-sm choice kab_kota" name="kab_kota" id="kab_kota">
-                                    <option value="">Pilih Kabupaten/Kota</option>
-                                    @foreach ($kabkotas as $kk)
-                                        <option value="{{ $kk->id }}">{{ $kk->nama }}</option>
-                                    @endforeach
-                                </select>
-                                <small class="text-danger kab_kota_id_error"></small>
+                                <label class="form-label w-100">Foto <i class="text-danger">*</i></label>
+                                <input id="foto" name="foto" class="form-control" type="file">
+                                <small class="text-danger foto_error"></small>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label required">Nama Petshop <i class="text-danger">*</i></label>
-                                <input id="nama" type="text" name="nama" class="form-control" placeholder="Nama">
-                                <small class="text-danger nama_petshop_error"></small>
+                                <label class="form-label required">Nama <i class="text-danger">*</i></label>
+                                <input id="nama" type="text" name="nama" class="form-control nama" placeholder="Nama">
+                                <small class="text-danger nama_error"></small>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Alamat Petshop <i class="text-danger">*</i></label>
-                                <textarea id="alamat" class="form-control alamat" name="alamat" placeholder="Alamat" rows="2"></textarea>
-                                <small class="text-danger alamat_error"></small>
+                                <label class="form-label required">Pekerjaan <i class="text-danger">*</i></label>
+                                <input id="pekerjaan" type="text" name="pekerjaan" class="form-control pekerjaan" placeholder="Pekerjaan">
+                                <small class="text-danger pekerjaan_error"></small>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">GMAPS Iframe <i class="text-danger">*</i></label>
-                                <textarea id="gmaps_iframe" class="form-control gmaps_iframe" name="gmaps_iframe" placeholder="Tag iframe dari google maps" rows="2"></textarea>
-                                <small class="text-danger gmaps_iframe_error"></small>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Keterangan</label>
-                                <textarea id="keterangan" class="form-control keterangan" name="keterangan" placeholder="Keterangan Petshop" rows="2"></textarea>
+                                <label class="form-label">Testimoni Teks <i class="text-danger">*</i></label>
+                                <textarea id="testi_text" class="form-control testi_text" name="testi_text" placeholder="Testimoni Text" rows="5"></textarea>
+                                <small class="text-danger testi_text_error"></small>
                             </div>
                             <div class="d-flex justify-content-center mt-5">
                                 <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
@@ -93,33 +78,26 @@
                     <div class="modal-body m-3">
                         <form id="edit">
                             <div class="mb-3">
-                                <label class="form-label required">Kabupaten/Kota <i class="text-danger">*</i></label>
-                                <div class="select_edit">
-                                    <select class="form-control form-control-sm">
-                                        <option value="">Loading...</option>
-                                    </select>
-                                </div>
-                                <small class="text-danger provinsi_id_error"></small>
+                                <label class="form-label w-100">Foto </label>
+                                <input id="foto" name="edit_foto" class="form-control edit_foto" type="file">
+                                <small class="text-danger foto_error"></small>
+                                <div class="old_foto"></div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label required">Nama Petshop <i class="text-danger">*</i></label>
-                                <input type="hidden" name="edit_id" class="edit_id">
-                                <input id="edit_nama" type="text" name="edit_nama" class="form-control" placeholder="Nama">
-                                <small class="text-danger nama_petshop_error"></small>
+                                <label class="form-label required">Nama <i class="text-danger">*</i></label>
+                                <input type="hidden" name="id" class="edit_id">
+                                <input id="nama" type="text" name="edit_nama" class="form-control edit_nama" placeholder="Nama">
+                                <small class="text-danger nama_error"></small>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Alamat Petshop <i class="text-danger">*</i></label>
-                                <textarea id="edit_alamat" class="form-control alamat" name="edit_alamat" placeholder="Alamat" rows="2"></textarea>
-                                <small class="text-danger alamat_error"></small>
+                                <label class="form-label required">Pekerjaan <i class="text-danger">*</i></label>
+                                <input id="pekerjaan" type="text" name="edit_pekerjaan" class="form-control edit_pekerjaan" placeholder="Pekerjaan">
+                                <small class="text-danger pekerjaan_error"></small>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">GMAPS Iframe <i class="text-danger">*</i></label>
-                                <textarea id="edit_gmaps_iframe" class="form-control gmaps_iframe" name="edit_gmaps_iframe" placeholder="Tag iframe dari google maps" rows="2"></textarea>
-                                <small class="text-danger gmaps_iframe_error"></small>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Keterangan</label>
-                                <textarea id="edit_keterangan" class="form-control keterangan" name="edit_keterangan" placeholder="Keterangan Petshop" rows="2"></textarea>
+                                <label class="form-label">Testimoni Teks <i class="text-danger">*</i></label>
+                                <textarea id="testi_text" class="form-control edit_testi_text" name="edit_testi_text" placeholder="Testimoni Text" rows="5"></textarea>
+                                <small class="text-danger testi_text_error"></small>
                             </div>
                             <div class="d-flex justify-content-center mt-5">
                                 <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
@@ -143,12 +121,12 @@
 <script src="{{ asset('dashboard/libs/sweetalert/app.js') }}"></script>
 <script>
     $(document).ready(function () {
-        _table.set("{{ route('petshop-terdekat.data') }}",
+        _table.set("{{ route('testimoni.data') }}",
             [
-                {data: 'nama_petshop', name: 'nama_petshop'},
-                {data: 'kab_kota_id.nama', name: 'kab_kota_id.nama'},
-                {data: 'keterangan_petshop', name: 'keterangan_petshop'},
-                {data: 'gmaps_iframe', name: 'gmaps_iframe'},
+                {data: 'foto', name: 'foto'},
+                {data: 'nama', name: 'nama'},
+                {data: 'pekerjaan', name: 'pekerjaan'},
+                {data: 'testi_text', name: 'testi_text'},
                 {
                     data: 'action',
                     name: 'action',
@@ -157,20 +135,19 @@
                 },
             ]
         );
-        new Choices('.choice');
+
         _form.reset('.add','#create');
 
         $(document).on('click','.create',function (e) {
             e.preventDefault();
-            let data = {
-                'nama_petshop':$('#nama').val(),
-                'keterangan_petshop':$('#keterangan').val(),
-                'gmaps_iframe':$('#gmaps_iframe').val(),
-                'alamat':$('#alamat').val(),
-                'kab_kota_id':$('#kab_kota option:selected').val(),
-            }
+            var foto = $('#foto')[0].files;
+            let data = new FormData();
+            data.append('foto',foto[0]);
+            data.append('nama',$('#nama').val());
+            data.append('pekerjaan',$('#pekerjaan').val());
+            data.append('testi_text',$('#testi_text').val());
             _input.loading.start(this);
-            _ajax.post("{{ route('master-data.petshop-terdekat.create') }}",data,
+            _ajax.postWithFile("{{ route('web-content.testimoni.create') }}",data,
                 (response)=>{
                     _input.loading.stop('.create','Kirim');
                     if (response.status == 200) {
@@ -200,16 +177,15 @@
             e.preventDefault()
             $('form#edit').trigger('reset');
             let id = $(this).data('id');
-            _ajax.get(`{{ url('/auth/dashboard/petshop-terdekat/edit') }}/${id}`,
+            $('#modal_edit').modal('show');
+            _ajax.get(`{{ url('/auth/dashboard/testimoni/edit') }}/${id}`,
                 (response) => {
-                    $('#modal_edit').modal('show');
                     if (response.status == 200) {
-                        $('#edit_nama').val(response.data.nama_petshop);
+                        $('.edit_nama').val(response.data.nama);
                         $('.edit_id').val(response.data.id);
-                        $('#edit_keterangan').val(response.data.keterangan_petshop);
-                        $('#edit_alamat').val(response.data.alamat);
-                        $('#edit_gmaps_iframe').val(response.data.gmaps_iframe);
-                        let options = [];response.kabkota.forEach(e=>{response.data.kab_kota_id==e.id?options.push(`<option value="${e.id}" selected>${e.nama}</option>`):options.push(`<option value="${e.id}">${e.nama}</option>`);});$('.select_edit').html(`<select class="form-control form-control-sm choice_edit edit_kab_kota" name="edit_kab_kota" id="kab_kota">${options.join('')}</select>`);new Choices('.choice_edit');
+                        $('.edit_pekerjaan').val(response.data.pekerjaan);
+                        $('.edit_testi_text').val(response.data.testi_text);
+                        $('.old_foto').html(`<img id="old-foto" src="${response.data.foto}" width="100" class="mt-3" alt="Foto">`)
                     }
                 },
                 (response) => {
@@ -229,16 +205,15 @@
 
         $(document).on('click','.update', function(e){
             e.preventDefault();
-            let data = {
-                'id':$('.edit_id').val(),
-                'nama_petshop':$('#edit_nama').val(),
-                'keterangan_petshop':$('#edit_keterangan').val(),
-                'gmaps_iframe':$('#edit_gmaps_iframe').val(),
-                'alamat':$('#edit_alamat').val(),
-                'kab_kota_id':$('.edit_kab_kota option:selected').val(),
-            }
+            var foto = $('.edit_foto')[0].files;
+            let data = new FormData();
+            data.append('foto',foto[0]);
+            data.append('nama',$('.edit_nama').val());
+            data.append('id',$('.edit_id').val());
+            data.append('pekerjaan',$('.edit_pekerjaan').val());
+            data.append('testi_text',$('.edit_testi_text').val());
             _input.loading.start(this);
-            _ajax.put(`{{ url('/auth/dashboard/petshop-terdekat/update') }}/${data.id}`,data,
+            _ajax.postWithFile(`{{ url('/auth/dashboard/testimoni/update') }}`,data,
                 (response) => {
                     _input.loading.stop('.update','Kirim');
                     if (response.status == 200) {
@@ -279,7 +254,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     let id = $(this).data('id');
-                    _ajax.get(`{{ url('/auth/dashboard/petshop-terdekat/delete') }}/${id}`,
+                    _ajax.get(`{{ url('/auth/dashboard/testimoni/delete') }}/${id}`,
                         (response)=>{
                             if (response.status == 200) {
                                 Swal.fire({
@@ -303,7 +278,6 @@
                 }
             });
         })
-
     });
 </script>
 @endpush

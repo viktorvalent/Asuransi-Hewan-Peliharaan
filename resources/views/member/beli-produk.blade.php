@@ -81,7 +81,7 @@
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" name="tnc" value="1" id="tnc">
                         <label class="form-check-label" for="tnc" style="font-size: .8em;">
-                            Dengan ini saya menyetujui <a href="{{ URL::current() }}#" class="fw-bold text-dark">Term & Conditions.</a>
+                            Dengan ini saya menyetujui <a href="{{ route('home.tnc') }}" class="fw-bold text-dark">Term & Conditions.</a>
                         </label>
                     </div>
 

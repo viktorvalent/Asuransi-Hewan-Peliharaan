@@ -7,12 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Testimoni extends Model
 {
     protected $table = 'testimoni';
-    protected $fillable = ['user_id','teks'];
+    protected $fillable = ['nama','pekerjaan','testi_text','foto'];
     public $timestamps = true;
     protected $primaryKey = 'id';
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 }

@@ -175,7 +175,7 @@
                 @else
                     <button class="btn btn-success" style="width: 200px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_create"><i class="bi bi-check2-square"></i> Terima & Buat Polis</button>
                 @endif
-                {{-- <a href="{{ URL::route('test.pdf', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;"><i class="bi bi-check2-square"></i> Terima & Buat Polis</a> --}}
+                <a href="{{ URL::route('test.pdf.polis', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;">Test</a>
             </div>
 
             <div class="modal fade" id="modal_create" tabindex="-1" aria-modal="true" role="dialog">

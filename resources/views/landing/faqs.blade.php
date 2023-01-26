@@ -16,7 +16,7 @@
                     <div class="content px-xl-5">
                         <h3>Frequently Asked <strong>Questions</strong></h3>
                         <p>
-                            We’ve answered 5 of the most frequently asked questions about pet insurance and included some handy resources to help you make the most informed decision for your pet.
+                            Kami telah menjawab pertanyaan paling umum tentang asuransi hewan peliharaan dan menyertakan beberapa sumber berguna untuk membantu Anda membuat keputusan paling tepat untuk hewan peliharaan Anda.
                         </p>
                     </div>
                 </div>
@@ -39,6 +39,9 @@
                         </div>
                     @php($num++)
                     @endforeach
+                    </div>
+                    <div class="my-4 d-flex justify-content-center">
+                        {{ $faqs->links() }}
                     </div>
                 </div>
             </div>
