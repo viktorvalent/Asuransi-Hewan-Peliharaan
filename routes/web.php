@@ -23,6 +23,7 @@ use App\Http\Controllers\Admin\MasterData\MasterProvinsiController;
 use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
+use App\Http\Controllers\Admin\UserManagement\UserController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -203,6 +204,13 @@ Route::middleware(['is_admin'])->group(function(){
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
     });
+
+    Route::controller(UserController::class)->prefix('/auth/dashboard/users')->group(function(){
+        Route::get('/','index')->name('user.manage');
+        Route::get('/list-data','data')->name('user.data');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+    });
 });
 
 Route::middleware(['is_member'])->group(function(){
@@ -220,6 +228,7 @@ Route::middleware(['is_member'])->group(function(){
         Route::get('/claim/revisi/{id}', 'revisi_klaim')->name('member.claim.revisi');
         Route::get('/cart', 'cart')->name('member.cart');
         Route::get('/nearest-petshop', 'nearest_petshop')->name('member.nearest-petshop');
+        Route::get('/activity-log', 'activity_log')->name('member.log');
     });
 
     Route::controller(ProdukController::class)->prefix('/pembelian')->group(function(){

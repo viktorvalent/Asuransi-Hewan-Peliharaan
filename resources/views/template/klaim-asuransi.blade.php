@@ -69,7 +69,7 @@
 
     <div class="mt-2">Nomor Polis : {{ $data->polis->nomor_polis }}</div>
     <div class="mt-2">Tanggal Klaim : {{ \Carbon\Carbon::createFromFormat('Y-m-d',$data->tgl_klaim)->format('d-m-Y') }}</div>
-    <div class="mt-2 text-capitalized">Hal : {{ $data->keterangan_klaim }}</div>
+    <div class="mt-2 text-capitalized">Keterangan : {{ $data->keterangan_klaim }}</div>
 
     <div class="mt-4 text-justify">Terima kasih atas kepercayaan Bapak/Ibu yang telah menggunakan Jasa Asuransi MYPETT sebagai mitra perlindungan asuransi hewan Bapak/Ibu. </div>
     <div class="mt-4 text-justify">Pengajuan permohonan klaim sesuai dengan perihal Permohonan asuransi hewan Bapak/Ibu kami terima dengan jumlah sebesar Rp.{{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }} dengan perincian sebagai berikut : </div>

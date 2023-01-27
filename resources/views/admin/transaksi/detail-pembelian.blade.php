@@ -175,9 +175,7 @@
                 @else
                     <button class="btn btn-success" style="width: 200px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_create"><i class="bi bi-check2-square"></i> Terima & Buat Polis</button>
                 @endif
-                <a href="{{ URL::route('test.pdf.polis', $data->id) }}" class="btn btn-secondary ms-2" style="width: 200px;height: 35px;">Test</a>
             </div>
-
             <div class="modal fade" id="modal_create" tabindex="-1" aria-modal="true" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -203,10 +201,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="mb-3">
-                                    <label class="form-label">Deskripsi</label>
-                                    <textarea id="deskripsi" class="form-control deskripsi" name="deskripsi" placeholder="Deskripsi" rows="2"></textarea>
-                                </div> --}}
                                 <div class="d-flex justify-content-center mt-5">
                                     <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
                                     <button type="submit" class="btn btn-primary ms-2 create">Kirim</button>

@@ -102,9 +102,9 @@
                         </ul>
                     </li> --}}
                     {{-- <li class="sidebar-item"><a class="sidebar-link" href="dashboard-ecommerce.html">E-Commerce</a></li> --}}
-                    <li class="sidebar-item {{ $title=='Hero'?'active':'' }}">
+                    {{-- <li class="sidebar-item {{ $title=='Hero'?'active':'' }}">
                         <a class="sidebar-link" href="{{ route('web-content.hero') }}">Hero</a>
-                    </li>
+                    </li> --}}
                     <li class="sidebar-item {{ $title=='Term & Conditions'?'active':'' }}{{ $title=='Tambah Term & Conditions'?'active':'' }}">
                         <a class="sidebar-link" href="{{ route('web-content.tnc') }}">Term & Conditions</a>
                     </li>
@@ -117,15 +117,13 @@
                 </ul>
             </li>
 
-            <li class="sidebar-item">
+            <li class="sidebar-item {{ $title=='Users'?'active':'' }}">
                 <a href="#auth" data-bs-toggle="collapse" class="sidebar-link collapsed">
                     <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Manajemen User</span>
                 </a>
-                <ul id="auth" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">User</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">Member</a></li>
-                    <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">Akun Member</a></li>
-                    {{-- <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-up.html">Sign Up</a></li> --}}
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse {{ $title=='Users'?'show':'' }}" data-bs-parent="#sidebar">
+                    <li class="sidebar-item {{ $title=='Users'?'active':'' }}"><a class="sidebar-link" href="{{ route('user.manage') }}">User</a></li>
+                    {{-- <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">Member</a></li> --}}
                 </ul>
             </li>
 

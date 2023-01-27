@@ -15,7 +15,7 @@ use App\Models\KlaimAsuransi;
 use App\Models\MasterKabKota;
 use App\Models\MasterProvinsi;
 use App\Models\PetshopTerdekat;
-use App\Models\TermAndConditions;
+use App\Models\UserLog;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -233,7 +233,7 @@ class MemberDashboardController extends Controller
                     'no_rekening' => $request->rek,
                     'kab_kota_id' => $request->kab_kota
                 ]);
-                Helper::createUserLog("Berhasil menambahkan data member ".$request->nama, auth()->user()->id, $this->title);
+                Helper::createUserLog("Berhasil mengisi data member ".$request->nama, auth()->user()->id, $this->title);
                 DB::commit();
                 return response()->json([
                     'status'=>200,
@@ -241,7 +241,7 @@ class MemberDashboardController extends Controller
                 ]);
             } catch (Exception $e) {
                 DB::rollBack();
-                Helper::createUserLog("Gagal menambah data member ".$request->nama, auth()->user()->id, $this->title);
+                Helper::createUserLog("Gagal mengisi data member ".$request->nama, auth()->user()->id, $this->title);
                 return response()->json([
                     'message'=>$e->getMessage()
                 ],422);
@@ -253,12 +253,12 @@ class MemberDashboardController extends Controller
     {
         $unduh = PolisAsuransi::select('pembelian_id','path')->where('pembelian_id',$id)->first();
         if ($unduh) {
-            Helper::createUserLog("Berhasil download polis untuk member ".$unduh->pembelian->member->nama_lengkap, auth()->user()->id, $this->title);
+            Helper::createUserLog("Berhasil download polis", auth()->user()->id, $this->title);
             if (Storage::exists($unduh->path)) {
                 return Storage::download($unduh->path);
             }
         } else {
-            Helper::createUserLog("Gagal download polis untuk member ".$unduh->pembelian->member->nama_lengkap, auth()->user()->id, $this->title);
+            Helper::createUserLog("Gagal download polis", auth()->user()->id, $this->title);
             return response()->json([
                 'status'=>422,
                 'message'=>'Polis tidak tersedia/rusak'
@@ -271,12 +271,12 @@ class MemberDashboardController extends Controller
     {
         $unduh = KlaimAsuransi::with('member')->select('path','member_id')->where('id',$id)->first();
         if ($unduh) {
-            Helper::createUserLog("Berhasil download polis untuk member ".$unduh->member->nama_lengkap, auth()->user()->id, $this->title);
+            Helper::createUserLog("Berhasil download polis", auth()->user()->id, $this->title);
             if (Storage::exists($unduh->path)) {
                 return Storage::download($unduh->path);
             }
         } else {
-            Helper::createUserLog("Gagal download polis untuk member ".$unduh->member->nama_lengkap, auth()->user()->id, $this->title);
+            Helper::createUserLog("Gagal download polis", auth()->user()->id, $this->title);
             return response()->json([
                 'status'=>422,
                 'message'=>'Polis tidak tersedia/rusak'
@@ -314,6 +314,15 @@ class MemberDashboardController extends Controller
             'title'=>'Nearest Petshop',
             'member'=>$member,
             'petshops'=>$petshop
+        ]);
+    }
+
+    public function activity_log()
+    {
+        $log = UserLog::where('user_id',auth()->user()->id)->latest()->get();
+        return view('member.history', [
+            'title'=>'Activity Log',
+            'logs'=>$log
         ]);
     }
 }

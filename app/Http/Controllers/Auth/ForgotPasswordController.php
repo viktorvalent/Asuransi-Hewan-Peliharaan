@@ -34,7 +34,6 @@ class ForgotPasswordController extends Controller
             $message->to($request->email);
             $message->subject('Reset Password');
         });
-        Helper::createUserLog("Berhasil melakukan forgot password ", auth()->user()->id, "Forgot Password");
         return back()->with('message', 'We have e-mailed your password reset link!');
     }
 
@@ -62,7 +61,6 @@ class ForgotPasswordController extends Controller
                     ->update(['password' => Hash::make($request->password)]);
         $user = User::where('email', $request->email)->first();
         DB::table('password_resets')->where(['email'=> $request->email])->delete();
-        Helper::createUserLog("Berhasil reset password username ".$user->username, auth()->user()->id, "Forgot Password");
         if ($user->role==1) {
             return redirect('/auth/admin/sign-in')->with('message', 'Your password has been changed!');
         } else {

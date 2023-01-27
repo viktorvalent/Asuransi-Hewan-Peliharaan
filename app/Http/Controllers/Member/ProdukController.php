@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Member;
 
 use Exception;
+use App\Helper;
 use Carbon\Carbon;
 use App\Models\MasterBank;
 use Illuminate\Support\Str;
@@ -85,13 +86,17 @@ class ProdukController extends Controller
                     'status'=>1,
                     'pay_status'=>false
                 ]);
+
+                $produk = ProdukAsuransi::select('nama_produk')->find($request->produk_id);
                 DB::commit();
+                Helper::createUserLog("Berhasil melakukan pembelian produk ".$produk->nama_produk, auth()->user()->id, 'Pembelian Produk');
                 return response()->json([
                     'status'=>200,
                     'message'=>'Berhasil melakukan pembelian'
                 ]);
             } catch(Exception $e) {
                 DB::rollBack();
+                Helper::createUserLog("Gagal melakukan pembelian produk ".$produk->nama_produk, auth()->user()->id, 'Pembelian Produk');
                 return response()->json([
                     'status'=>422,
                     'message'=>$e->getMessage()
@@ -147,12 +152,14 @@ class ProdukController extends Controller
                 $pembelian->pay_status = true;
                 $pembelian->save();
                 DB::commit();
+                Helper::createUserLog("Berhasil konfirmasi pembayaran", auth()->user()->id, 'Pembelian Produk');
                 return response()->json([
                     'status'=>200,
                     'message'=>'Berhasil melakukan konfirmasi'
                 ]);
             } catch (Exception $e) {
                 DB::rollBack();
+                Helper::createUserLog("Gagal konfirmasi pembayaran", auth()->user()->id, 'Pembelian Produk');
                 return response()->json([
                     'status'=>422,
                     'message'=>$e->getMessage()
