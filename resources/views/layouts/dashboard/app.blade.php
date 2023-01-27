@@ -11,23 +11,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link rel="shortcut icon" href="{{ asset('dashboard/img/icons/icon-48x48.png') }}" />
-
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
-
-	<title>{{ $title }} | MYPETT</title>
-
+	<link rel="canonical" href="https://asuransi-hewan.test/" />
+	<title>{{ $title }} | MYPETT ADMIN</title>
 	<link href="{{ asset('dashboard/css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('dashboard/css/light.css') }}" rel="stylesheet">
 	@stack('css')
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body::-webkit-scrollbar {
-            display: none;
-        }
-        body {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-        }
+        body::-webkit-scrollbar{display:none;}
+        body{-ms-overflow-style:none;scrollbar-width:none;}
     </style>
 </head>
 
@@ -44,7 +36,6 @@
                 </div>
 				<div class="navbar-collapse collapse">
 					<ul class="navbar-nav navbar-align">
-                        @include('layouts.dashboard.notif')
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
                                 <i class="align-middle" data-feather="settings"></i>
@@ -52,12 +43,8 @@
                             <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
                                 <img src="{{ asset('img/avatar.png') }}" class="avatar img-fluid rounded-circle rounded me-1" alt="Charles Hall" /> <span class="text-dark">{{ auth()->user()->username }}</span>
                             </a>
-							<div class="dropdown-menu dropdown-menu-end">
+							<div class="dropdown-menu dropdown-menu-end mt-3">
 								<a class="dropdown-item" href="{{ route('auth.profile') }}"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
-								{{-- <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="index.html"><i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy</a>
-								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a> --}}
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item text-danger" href="{{ route('sign-out.admin') }}"><i class="align-middle me-1" data-feather="log-out"></i> Log out</a>
 							</div>
@@ -65,19 +52,17 @@
 					</ul>
 				</div>
 			</nav>
-
 			<main class="content">
 				<div class="container-fluid p-0">
                     @yield('container')
 				</div>
 			</main>
-
 			<footer class="footer">
 				<div class="container-fluid">
 					<div class="row text-muted">
 						<div class="col-6 text-start">
 							<p class="mb-0">
-								<a class="text-muted" href="javascript:void();"><strong>Mypett 2023</strong></a>								&copy;
+								<a class="text-muted" href="javascript:void();"><strong>Mypett 2023</strong></a>&copy;
 							</p>
 						</div>
 					</div>

@@ -64,4 +64,18 @@ class Helper {
         return $chart;
     }
 
+    public static function getPersenByWeek($model)
+    {
+        $result['status'] = true;
+        $thisWeek = ($model::whereBetween('created_at',[\Carbon\Carbon::now()->startOfWeek(),\Carbon\Carbon::now()->endOfWeek()])->count())==0?1:($model::whereBetween('created_at',[\Carbon\Carbon::now()->startOfWeek(),\Carbon\Carbon::now()->endOfWeek()])->count());
+        $lastWeek = ($model::whereBetween('created_at',[\Carbon\Carbon::now()->subDays(\Carbon\Carbon::now()->dayOfWeek)->startOfWeek(),\Carbon\Carbon::now()->subDays(\Carbon\Carbon::now()->dayOfWeek)->endOfWeek()])->count())==0?1:($model::whereBetween('created_at',[\Carbon\Carbon::now()->subDays(\Carbon\Carbon::now()->dayOfWeek)->startOfWeek(),\Carbon\Carbon::now()->subDays(\Carbon\Carbon::now()->dayOfWeek)->endOfWeek()])->count());
+        $result['persen'] = ($thisWeek / $lastWeek) * 100;
+
+        if ($thisWeek < $lastWeek) {
+            $result['status'] = false;
+        }
+
+        return $result;
+    }
+
 }

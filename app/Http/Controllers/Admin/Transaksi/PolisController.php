@@ -28,9 +28,6 @@ class PolisController extends Controller
             $data = PolisAsuransi::with('pembelian.member')->latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    return '';
-                })
                 ->editColumn('pembelian_id.member.nama_lengkap', function($row){
                     return $row->pembelian->member->nama_lengkap;
                 })
@@ -44,7 +41,7 @@ class PolisController extends Controller
                 ->editColumn('tgl_polis_mulai', function($row){
                     return Carbon::createFromFormat('Y-m-d',$row->tgl_polis_mulai)->format('d-m-Y');
                 })
-                ->rawColumns(['action','pembelian_id.member.nama_lengkap','nomor_polis'])
+                ->rawColumns(['pembelian_id.member.nama_lengkap','nomor_polis'])
                 ->make(true);
         }
     }

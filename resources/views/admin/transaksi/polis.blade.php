@@ -19,7 +19,6 @@
                         <th>Tanggal Mulai</th>
                         <th>Jangka Waktu</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -42,12 +41,6 @@
             {data: 'tgl_polis_mulai', name: 'tgl_polis_mulai'},
             {data: 'jangka_waktu', name: 'jangka_waktu'},
             {data: 'status_polis', name: 'status_polis'},
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false,
-            },
         ]
     );
 </script>

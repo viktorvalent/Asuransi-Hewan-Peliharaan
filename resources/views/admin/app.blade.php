@@ -22,7 +22,7 @@
 </div>
 <div class="row">
     <div class="col-sm-6 col-xl-3">
-        <div class="card">
+        <div class="card shadow-lg">
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
@@ -37,14 +37,14 @@
                 </div>
                 <h1 class="mt-1 mb-3">{{ number_format($data['member'],0,'','.') }}</h1>
                 <div class="mb-0">
-                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
+                    <span class="badge {{ $data['m_persen']['status']?'badge-success-light':'badge-danger-light' }}"> <i class="mdi mdi-arrow-bottom-right"></i> {{ $data['m_persen']['status']?'+':'-' }}{{ $data['m_persen']['persen'] }}% </span>
                     <span class="text-muted">Since last week</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
-        <div class="card">
+        <div class="card shadow-lg">
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
@@ -58,14 +58,14 @@
                 </div>
                 <h1 class="mt-1 mb-3">{{ number_format($data['asuransi'],0,'','.') }}</h1>
                 <div class="mb-0">
-                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
+                    <span class="badge {{ $data['a_persen']['status']?'badge-success-light':'badge-danger-light' }}"> <i class="mdi mdi-arrow-bottom-right"></i> {{ $data['a_persen']['status']?'+':'-' }}{{ $data['a_persen']['persen'] }}% </span>
                     <span class="text-muted">Since last week</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
-        <div class="card">
+        <div class="card shadow-lg">
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
@@ -80,14 +80,14 @@
                 </div>
                 <h1 class="mt-1 mb-3">{{ number_format($data['polis'],0,'','.') }}</h1>
                 <div class="mb-0">
-                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
+                    <span class="badge {{ $data['p_persen']['status']?'badge-success-light':'badge-danger-light' }}"> <i class="mdi mdi-arrow-bottom-right"></i> {{ $data['p_persen']['status']?'+':'-' }}{{ $data['p_persen']['persen'] }}% </span>
                     <span class="text-muted">Since last week</span>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-xl-3">
-        <div class="card">
+        <div class="card shadow-lg">
             <div class="card-body">
                 <div class="row">
                     <div class="col mt-0">
@@ -102,7 +102,7 @@
                 </div>
                 <h1 class="mt-1 mb-3">{{ number_format($data['klaim'],0,'','.') }}</h1>
                 <div class="mb-0">
-                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -5.25% </span>
+                    <span class="badge {{ $data['k_persen']['status']?'badge-success-light':'badge-danger-light' }}"> <i class="mdi mdi-arrow-bottom-right"></i> {{ $data['k_persen']['status']?'+':'-' }}{{ $data['k_persen']['persen'] }}% </span>
                     <span class="text-muted">Since last week</span>
                 </div>
             </div>
@@ -111,13 +111,45 @@
 </div>
 <div class="row">
     <div class="col-md-6 col-xl-6 col-xxl-7">
-        <div class="card flex-fill w-100">
+        <div class="card flex-fill w-100 shadow-lg">
             <div class="card-header">
                 <h5 class="card-title mb-0">Grafik Pembelian Asuransi</h5>
             </div>
             <div class="card-body pt-2 pb-3">
                 <div class="chart chart-sm"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                     <canvas id="chartjs-dashboard-line" style="display: block; width: 246px; height: 250px;" width="246" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xxl-3 d-flex order-1 order-xxl-3">
+        <div class="card flex-fill w-100">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Klaim Asuransi</h5>
+            </div>
+            <div class="card-body d-flex">
+                <div class="align-self-center w-100">
+                    <div class="py-3">
+                        <div class="chart chart-xs"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chartjs-dashboard-pie" width="456" height="125" style="display: block; width: 456px; height: 125px;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                    <table class="table mb-0">
+                        <tbody>
+                            <tr>
+                                <td><i class="align-middle text-success" data-feather="check"></i> Accepted</td>
+                                <td class="text-end">{{ $data['acc_klaim'] }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="align-middle text-danger" data-feather="x"></i> Rejected</td>
+                                <td class="text-end">{{ $data['rej_klaim'] }}</td>
+                            </tr>
+                            <tr>
+                                <td><i class="align-middle text-secondary" data-feather="activity"></i> Awaiting</td>
+                                <td class="text-end">{{ $data['await_klaim'] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -183,6 +215,36 @@
                         }
                     }]
                 }
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var chart_pie = {!! $data['chart_pie'] !!};
+        new Chart(document.getElementById("chartjs-dashboard-pie"), {
+            type: "pie",
+            data: {
+                labels: ["Accepted", "Rejected", "Awaiting"],
+                datasets: [{
+                    data: chart_pie,
+                    backgroundColor: [
+                        window.theme.success,
+                        window.theme.danger,
+                        window.theme.secondary,
+                        "#E8EAED"
+                    ],
+                    borderWidth: 5,
+                    borderColor: window.theme.white
+                }]
+            },
+            options: {
+                responsive: !window.MSInputMethodContext,
+                maintainAspectRatio: false,
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 70
             }
         });
     });

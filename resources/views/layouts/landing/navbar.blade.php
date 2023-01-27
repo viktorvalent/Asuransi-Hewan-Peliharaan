@@ -4,7 +4,7 @@
         <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
             <ul>
                 <li><a href="{{ route('home.package') }}">Package</a></li>
-                {{-- <li><a href="#">Claim</a></li> --}}
+                <li><a href="{{ route('home.calculator') }}">Calculator</a></li>
             </ul>
         </li>
         <li><a href="#">About</a></li>

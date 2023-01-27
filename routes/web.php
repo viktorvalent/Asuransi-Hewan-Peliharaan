@@ -28,6 +28,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
 Route::get('/faqs', [HomeController::class, 'faqs'])->name('home.faqs');
 Route::get('/term-and-condition', [HomeController::class, 'term_and_condition'])->name('home.tnc');
+Route::get('/calculator', [HomeController::class, 'kalkulator'])->name('home.calculator');
+Route::get('/calculator/get-ras-hewan/{id}', [HomeController::class, 'get_ras_hewan']);
 
 // Login Admin
 Route::controller(AdminController::class)->prefix('/auth/admin')->group(function(){

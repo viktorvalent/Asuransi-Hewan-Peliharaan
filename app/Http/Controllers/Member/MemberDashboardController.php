@@ -295,7 +295,6 @@ class MemberDashboardController extends Controller
         } else {
             $member = null;
         }
-
         return view('member.keranjang', [
             'title'=>'Cart',
             'member'=>$member,
@@ -311,13 +310,10 @@ class MemberDashboardController extends Controller
         } else {
             $member = null;
         }
-
         return view('member.petshop-terdekat', [
             'title'=>'Nearest Petshop',
             'member'=>$member,
             'petshops'=>$petshop
         ]);
     }
-
-    
 }

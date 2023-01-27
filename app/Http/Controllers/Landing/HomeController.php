@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Models\ProdukAsuransi;
 use App\Models\TermAndConditions;
 use App\Http\Controllers\Controller;
+use App\Models\MasterJenisHewan;
+use App\Models\MasterRasHewan;
 
 class HomeController extends Controller
 {
@@ -50,5 +52,26 @@ class HomeController extends Controller
             'title'=>'Term & Condition',
             'data'=>$data
         ]);
+    }
+
+    public function kalkulator()
+    {
+        $jenis = MasterJenisHewan::select('id','nama')->get();
+        return view('landing.premi-kalkulator', [
+            'title'=>'Kalkulator',
+            'jeniss'=>$jenis
+        ]);
+    }
+
+    public function get_ras_hewan($id)
+    {
+        $data = MasterRasHewan::where('jenis_hewan_id',$id)->get();
+
+        if ($data) {
+            return response()->json([
+                'status'=>200,
+                'data'=>$data
+            ]);
+        }
     }
 }

@@ -22,8 +22,15 @@ class DashboardController extends Controller
         $data['polis'] = PolisAsuransi::count();
         $data['klaim'] = KlaimAsuransi::count();
         $data['chart'] = json_encode(Helper::chartData());
-        // $currentDate = \Carbon\Carbon::now();
-        // $agoDate = $currentDate->subDays($currentDate->dayOfWeek)->subWeek();
+        $data['m_persen'] = Helper::getPersenByWeek(Member::class);
+        $data['a_persen'] = Helper::getPersenByWeek(PembelianProduk::class);
+        $data['p_persen'] = Helper::getPersenByWeek(PolisAsuransi::class);
+        $data['k_persen'] = Helper::getPersenByWeek(KlaimAsuransi::class);
+        $data['acc_klaim'] = KlaimAsuransi::where('status_klaim',3)->count();
+        $data['rej_klaim'] = KlaimAsuransi::where('status_klaim',2)->count();
+        $data['await_klaim'] = KlaimAsuransi::where('status_klaim',1)->count();
+        $pie = [$data['acc_klaim'],$data['rej_klaim'],$data['await_klaim']];
+        $data['chart_pie'] = json_encode($pie);
         return view('admin.app',[
             'title'=>$this->title,
             'data'=>$data
