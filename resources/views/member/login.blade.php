@@ -59,7 +59,7 @@
             <small class="text-danger email_error" style="font-size: 12px;"></small>
             <input type="password" name="password" id="password" required placeholder="password">
             <small class="text-danger password_error" style="font-size: 12px;"></small>
-            <a href="#">Forgot your password?</a>
+            <a href="{{ route('forget.password.get') }}">Forgot your password?</a>
             <button type="submit" class="mt-5 signin">Sign In</button>
         </form>
     </div>

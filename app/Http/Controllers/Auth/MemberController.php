@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class MemberController extends Controller
@@ -87,11 +90,8 @@ class MemberController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect()->route('sign-in.member');
     }
 }

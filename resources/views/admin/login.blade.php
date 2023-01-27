@@ -64,7 +64,7 @@
 											<button type="submit" class="btn btn-lg btn-primary sign" style="width: 125px;">Sign in</button>
 										</div>
                                         <div class="text-end">
-                                            <a class="text-end" href="#">Forgot password?</a>
+                                            <a class="text-end" href="{{ route('forget.password.get') }}">Forgot password?</a>
                                         </div>
 									</form>
 								</div>

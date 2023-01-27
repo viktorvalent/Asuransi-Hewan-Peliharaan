@@ -6,23 +6,24 @@ use App\Http\Controllers\Auth\MemberController;
 use App\Http\Controllers\Landing\HomeController;
 use App\Http\Controllers\Member\ProdukController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\WebContent\FaqController;
-use App\Http\Controllers\Admin\WebContent\HeroController;
+use App\Http\Controllers\Member\KlaimAsuransiController;
 use App\Http\Controllers\Admin\Transaksi\KlaimController;
-use App\Http\Controllers\Admin\MasterData\NoRekController;
 use App\Http\Controllers\Admin\Transaksi\PolisController;
+use App\Http\Controllers\Admin\WebContent\HeroController;
+use App\Http\Controllers\Admin\MasterData\NoRekController;
 use App\Http\Controllers\Member\MemberDashboardController;
+use App\Http\Controllers\Admin\MasterData\PetshopController;
 use App\Http\Controllers\Admin\Transaksi\PembelianController;
+use App\Http\Controllers\Admin\WebContent\TestimoniController;
 use App\Http\Controllers\Admin\MasterData\MasterBankController;
+use App\Http\Controllers\Admin\MasterData\MasterKabKotaController;
+use App\Http\Controllers\Admin\MasterData\MasterProvinsiController;
 use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
-use App\Http\Controllers\Admin\MasterData\MasterKabKotaController;
-use App\Http\Controllers\Admin\MasterData\MasterProvinsiController;
-use App\Http\Controllers\Admin\MasterData\PetshopController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
-use App\Http\Controllers\Admin\WebContent\TestimoniController;
-use App\Http\Controllers\Member\KlaimAsuransiController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
@@ -45,6 +46,11 @@ Route::controller(MemberController::class)->prefix('/member')->group(function(){
     Route::post('/registration','registration')->name('register.member');
     Route::get('/sign-out','logout')->name('sign-out.member');
 });
+
+Route::get('auth/forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.get');
+Route::post('auth/forget-password', [ForgotPasswordController::class, 'submitForgetPasswordForm'])->name('forget.password.post');
+Route::get('auth/reset-password/{token}', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('reset.password.get');
+Route::post('auth/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('reset.password.post');
 
 Route::middleware(['is_admin'])->group(function(){
     Route::controller(DashboardController::class)->prefix('/auth/dashboard')->group(function(){
