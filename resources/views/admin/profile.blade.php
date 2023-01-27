@@ -3,102 +3,71 @@
 @section('title', $title)
 
 @push('css')
-
+<link href="{{ asset('dashboard/css/jquery-datatable.css') }}" rel="stylesheet" />
 @endpush
 
 @section('container')
 <div class="row">
-    <div class="col-md-12 ">
-        <div class="alert alert-success alert-dismissible" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <div class="alert-icon">
-                <i class="align-middle" data-feather="user"></i>
+    <div class="col-md-4 col-xl-3">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Profile Details</h5>
             </div>
-            <div class="alert-message fs-4">
-                Selamat datang, <strong>{{ auth()->user()->username }}</strong>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Sales</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck align-middle"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">2.382</h1>
-                <div class="mb-0">
-                    <span class="badge badge-primary-light"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
-                    <span class="text-muted">Since last week</span>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Visitors</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users align-middle"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">14.212</h1>
-                <div class="mb-0">
-                    <span class="badge badge-success-light"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
-                    <span class="text-muted">Since last week</span>
+            <div class="card-body text-center">
+                <img src="{{ asset('img/avatar.png') }}" alt="Christina Mason" class="img-fluid rounded-circle mb-2" width="128" height="128">
+                <h5 class="card-title mb-1">{{ auth()->user()->username }}</h5>
+                <div class="text-muted mb-2">{{ auth()->user()->email }}</div>
+                <div>
+                    <a class="btn btn-primary btn-sm mt-2" href="#" data-bs-toggle="modal" data-bs-target="#modal_reset">Reset Password</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-md-8 col-xl-9">
         <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Earnings</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign align-middle"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">$21.300</h1>
-                <div class="mb-0">
-                    <span class="badge badge-success-light"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-                    <span class="text-muted">Since last week</span>
-                </div>
+            <div class="card-header">
+                <h5 class="card-title mb-0">Admin Activity</h5>
+            </div>
+            <div class="card-body h-100">
+                <table id="datatable" class="table table-hover w-100">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Menu</th>
+                            <th>Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Orders</h5>
-                    </div>
+    </div>
 
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart align-middle"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                        </div>
-                    </div>
+    <div class="modal fade" id="modal_reset" tabindex="-1" aria-modal="true" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Reset Password</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <h1 class="mt-1 mb-3">64</h1>
-                <div class="mb-0">
-                    <span class="badge badge-danger-light"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
-                    <span class="text-muted">Since last week</span>
+                <div class="modal-body m-2">
+                    <form id="create">
+                        <div class="mb-2">
+                            <label class="form-label required">Password Baru <i class="text-danger">*</i></label>
+                            <input type="hidden" name="id" class="id" value="{{ auth()->user()->id }}">
+                            <input id="new_pass" type="password" name="new_pass" class="form-control" placeholder="******">
+                            <small class="text-danger new_pass_error"></small>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label required">Konfirmasi Password Baru <i class="text-danger">*</i></label>
+                            <input id="confirm_new_pass" type="password" name="confirm_new_pass" class="form-control" placeholder="******">
+                            <small class="text-danger confirm_new_pass_error"></small>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary btn-default ms-2 reset">Kirim</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -107,5 +76,55 @@
 @endsection
 
 @push('js')
+<script src="{{ asset('dashboard/js/jquery.js') }}"></script>
+<script src="{{ asset('dashboard/js/jquery-datatable.js') }}"></script>
+<script src="{{ asset('dashboard/js/support.js') }}"></script>
+<script src="{{ asset('dashboard/libs/sweetalert/app.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        _table.set("{{ route('admin.logs') }}",
+            [
+                {data: 'tanggal', name: 'tanggal'},
+                {data: 'menu', name: 'menu'},
+                {data: 'description', name: 'description'},
+            ]
+        );
 
+        $(document).on('click','.reset',function(e){
+            e.preventDefault();
+            let data = {
+                'id':$('.id').val(),
+                'new_pass':$('#new_pass').val(),
+                'confirm_new_pass':$('#confirm_new_pass').val(),
+            }
+            _input.loading.start(this);
+            _ajax.post(`{{ route('reset.pass.admin') }}`,data,
+            (response)=>{
+                    _input.loading.stop('.reset','Kirim');
+                    if (response.status == 200) {
+                        _swalert(response);
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    }
+                },
+                (response)=>{
+                    _input.loading.stop('.reset','Kirim');
+                    if (response.status == 400) {
+                        _validation.action(response.responseJSON)
+                    } else if (response.status == 404) {
+                        _swalert(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                }
+            )
+        });
+    });
+</script>
 @endpush

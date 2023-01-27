@@ -36,6 +36,7 @@ Route::get('/calculator/get-ras-hewan/{id}', [HomeController::class, 'get_ras_he
 Route::controller(AdminController::class)->prefix('/auth/admin')->group(function(){
     Route::get('/sign-in','index')->name('sign-in.admin');
     Route::post('/authenticating','authenticate')->name('authenticating.admin');
+    Route::post('/reset-password','resetPassword')->name('reset.pass.admin')->middleware('is_admin');
     Route::get('/sign-out','logout')->name('sign-out.admin');
 });
 
@@ -56,6 +57,7 @@ Route::middleware(['is_admin'])->group(function(){
     Route::controller(DashboardController::class)->prefix('/auth/dashboard')->group(function(){
         Route::get('/','index')->name('auth.dashboard');
         Route::get('/profile','profile')->name('auth.profile');
+        Route::get('/list-data','data')->name('admin.logs');
     });
 
     Route::controller(MasterBankController::class)->prefix('/auth/dashboard/master-bank')->group(function(){

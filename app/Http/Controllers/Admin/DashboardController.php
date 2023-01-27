@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Helper;
 use App\Models\User;
 use App\Models\Member;
+use App\Models\UserLog;
 use Illuminate\Http\Request;
 use App\Models\KlaimAsuransi;
 use App\Models\PolisAsuransi;
 use App\Models\PembelianProduk;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class DashboardController extends Controller
 {
@@ -44,5 +46,19 @@ class DashboardController extends Controller
             'data'=>$data,
             'title'=>'Profile'
         ]);
+    }
+
+    public function data(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = UserLog::where('user_id',auth()->user()->id)->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('tanggal', function($row){
+                    return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $row->created_at)->format('d/m/Y');
+                })
+                ->rawColumns(['tanggal'])
+                ->make(true);
+        }
     }
 }
