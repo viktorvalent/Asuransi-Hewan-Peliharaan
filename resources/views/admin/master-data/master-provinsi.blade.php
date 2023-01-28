@@ -37,7 +37,7 @@
                     <div class="modal-body m-3">
                         <form id="create">
                             <div class="mb-3">
-                                <label class="form-label required">Nama <i class="text-danger">*</i></label>
+                                <label class="form-label required">Nama Provinsi <i class="text-danger">*</i></label>
                                 <input id="nama" type="text" name="nama" class="form-control" placeholder="Nama">
                                 <small class="text-danger nama_error"></small>
                             </div>
@@ -65,7 +65,7 @@
                     <div class="modal-body m-3">
                         <form id="edit">
                             <div class="mb-3">
-                                <label class="form-label required">Nama <i class="text-danger">*</i></label>
+                                <label class="form-label required">Nama Provinsi <i class="text-danger">*</i></label>
                                 <input type="hidden" name="edit_id" class="edit_id">
                                 <input id="nama" type="text" name="edit_nama" class="form-control edit_nama" placeholder="Nama">
                                 <small class="text-danger nama_error"></small>

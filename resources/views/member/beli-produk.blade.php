@@ -84,13 +84,6 @@
                             Dengan ini saya menyetujui <a href="{{ route('home.tnc') }}" class="fw-bold text-dark" target="_blank">Term & Conditions.</a>
                         </label>
                     </div>
-
-                    {{-- <div class="mb-3">
-                        <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
-                        <textarea name="alamat" class="form-control" id="alamat" rows="3" placeholder="Alamat"></textarea>
-                        <small class="text-danger alamat_error"></small>
-                    </div> --}}
-
                     <div class="d-flex justify-content-center py-3">
                         <button type="submit" class="btn btn-primary shadow create" style="width: 150px;" disabled="disabled">Kirim</button>
                     </div>
