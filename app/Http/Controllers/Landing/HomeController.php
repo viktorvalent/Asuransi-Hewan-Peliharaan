@@ -17,7 +17,7 @@ class HomeController extends Controller
     public function index()
     {
         $faq = Faq::latest()->limit(5)->get();
-        $package = PaketContent::latest()->limit(3)->get();
+        $package = PaketContent::latest()->get();
         $testimonials = Testimoni::select('nama','pekerjaan','foto','testi_text')->get();
         return view('landing.home', [
             'title'=>'Home',

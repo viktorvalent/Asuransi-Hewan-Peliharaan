@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\MasterData\MasterRasHewanController;
 use App\Http\Controllers\Admin\MasterData\ProdukAsuransiController;
 use App\Http\Controllers\Admin\MasterData\MasterJenisHewanController;
 use App\Http\Controllers\Admin\UserManagement\UserController;
+use App\Http\Controllers\Admin\WebContent\PakacgeContentController;
 use App\Http\Controllers\Admin\WebContent\TermAndConditionsController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -201,6 +202,13 @@ Route::middleware(['is_admin'])->group(function(){
     Route::controller(HeroController::class)->prefix('/auth/dashboard/hero')->group(function(){
         Route::get('/','index')->name('web-content.hero');
         Route::get('/list-data','data')->name('hero.data');
+        Route::get('/edit/{id}','edit');
+        Route::put('/update/{id}','update');
+    });
+
+    Route::controller(PakacgeContentController::class)->prefix('/auth/dashboard/package-content')->group(function(){
+        Route::get('/','index')->name('web-content.package-content');
+        Route::get('/list-data','data')->name('package-content.data');
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
     });

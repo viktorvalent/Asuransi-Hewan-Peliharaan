@@ -115,6 +115,9 @@
                     <li class="sidebar-item {{ $title=='Testimoni'?'active':'' }}">
                         <a class="sidebar-link" href="{{ route('web-content.testimoni') }}">Testimoni</a>
                     </li>
+                    <li class="sidebar-item {{ $title=='Paket Konten'?'active':'' }}">
+                        <a class="sidebar-link" href="{{ route('web-content.package-content') }}">Paket Konten</a>
+                    </li>
                 </ul>
             </li>
 
