@@ -23,7 +23,9 @@ return new class extends Migration
             $table->string('foto_bukti_bayar')->nullable();
             $table->string('foto_resep_obat')->nullable();
             $table->string('foto_diagnosa_dokter')->nullable();
-            $table->integer('nominal_klaim')->nullable();
+            $table->integer('nominal_bayar_rs')->nullable();
+            $table->integer('nominal_bayar_dokter')->nullable();
+            $table->integer('nominal_bayar_obat')->nullable();
             $table->integer('nominal_disetujui')->nullable();
             $table->string('keterangan_klaim')->nullable();
             $table->timestamps();

@@ -25,7 +25,37 @@
                         <a href="{{ route('home.package') }}" class="btn btn-primary btn-sm"><i class="bi bi-cart3 fs-5"></i> Paket Asuransi</a>
                     </div>
                 @else
-                    C
+                <table id="datatable" class="table table-bordered table-hover w-100" style="font-size: .9rem">
+                    <thead class="bg-light">
+                        <tr class="text-center align-middle">
+                            <th>No.</th>
+                            <th>Paket Asuransi</th>
+                            <th>Nama Hewan (Ras)</th>
+                            <th>Total Pembayaran</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php($no=1)
+                        @foreach ($pembelians as $item)
+                        <tr class="text-center align-middle" style="height: 5rem">
+                            <td class="fw-bold">{{ $no }}</td>
+                            <td>{{ $item->produk->nama_produk }}</td>
+                            <td>{{ $item->nama_hewan }} ({{ $item->ras_hewan->jenis_hewan->nama }} - {{ $item->ras_hewan->nama_ras }})</td>
+                            <td class="text-danger fw-bold">Rp {{ number_format(($item->harga_dasar_premi+$item->biaya_pendaftaran),0,'','.') }}</td>
+                            <td>
+                                <span class="badge text-bg-secondary shadow-sm">UNPAID</span>
+                            </td>
+                            <td>
+                                <a href="{{ URL::route('pembelian.bayar.cart', ['id'=>$item->id]) }}" class="btn btn-sm btn-success" style="font-size: .825rem;"><i class="bi bi-cash"></i>&nbsp;&nbsp;BAYAR</a>
+                            </td>
+                        </tr>
+                        @php($no++)
+                        @endforeach
+                    </tbody>
+                </table>
+
                 @endif
             </div>
         </div>
