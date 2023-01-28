@@ -127,6 +127,24 @@
                                 </div>
                             </div>
                         </div>
+                        <hr>
+                        <h5>Konten</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nohp" class="form-label">Harga untuk Konten <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control rupiah_format" id="harga_konten" name="harga_konten" placeholder="Rp." value="{{ number_format($data->konten->harga,0,'','.') }}">
+                                    <small class="text-danger harga_konten_error"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nohp" class="form-label">Icon untuk konten (Bootstrap Icon) <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="icon" name="icon" placeholder="Bootstrap Icon" value="{{ $data->konten->icon }}">
+                                    <small class="text-danger icon_error"></small>
+                                </div>
+                            </div>
+                        </div>
                         <div class="py-4 d-flex justify-content-center">
                             <button type="submit" class="btn btn-primary create">
                                 Kirim
@@ -165,9 +183,11 @@
                 'nilai_pertanggungan_max':parseFloat((($('#nilai_pertanggungan_max').val()).split('.').join(''))),
                 'santunan_mati_kecelakaan':parseFloat((($('#santunan_mati_kecelakaan').val()).split('.').join(''))),
                 'santunan_kecurian':$('#santunan_kecurian').val(),
+                'icon':$('#icon').val(),
                 'tanggung_jawab_hukum':parseFloat((($('#tanggung_jawab_hukum').val()).split('.').join(''))),
                 'santunan_kremasi':parseFloat((($('#santunan_kremasi').val()).split('.').join(''))),
                 'santunan_rawat_inap':parseFloat((($('#santunan_rawat_inap').val()).split('.').join(''))),
+                'harga_konten':parseFloat((($('#harga_konten').val()).split('.').join(''))),
             }
             _input.loading.start(this);
             _ajax.post("{{ route('master-data.produk-asuransi.update') }}",data,

@@ -20,4 +20,9 @@ class ProdukAsuransi extends Model
     {
         return $this->hasOne(ProdukBenefit::class, 'produk_id');
     }
+
+    public function konten()
+    {
+        return $this->hasOne(PaketContent::class, 'produk_id');
+    }
 }

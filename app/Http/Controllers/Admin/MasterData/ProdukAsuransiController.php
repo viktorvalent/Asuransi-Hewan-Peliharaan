@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\ProdukAsuransi;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PaketContent;
 use App\Models\ProdukBenefit;
 use Illuminate\Support\Facades\URL;
 use Yajra\DataTables\Facades\DataTables;
@@ -39,7 +40,7 @@ class ProdukAsuransiController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function($row){
                     $edit = URL::route('produk-asuransi.edit', ['id'=>$row->id]);
-                    if (!$row->pembelian_produk()->exists() || !$row->produk_benefit()->exists()) {
+                    if (!$row->pembelian_produk()->exists() && !$row->produk_benefit()->exists() && !$row->konten()->exists()) {
                         $action = '<a href="'.$edit.'" class="btn btn-primary my-1 edit fs-4" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit align-middle"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                                     </a>
@@ -56,11 +57,16 @@ class ProdukAsuransiController extends Controller
                     }
                     return $action;
                 })
-                ->editColumn('nama_produk', function($row){
-                    $url = URL::route('master-data.produk-asuransi.detail', $row->id);
-                    return '<a href="'.$url.'" class="fw-bold">'.$row->nama_produk.'</a>';
+                ->editColumn('konten.icon', function($row){
+                    return $row->konten->icon;
                 })
-                ->rawColumns(['action','nama_produk'])
+                ->editColumn('limit_kamar', function($row){
+                    return 'Rp '.number_format($row->limit_kamar,0,'','.');
+                })
+                ->editColumn('limit_obat', function($row){
+                    return 'Rp '.number_format($row->limit_kamar,0,'','.');
+                })
+                ->rawColumns(['action','konten.icon'])
                 ->make(true);
         }
     }
@@ -82,6 +88,8 @@ class ProdukAsuransiController extends Controller
             'tanggung_jawab_hukum' => 'required',
             'santunan_kremasi' => 'required',
             'santunan_rawat_inap' => 'required',
+            'harga_konten' => 'required',
+            'icon' => 'required',
         ],
         [
             '*.required' => 'Tidak boleh kosong!'
@@ -102,7 +110,6 @@ class ProdukAsuransiController extends Controller
                     'satuan_limit_obat' => $request->satuan_limit_obat,
                     'satuan_limit_dokter' => $request->satuan_limit_dokter,
                 ]);
-
                 if($produk) {
                     ProdukBenefit::create([
                         'produk_id' => $produk->id,
@@ -113,6 +120,13 @@ class ProdukAsuransiController extends Controller
                         'hukum_pihak_ketiga_max' => $request->tanggung_jawab_hukum,
                         'santunan_kremasi_max' => $request->santunan_kremasi,
                         'santunan_rawat_inap_max' => $request->santunan_rawat_inap
+                    ]);
+                    PaketContent::create([
+                        'produk_id'=>$produk->id,
+                        'nama'=>$produk->nama_produk,
+                        'icon'=>$request->icon,
+                        'warna'=>'#0081c9',
+                        'harga'=>$request->harga_konten
                     ]);
                 }
                 Helper::createUserLog("Berhasil menambahkan produk asuransi ".$produk->nama_produk, auth()->user()->id, $this->title);
@@ -134,7 +148,7 @@ class ProdukAsuransiController extends Controller
 
     public function edit($id)
     {
-        $data = ProdukAsuransi::with('produk_benefit')->find($id);
+        $data = ProdukAsuransi::with('produk_benefit','konten')->find($id);
         if($data) {
             return view('admin.master-data.edit-produk-asuransi', [
                 'title' => $this->title,
@@ -160,6 +174,8 @@ class ProdukAsuransiController extends Controller
             'tanggung_jawab_hukum' => 'required',
             'santunan_kremasi' => 'required',
             'santunan_rawat_inap' => 'required',
+            'harga_konten' => 'required',
+            'icon' => 'required',
         ],
         [
             '*.required' => 'Tidak boleh kosong!'
@@ -193,6 +209,14 @@ class ProdukAsuransiController extends Controller
                             'hukum_pihak_ketiga_max' => $request->tanggung_jawab_hukum,
                             'santunan_kremasi_max' => $request->santunan_kremasi,
                             'santunan_rawat_inap_max' => $request->santunan_rawat_inap
+                        ]);
+                        $content = PaketContent::where('produk_id',$request->id)->first();
+                        $content->update([
+                            'produk_id'=>$produk->id,
+                            'nama'=>$produk->nama_produk,
+                            'icon'=>$request->icon,
+                            'warna'=>'#0081c9',
+                            'harga'=>$request->harga_konten
                         ]);
                     }
                     Helper::createUserLog("Berhasil mengubah produk asuransi ".$produk->nama_produk, auth()->user()->id, $this->title);
