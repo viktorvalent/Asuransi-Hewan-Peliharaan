@@ -163,4 +163,15 @@ class KlaimAsuransiController extends Controller
             ]);
         }
     }
+
+    public function confirm_detail($id)
+    {
+        $data = KlaimAsuransi::with('konfirmasi_klaim_asuransi')->select('id')->find($id);
+        if ($data) {
+            return response()->json([
+                'status'=>200,
+                'data'=>$data
+            ]);
+        }
+    }
 }

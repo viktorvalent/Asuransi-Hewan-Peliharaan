@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\TerimaKlaimAsuransi;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use App\Models\KonfirmasiKlaimAsuransi;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -185,6 +186,45 @@ class KlaimController extends Controller
             } catch (Exception $e) {
                 DB::rollBack();
                 Helper::createUserLog("Gagal menolak klaim", auth()->user()->id, $this->title);
+                return response()->json([
+                    'message'=>$e->getMessage()
+                ],422);
+            }
+        }
+    }
+
+    public function nominal_confirmation(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'alasan' => 'required',
+            'nominal' => 'required',
+        ],
+        [
+            '*.required' => 'Tidak boleh kosong!'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->errors()->toArray()
+            ],400);
+        } else {
+            try {
+                DB::beginTransaction();
+                $data = KlaimAsuransi::find($request->id);
+                KonfirmasiKlaimAsuransi::create([
+                    'klaim_id'=>$data->id,
+                    'nominal_ditawarkan'=>$request->nominal,
+                    'alasan'=>$request->alasan
+                ]);
+                $data->update(['status_klaim'=>5]);
+                Helper::createUserLog("Berhasil konfirmasi nominal", auth()->user()->id, $this->title);
+                DB::commit();
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Berhasil menolak klaim'
+                ]);
+            } catch (Exception $e) {
+                DB::rollBack();
+                Helper::createUserLog("Gagal konfirmasi nominal", auth()->user()->id, $this->title);
                 return response()->json([
                     'message'=>$e->getMessage()
                 ],422);

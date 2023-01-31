@@ -18,7 +18,7 @@
                         <div class="col-md-3 p-1 rounded">
                             <div class="fs-5 text-muted mb-2">Tanggal Klaim</div>
                             <input class="klaim_id" type="hidden" name="klaim_id" value="{{ $data->id }}">
-                            <div class="fs-4 fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $data->tgl_klaim, 'Asia/Jakarta')->format('d-m-Y') }}</div>
+                            <div class="fs-4 fw-bold">{{ \Carbon\Carbon::createFromFormat('Y-m-d', $data->tgl_klaim, 'Asia/Jakarta')->format('d/m/Y') }}</div>
                         </div>
                         <div class="col-md-3 p-1 rounded">
                             <div class="fs-5 text-muted mb-2">Member</div>
@@ -172,14 +172,17 @@
         <div class="card-body">
             <div class="d-flex justify-content-center">
                 @if ($data->status_klaim==3)
-                <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
-                <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                    <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
+                    <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @elseif ($data->status_klaim==2)
-                <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
-                <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                    <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
+                    <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                @elseif ($data->status_klaim==5)
+                    <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                    <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-pencil-square"></i> Tolak & Konfirmasi Nominal</button>
                 @elseif (!$status)
-                    <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true) data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Limit Klaim Tidak Mencukupi"><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
-                    <button class="btn btn-danger" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_reject"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                    <button class="btn btn-danger me-2" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_reject"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                    <button class="btn btn-warning" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_nominal"><i class="bi bi-pencil-square"></i> Tolak & Konfirmasi Nominal</button>
                 @else
                     <button class="btn btn-success me-2" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_accept"><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
                     <button class="btn btn-danger" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_reject"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
@@ -210,6 +213,34 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="modal_nominal" tabindex="-1" aria-modal="true" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Tolak Klaim Asuransi</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <form id="create">
+                                <div class="mb-3">
+                                    <label for="foto" class="form-label">Nominal yang bisa diberikan <i class="text-danger">*</i></label>
+                                    <input class="form-control rupiah_format" type="text" id="nominal" name="nominal" placeholder="Rp. 00,0">
+                                    <small class="text-danger nominal_error"></small>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea id="alasan_nominal" class="form-control alasan_nominal" name="alasan_nominal" placeholder="Alasan konfirmasi nominal" rows="3"></textarea>
+                                    <small class="text-danger alasan_error"></small>
+                                </div>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary ms-2 btn-default nominal_confirm">Kirim</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="modal_accept" tabindex="-1" aria-modal="true" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -218,28 +249,109 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body mx-3">
-                            <div class="row mb-4">
+                            <div class="row mb-4 border p-2 rounded shadow bg-light">
                                 <div class="col-12">
                                     <div class="row mb-2">
                                         <div class="col-md-6 fw-bold">
-                                            Member Bank Tujuan
+                                            Bank
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 text-end">
                                             {{ $data->member->master_bank->nama }}
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mb-2">
                                         <div class="col-md-6 fw-bold">
                                             Nomor Rekening
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 text-end">
                                             {{ $data->member->no_rekening }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6 fw-bold">
+                                            Jumlah Pengajuan Klaim
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            Rp {{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6 fw-bold">
+                                            Jumlah Yang Disetujui
+                                        </div>
+                                        <div class="col-md-6 text-end">
+                                            Rp <span class="agree_total">{{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <form id="create">
                                 <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input tg_radio" type="radio" name="tanggungan" id="semua" value="1" style="width: 20px;height:20px;" checked>
+                                                <label class="form-check-label mt-1 ms-2" for="semua">
+                                                    Tanggung Semua
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input tg_radio" type="radio" name="tanggungan" id="sebagian" value="2" style="width: 20px;height:20px;">
+                                                <label class="form-check-label mt-1 ms-2" for="sebagian">
+                                                    Tanggung Sebagian
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="rs" class="form-label">Tanggungan Biaya RS <i class="text-danger">*</i></label>
+                                    <div class="row">
+                                        <div class="col-md-5 mb-2">
+                                            <div class="form-check form-switch d-flex align-item-center">
+                                                <input class="form-check-input tg_prop full full_rs" type="checkbox" id="full_rs" disabled>
+                                                <label class="form-check-label ms-2" for="full_rs"><i class="text-primary"><small>Tanggung Penuh Biaya RS</small></i></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input class="form-control tg_prop rupiah_format rs" type="text" id="rs" name="rs" placeholder="Rp. 00,0" disabled>
+                                            <small class="text-danger rs_error"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="obat" class="form-label">Tanggungan Biaya Obat <i class="text-danger">*</i></label>
+                                    <div class="row">
+                                        <div class="col-md-5 mb-2">
+                                            <div class="form-check form-switch d-flex align-item-center">
+                                                <input class="form-check-input tg_prop full full_obat" type="checkbox" id="full_obat" disabled>
+                                                <label class="form-check-label ms-2" for="full_obat"><i class="text-primary"><small>Tanggung Penuh Biaya Obat</small></i></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input class="form-control tg_prop rupiah_format obat" type="text" id="obat" name="obat" placeholder="Rp. 00,0" disabled>
+                                            <small class="text-danger obat_error"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="dokter" class="form-label">Tanggungan Biaya Diagnosa Dokter <i class="text-danger">*</i></label>
+                                    <div class="row">
+                                        <div class="col-md-5 mb-2">
+                                            <div class="form-check form-switch d-flex align-item-center">
+                                                <input class="form-check-input tg_prop full full_dokter" type="checkbox" id="full_dokter" disabled>
+                                                <label class="form-check-label ms-2" for="full_dokter"><i class="text-primary"><small>Tanggung Penuh Biaya Obat</small></i></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <input class="form-control tg_prop rupiah_format dokter" type="text" id="dokter" name="dokter" placeholder="Rp. 00,0" disabled>
+                                            <small class="text-danger dokter_error"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
                                     <label for="foto" class="form-label">Foto Bukti Bayar Klaim <i class="text-danger">*</i></label>
                                     <input class="form-control" type="file" id="bukti_bayar_klaim" name="bukti_bayar_klaim">
                                     <small class="text-danger bukti_bayar_klaim_error"></small>
@@ -253,7 +365,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -268,6 +379,7 @@
 <script>
     $(document).ready(function () {
         new Zooming().listen('.img-zoomable');
+        $('.rupiah_format').on('keyup',function(e){this.value=_input.rupiah(this.value)});
         $(document).on('click','.reject', function(e){
             e.preventDefault();
             let data = {
@@ -338,6 +450,72 @@
             );
         })
 
+        $(document).on('click','.nominal_confirm', function(e){
+            e.preventDefault();
+            let data = {
+                'id': $('.klaim_id').val(),
+                'nominal':parseFloat($('#nominal').val().split(".").join("")),
+                'alasan':$('#alasan_nominal').val()
+            }
+            _input.loading.start(this);
+            _ajax.post("{{ route('klaim.nominal-confirmation') }}",data,
+                (response) => {
+                    _input.loading.stop('.reject','Kirim');
+                    if (response.status == 200) {
+                        _swalert(response);
+                        setTimeout(() => {
+                            location.href="{{ route('klaim') }}";
+                        }, 1500);
+                    }
+                },
+                (response) => {
+                    _input.loading.stop('.reject','Kirim');
+                    if (response.status == 400) {
+                        _validation.action(response.responseJSON)
+                    } else if (response.status == 404) {
+                        _swalert(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                }
+            );
+        });
+
+        $(document).on('change','.tg_radio', function(e){
+            e.preventDefault();
+            let tg = parseInt($('.tg_radio:checked').val());
+            if(tg === 1) {
+                $('input.tg_prop').attr('disabled','disabled');
+                $('.full').prop('checked',false);
+                $('input.tg_prop').val('');
+                $('input#bukti_bayar_klaim').removeAttr('disabled');
+                $('.agree_total').html(_input.rupiah(({!! $data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter !!}).toString()))
+            } else {
+                $('input#bukti_bayar_klaim').attr('disabled','disabled');
+                $('input.tg_prop').removeAttr('disabled');
+                $('.agree_total').html('0');
+            }
+        });
+
+        const autoFull = (elChange,elTarget,acc) => {
+            $(document).on('change',elChange, function(e){
+                e.preventDefault();
+                if($(this).is(':checked')) {
+                    $(elTarget).val(_input.rupiah(acc.toString()));
+                } else {
+                    $(elTarget).val('');
+                }
+            });
+        };
+
+        autoFull('.full_rs','.rs',{!! $data->nominal_bayar_rs !!});
+        autoFull('.full_obat','.obat',{!! $data->nominal_bayar_obat !!});
+        autoFull('.full_dokter','.dokter',{!! $data->nominal_bayar_dokter !!});
     });
 </script>
 @endpush

@@ -55,7 +55,7 @@
                             <tr class="text-center align-middle" style="height: 3.75rem">
                                 <td class="fw-bold">{{ $no }}</td>
                                 <td>{{ $item->polis->nomor_polis }}</td>
-                                <td>Rp {{ number_format(($item->nominal_bayar_rs+$item->nominal_bayar_dokter+$item->nominal_bayar_obat),0,'','.') }}</td>
+                                <td class="{{ ($item->status_set->id==5?'text-danger':'') }}">Rp {{ number_format(($item->nominal_bayar_rs+$item->nominal_bayar_dokter+$item->nominal_bayar_obat),0,'','.') }}</td>
                                 <td>
                                     @if ($item->status_set->id==1)
                                         <span class="badge text-bg-light shadow-sm">{{ $item->status_set->status }}</span>
@@ -69,13 +69,17 @@
                                 </td>
                                 <td>
                                     @if ($item->status_set->id==1)
-                                        <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;">Awaiting <div class="spinner-border text-white" style="width:15.5px;height:15.5px;" role="status"></div></button>
+                                        <button class="btn btn-sm btn-secondary" style="font-size: .825rem;cursor:default;" data-bs-toggle="tooltip" data-bs-placement="top" title="Awaiting for Admin Confirmation"><i class="bi bi-clock-history"></i></button>
+                                        <button class="btn btn-sm btn-secondary" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Unduh Nota" @disabled(true)><i class="bi bi-download"></i></button>
                                     @elseif ($item->status_set->id==2)
-                                    <button data-id="{{ $item->id }}" class="btn btn-sm btn-secondary detail" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Alasan Penolakan"><i class="bi bi-search"></i></button>
+                                        <button data-id="{{ $item->id }}" class="btn btn-sm btn-secondary detail" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Alasan Penolakan"><i class="bi bi-search"></i></button>
                                         <a href="{{ URL::route('member.claim.revisi',['id'=>$item->id]) }}" class="btn btn-sm btn-warning" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Revisi Klaim"><i class="bi bi-pencil"></i></a>
                                     @elseif ($item->status_set->id==3)
                                         <button data-id="{{ $item->id }}" class="btn btn-sm btn-secondary detail" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Bukti Pembayaran Klaim"><i class="bi bi-search"></i></button>
                                         <a href="{{ URL::route('member.download.nota_klaim', ['id'=>$item->id]) }}" class="btn btn-sm btn-success" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Unduh Nota"><i class="bi bi-download"></i></a>
+                                    @elseif ($item->status_set->id==5)
+                                        <button data-id="{{ $item->id }}" class="btn btn-sm btn-danger nominal_confirm" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Konfirmasi Nominal Klaim"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-secondary" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Unduh Nota" @disabled(true)><i class="bi bi-download"></i></button>
                                     @else
                                         <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Nota</button>
                                     @endif
@@ -134,6 +138,19 @@
                         } else {
                             $('.detail_data').html(`<div class="fs-6 mb-2">Alasan klaim ditolak :</div><div class="fst-italic text-danger fw-bold">"${response.data.tolak_klaim_asuransi.alasan_menolak}."</div>`);
                         }
+                    }
+                }
+            )
+        });
+
+        $(document).on('click','.nominal_confirm', function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
+            _ajax.get(`{{ url('/claim/confirm-detail') }}/${id}`,
+                (response) => {
+                    if (response.status == 200) {
+                        $('#modal_accept').modal('show')
+                        $('.detail_data').html(``);
                     }
                 }
             )

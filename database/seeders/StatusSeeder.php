@@ -31,6 +31,10 @@ class StatusSeeder extends Seeder
             [
                 'id'=>4,
                 'status'=>'NEED REVISION'
+            ],
+            [
+                'id'=>5,
+                'status'=>'NOMINAL CONFIRMATION'
             ]
         ]);
     }

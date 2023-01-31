@@ -157,6 +157,7 @@ Route::middleware(['is_admin'])->group(function(){
         Route::get('/detail/{id}','check_detail')->name('klaim.detail');
         Route::post('/confirm','confirm_klaim')->name('klaim.confirm');
         Route::post('/reject','reject_klaim')->name('klaim.reject');
+        Route::post('/nominal-confirmation','nominal_confirmation')->name('klaim.nominal-confirmation');
         Route::get('/edit/{id}','edit');
         Route::get('/testpdf/{id}','pdf')->name('test.pdf.klaim');
         Route::put('/update/{id}','update');
@@ -252,5 +253,6 @@ Route::middleware(['is_member'])->group(function(){
         Route::post('/make-claim','klaim')->name('claim.make');
         Route::post('/make-revisi','revisi')->name('claim.revisi');
         Route::get('/cek-detail/{id}','accept_detail');
+        Route::get('/confirm-detail/{id}','confirm_detail');
     });
 });
