@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Member extends Model
 {
     protected $table = 'member';
-    protected $fillable = ['user_id','bank_id','nama_lengkap','no_ktp','alamat','no_hp','no_rekening','kab_kota_id'];
+    protected $fillable = ['user_id','bank_id','nama_lengkap','no_ktp','alamat','no_hp','no_rekening','kab_kota_id','profile_pic'];
     public $timestamps = true;
     protected $primaryKey = 'id';
 

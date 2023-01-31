@@ -50,6 +50,7 @@ class ProdukController extends Controller
         $validator = Validator::make($request->all(), [
             'produk_id' => 'required',
             'nama_hewan' => 'required',
+            'jangka_waktu' => 'required',
             'nama_pemilik' => 'required',
             'bobot' => 'required',
             'tgl_lahir' => 'required',
@@ -68,8 +69,10 @@ class ProdukController extends Controller
             try {
                 DB::beginTransaction();
                 $foto = $request->file('foto')->store('public/data-pembelian/foto-hewan/member_'.Str::slug(auth()->user()->member->nama_lengkap));
-                $ras = MasterRasHewan::select('harga_hewan')->where('id',$request->ras_hewan)->first();
+                $ras = MasterRasHewan::select('harga_hewan','persen_per_umur')->where('id',$request->ras_hewan)->first();
+                $umur = Carbon::parse($request->tgl_lahir)->age;
                 $dasar_premi = $ras->harga_hewan*(5/100);
+                $total_premi = $dasar_premi + ($dasar_premi*(($ras->persen_per_umur*$umur)/100));
                 PembelianProduk::create([
                     'produk_id'=>$request->produk_id,
                     'nama_hewan'=>$request->nama_hewan,
@@ -80,10 +83,11 @@ class ProdukController extends Controller
                     'jenis_kelamin_hewan'=>$request->jenis_kelamin,
                     'ras_hewan_id'=>$request->ras_hewan,
                     'biaya_pendaftaran'=>138000,
-                    'harga_dasar_premi'=>$dasar_premi,
+                    'harga_dasar_premi'=>$total_premi,
                     'tgl_daftar_asuransi'=>Carbon::now('Asia/Jakarta')->format('Y-m-d'),
                     'foto'=>$foto,
                     'status'=>1,
+                    'jangka_waktu'=>$request->jangka_waktu,
                     'pay_status'=>false
                 ]);
 

@@ -58,6 +58,7 @@ class KlaimAsuransiController extends Controller
                     'foto_diagnosa_dokter'=>$diagnosa,
                     'status_klaim'=>1
                 ]);
+
                 DB::commit();
                 Helper::createUserLog("Berhasil melakukan klaim", auth()->user()->id, $this->title);
                 return response()->json([

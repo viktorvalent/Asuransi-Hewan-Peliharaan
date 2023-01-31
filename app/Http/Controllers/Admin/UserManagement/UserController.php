@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\UserManagement;
 use Exception;
 use App\Helper;
 use App\Models\User;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -26,7 +27,7 @@ class UserController extends Controller
     public function data(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::latest()->get();
+            $data = Member::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($row){

@@ -9,14 +9,19 @@
                 <h4 class="text-center">Silahkan isi form dengan benar.</h4>
             </div>
             <div class="card-body mx-2">
-
                 <form enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="polis" class="form-label">Polis <span class="text-danger">*</span></label>
                         <input type="hidden" class="member_id" value="{{ auth()->user()->member->id }}">
-                        <select class="form-select polis" name="polis" id="polis">
+                        <select class="form-select polis" name="polis" id="polis" placeholder="JJJJ">
                             @foreach ($pembelians as $item)
-                                <option value="{{ $item->polis->nomor_polis }}">{{ $item->produk->nama_produk }} - Nomor Polis : {{ $item->polis->nomor_polis }}</option>
+                                @if ($item->polis()->exists())
+                                    @if ($item->polis->tgl_polis_mulai <= \Carbon\Carbon::now('Asia/Jakarta')->format('Y-m-d'));
+                                    <option value="{{ $item->polis->id }}">{{ $item->produk->nama_produk }} - Nomor Polis : {{ $item->polis->nomor_polis }}</option>
+                                    @else
+                                    <option disabled selected value="0">Tidak ada polis yang aktif</option>
+                                    @endif
+                                @endif
                             @endforeach
                         </select>
                         <small class="text-danger polis_error"></small>
@@ -56,7 +61,6 @@
                         <textarea name="ket" class="form-control" id="ket" rows="3" placeholder="Keterangan"></textarea>
                         <small class="text-danger ket_error"></small>
                     </div>
-
                     <div class="d-flex justify-content-center py-3">
                         <button type="submit" class="btn btn-primary shadow create" style="width: 150px;">Kirim</button>
                     </div>
@@ -94,6 +98,16 @@
             data.append('nominal_dokter',parseFloat($('#nominal_dokter').val().split('.').join('')));
             data.append('ket',$('#ket').val());
             _input.loading.start(this);
+
+            if ($('#polis option:selected').val()==0) {
+                var swal = Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Polis harus diisi!',
+                        })
+                        _input.loading.stop('.create','Kirim');
+                return swal;
+            }
             _ajax.postWithFile("{{ route('claim.make') }}",data,
                 (response) => {
                     _input.loading.stop('.create','Kirim');

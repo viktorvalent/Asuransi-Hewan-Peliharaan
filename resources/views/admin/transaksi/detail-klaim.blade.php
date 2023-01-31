@@ -129,6 +129,47 @@
 <div class="row">
     <div class="card shadow">
         <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 px-4">
+                    <div class="d-flex justify-content-between">
+                        <div class="col-md-6">
+                            <div class="fw-bold">Status Limit</div>
+                        </div>
+                        @if ($status)
+                        <div class="col-md-6 text-end fw-bold">
+                            <span class="badge text-white bg-success">SUFFICIENT</span>
+                        </div>
+                        @else
+                        <div class="col-md-6 text-end fw-bold">
+                            <span class="badge text-white bg-danger">INSUFFICIENT</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 px-4">
+                    <div class="d-flex justify-content-between">
+                        <div class="col-md-6">
+                            <div class="fw-bold">Sisa Limit Klaim Sekarang</div>
+                        </div>
+                        <div class="col-md-6 text-end fw-bold {{ $status?'text-success':'text-danger' }}">
+                            Rp{{ number_format(($limit_klaim),0,'','.') }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="card shadow">
+        <div class="card-body">
             <div class="d-flex justify-content-center">
                 @if ($data->status_klaim==3)
                 <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
@@ -136,6 +177,9 @@
                 @elseif ($data->status_klaim==2)
                 <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
                 <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                @elseif (!$status)
+                    <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true) data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Limit Klaim Tidak Mencukupi"><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
+                    <button class="btn btn-danger" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_reject"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @else
                     <button class="btn btn-success me-2" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_accept"><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
                     <button class="btn btn-danger" style="width: 300px;height: 35px;" data-bs-toggle="modal" data-bs-target="#modal_reject"><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>

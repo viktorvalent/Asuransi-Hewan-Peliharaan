@@ -1,5 +1,9 @@
 @extends('member.dashboard')
 
+@push('member_css')
+{{-- <link rel="stylesheet" href="{{ asset('vendor/filepond/css/app.css') }}" /> --}}
+@endpush
+
 @section('member')
         @if (!auth()->user()->member)
             <div class="row">
@@ -135,6 +139,7 @@
 <script src="{{ asset('dashboard/js/jquery.js') }}"></script>
 <script src="{{ asset('dashboard/libs/sweetalert/app.js') }}"></script>
 <script src="{{ asset('dashboard/js/support.js') }}"></script>
+{{-- <script src="{{ asset('vendor/filepond/js/app.js') }}"></script> --}}
 <script>
     $(document).ready(function () {
 
@@ -194,6 +199,7 @@
                 }
             )
         })
+
     });
 </script>
 @endpush

@@ -15,4 +15,19 @@ class PolisAsuransi extends Model
     {
         return $this->belongsTo(PembelianProduk::class, 'pembelian_id');
     }
+
+    public function klaim_asuransi()
+    {
+        return $this->hasMany(KlaimAsuransi::class, 'polis_id');
+    }
+
+    public function klaim_records()
+    {
+        return $this->hasMany(KlaimRecord::class, 'polis_id');
+    }
+
+    public function polis_klaim_parsials()
+    {
+        return $this->hasMany(PolisKlaimParsial::class, 'polis_id');
+    }
 }

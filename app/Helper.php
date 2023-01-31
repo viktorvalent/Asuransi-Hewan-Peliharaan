@@ -2,7 +2,9 @@
 
 namespace App;
 
-use Illuminate\Support\Str;
+use Exception;
+use Illuminate\Support\Facades\DB;
+
 
 class Helper {
     public static function createUserLog($a,$b,$c)
@@ -41,7 +43,7 @@ class Helper {
             $inv['nomor'] = $getLast->nomor + 1;
         }
         \App\Models\PolisNumber::create($inv);
-        $polis_number = strval(Str::padLeft($inv['nomor'], 8, '0'));
+        $polis_number = strval(\Illuminate\Support\Str::padLeft($inv['nomor'], 8, '0'));
         return $polis_number;
     }
 
@@ -78,4 +80,37 @@ class Helper {
         return $result;
     }
 
+    public static function limitClaimAccumulator($polis_id)
+    {
+        $now = \Carbon\Carbon::now('Asia/Jakarta')->format('Y-m-d');
+        $polis = \App\Models\PolisAsuransi::select('tgl_polis_mulai','jangka_waktu')->find($polis_id);
+        $limit = \App\Models\PolisKlaimParsial::where('polis_id',$polis_id)->get();
+        $limitBefore = 0;
+        for ($i=0; $i < ($polis->jangka_waktu/(25/100)); $i++) {
+            foreach ($limit as $j) {
+                if ($now >= $j->tgl_mulai && $now < $j->tgl_berakhir) {
+                    $afterDate = \App\Models\PolisKlaimParsial::where(function($q)use($j){
+                                    $q->where('polis_id',$j->polis_id)
+                                      ->whereDate('tgl_mulai','<=',date('Y-m-d'))
+                                      ->whereDate('tgl_berakhir','>',date('Y-m-d'));
+                                })->first();
+                    $beforeDate = \App\Models\PolisKlaimParsial::where('polis_id',$polis_id)->whereDate('tgl_berakhir','<',$now)->orderBy('tgl_berakhir','desc')->first();
+                    try {
+                        DB::beginTransaction();
+                        if (!empty($beforeDate)) {
+                            $limitBefore = $beforeDate->limit_klaim;
+                            $beforeDate->limit_klaim = 0;
+                            $beforeDate->save();
+                        };
+                        $afterDate->limit_klaim = $afterDate->limit_klaim + $limitBefore;
+                        $afterDate->save();
+                        DB::commit();
+                    } catch (Exception $e) {
+                        DB::rollBack();
+                        echo $e->getMessage();
+                    }
+                }
+            }
+        }
+    }
 }

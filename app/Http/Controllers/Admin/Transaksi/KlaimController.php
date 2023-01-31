@@ -10,11 +10,12 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\KlaimAsuransi;
 use Yajra\DataTables\DataTables;
+use App\Models\PolisKlaimParsial;
+use App\Models\TolakKlaimAsuransi;
 use Illuminate\Support\Facades\DB;
+use App\Models\TerimaKlaimAsuransi;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
-use App\Models\TerimaKlaimAsuransi;
-use App\Models\TolakKlaimAsuransi;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,20 +32,23 @@ class KlaimController extends Controller
     public function check_detail($id)
     {
         $data = KlaimAsuransi::with('polis','member','status_set')->find($id);
+        Helper::limitClaimAccumulator($data->polis_id);
+        $cek_limit = PolisKlaimParsial::select('limit_klaim')->where(function($q)use($data){
+                        $q->where('polis_id',$data->polis_id)
+                            ->whereDate('tgl_mulai','<=',date('Y-m-d'))
+                            ->whereDate('tgl_berakhir','>',date('Y-m-d'));
+                    })->first();
+        $limit_klaim = $cek_limit->limit_klaim;
+        $status = false;
+        $total_klaim = $data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter;
+        ($total_klaim <= $limit_klaim)?$status=true:$status=false;
 
         return view('admin.transaksi.detail-klaim', [
             'title'=>'Detail Klaim Asuransi Member',
-            'data'=>$data
+            'data'=>$data,
+            'status'=>$status,
+            'limit_klaim'=>$limit_klaim
         ]);
-    }
-
-    // for testing template pdf klaim
-    public function pdf($id)
-    {
-        $data = KlaimAsuransi::with('polis','member','status_set')->find($id);
-        view()->share('data',['data'=>$data]);
-        $pdf = PDF::loadView('template.klaim-asuransi', ['data'=>$data]);
-        return $pdf->download('polis.pdf');
     }
 
     public function data(Request $request)

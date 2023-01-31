@@ -5,6 +5,7 @@
             <ul>
                 <li><a href="{{ route('home.package') }}">Package</a></li>
                 <li><a href="{{ route('home.calculator') }}">Calculator</a></li>
+                <li><a href="{{ route('member.nearest-petshop') }}">Nearest Petshop</a></li>
             </ul>
         </li>
         <li><a href="#">About</a></li>
@@ -29,8 +30,8 @@
                         <li><a href="{{ route('member.cart') }}">My Cart</a></li>
                         <li><a href="{{ route('member.my-insurance') }}">My Insurance</a></li>
                         <li><a href="{{ route('member.claim') }}">My Claim</a></li>
-                        <li><a href="{{ route('member.nearest-petshop') }}">Nearest Petshop</a></li>
-                        <li><a href="{{ route('member.log') }}">Activity Log</a></li>
+                        {{-- <li><a href="{{ route('member.nearest-petshop') }}">Nearest Petshop</a></li> --}}
+                        {{-- <li><a href="{{ route('member.log') }}">Activity Log</a></li> --}}
                         <hr class="py-0 my-0">
                         <li><a href="{{ route('sign-out.member') }}">Sign Out</a></li>
                     @endcan

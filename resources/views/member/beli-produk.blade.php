@@ -73,10 +73,18 @@
                         <div class="col-md-6">
                             <div class="">
                                 <label for="berat_badan" class="form-label">Bobot Hewan (Kg) <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="bobot" placeholder="Berat">
+                                <input type="number" min="0" oninput="this.value=Math.abs(this.value)" class="form-control" id="bobot" placeholder="Berat">
                                 <small class="text-danger bobot_error"></small>
                             </div>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jangka_waktu" class="form-label">Jangka Waktu Asuransi <span class="text-danger">*</span></label>
+                        <select class="form-select jangka_waktu" aria-label="Default select example" name="jangka_waktu" id="jangka_waktu">
+                            <option value="1">1 Tahun</option>
+                            <option value="2">2 Tahun</option>
+                        </select>
+                        <small class="text-danger jangka_waktu_error"></small>
                     </div>
                     <div class="form-check mb-3">
                         <input class="form-check-input" type="checkbox" name="tnc" value="1" id="tnc">
@@ -144,6 +152,7 @@
             data.append('jenis_kelamin',$('#gender option:selected').val());
             data.append('tgl_lahir',$('#tgl_lahir').val());
             data.append('bobot',$('#bobot').val());
+            data.append('jangka_waktu',$('#jangka_waktu option:selected').val());
             _input.loading.start(this);
             Swal.fire({
                 title: 'Biaya Pendaftaran',

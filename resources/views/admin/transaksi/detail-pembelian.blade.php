@@ -123,14 +123,10 @@
                     </div>
                     <div class="d-flex mb-3 justify-content-between">
                         <div class="col-md-6">
-                            <div class="fw-bold">Status Pembayaran</div>
+                            <div class="fw-bold">Jangka Waktu</div>
                         </div>
                         <div class="col-md-6 text-end">
-                            @if ($data->pay_status!=false && $data->bukti_bayar!=null)
-                                <span class="badge text-bg-success text-white shadow-sm">Done</span>
-                            @else
-                                <span class="badge text-bg-danger text-white shadow-sm">Undone</span>
-                            @endif
+                            {{ $data->jangka_waktu }} Tahun
                         </div>
                     </div>
                     <div class="d-flex mb-3 justify-content-between">
@@ -183,25 +179,18 @@
                             <h4 class="modal-title">Buat Polis Asuransi</h4>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body m-3">
+                        <div class="modal-body m-1">
                             <form id="create">
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
+                                    <div class="col-md-12">
+                                        <div class="mb-b">
                                             <label class="form-label required">Tanggal Mulai <i class="text-danger">*</i></label>
                                             <input id="tgl_mulai" type="date" name="tgl_mulai" class="form-control" placeholder="Tanggal Mulai">
                                             <small class="text-danger tgl_mulai_error"></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="mb-3">
-                                            <label class="form-label required">Jangka Waktu (Tahun) <i class="text-danger">*</i></label>
-                                            <input id="jangka_waktu" type="number" name="jangka_waktu" class="form-control" placeholder="Jangka Waktu">
-                                            <small class="text-danger jangka_waktu_error"></small>
-                                        </div>
-                                    </div>
                                 </div>
-                                <div class="d-flex justify-content-center mt-5">
+                                <div class="d-flex justify-content-center mt-3">
                                     <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
                                     <button type="submit" class="btn btn-primary ms-2 create">Kirim</button>
                                 </div>
@@ -229,7 +218,6 @@
             let data = {
                 'id': $('.pembelian_id').val(),
                 'tgl_mulai':$('#tgl_mulai').val(),
-                'jangka_waktu':$('#jangka_waktu').val()
             }
             _input.loading.start(this);
             _ajax.post("{{ route('pembelian.confirm') }}",data,
@@ -259,7 +247,6 @@
                 }
             );
         })
-
     });
 </script>
 @endpush

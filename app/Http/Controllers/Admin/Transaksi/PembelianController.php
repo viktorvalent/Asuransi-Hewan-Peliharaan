@@ -13,6 +13,7 @@ use App\Models\PembelianProduk;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use App\Models\PolisKlaimParsial;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -62,7 +63,7 @@ class PembelianController extends Controller
                 })
                 ->editColumn('status.status_pembelian.nama', function($row){
                     if ($row->status_pembelian->id==1) {
-                        return '<span class="badge text-bg-light shadow-sm">'.$row->status_pembelian->status.'</span>';
+                        return '<span class="badge text-bg-light shadow">'.$row->status_pembelian->status.'</span>';
                     } elseif ($row->status_pembelian->id==2) {
                         return '<span class="badge text-bg-danger text-white shadow-sm">'.$row->status_pembelian->status.'</span>';
                     } elseif ($row->status_pembelian->id==3) {
@@ -78,7 +79,7 @@ class PembelianController extends Controller
 
     public function check_detail($id)
     {
-        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member')->find($id);
+        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member','polis.polis_klaim_parsials')->find($id);
 
         return view('admin.transaksi.detail-pembelian', [
             'title'=>'Detail Pembelian Asuransi Member',
@@ -90,7 +91,6 @@ class PembelianController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'tgl_mulai' => 'required',
-            'jangka_waktu' => 'required'
         ],
         [
             '*.required' => 'Wajib diisi!'
@@ -103,12 +103,13 @@ class PembelianController extends Controller
             if (!empty($request->id)){
                 try {
                     DB::beginTransaction();
+                    $data = PembelianProduk::select('jangka_waktu')->find($request->id);
                     $polis = PolisAsuransi::create([
                         'nomor_polis'=>Helper::generatePolisNumber(),
                         'pembelian_id'=>$request->id,
                         'tgl_polis_mulai'=>$request->tgl_mulai,
                         'tgl_polis_dibuat'=>Carbon::now('Asia/Jakarta')->format('Y-m-d'),
-                        'jangka_waktu'=>$request->jangka_waktu,
+                        'jangka_waktu'=>$data->jangka_waktu,
                         'status_polis'=>'Aktif',
                         'biaya_polis'=>null,
                         'tgl_bayar_polis'=>null,
@@ -116,7 +117,19 @@ class PembelianController extends Controller
                     ]);
 
                     if ($polis) {
-                        $data = PembelianProduk::with('produk','ras_hewan.jenis_hewan','member','polis')->find($request->id);
+                        $data = PembelianProduk::with('produk.produk_benefit','ras_hewan.jenis_hewan','member','polis')->find($request->id);
+                        $parsial = ($data->produk->produk_benefit->nilai_pertanggungan_max)/4;
+                        $tgl = $request->tgl_mulai;
+                        for ($i=0; $i < ($data->jangka_waktu/(25/100)); $i++) {
+                            $item = PolisKlaimParsial::create([
+                                'polis_id' => $polis->id,
+                                'tgl_mulai' => $tgl,
+                                'tgl_berakhir' => Carbon::createFromFormat('Y-m-d', $tgl)->addMonth(3)->format('Y-m-d'),
+                                'limit_klaim' => $parsial
+                            ]);
+                            $tgl = $item->tgl_berakhir;
+                        }
+
                         if ($data) {
                             view()->share('data',['data'=>$data]);
                             $pdf = PDF::loadView('template.polis-asuransi', ['data'=>$data]);

@@ -106,7 +106,7 @@
         <tr class="align-top">
             <td>Tanggal Lahir Hewan</td>
             <td>:</td>
-            <td>&nbsp;{{ \Carbon\Carbon::createFromFormat('Y-m-d',$data->tgl_lahir_hewan)->format('d-m-Y') }}</td>
+            <td>&nbsp;{{ \Carbon\Carbon::createFromFormat('Y-m-d',$data->tgl_lahir_hewan)->format('d/m/Y') }}</td>
         </tr>
         <tr class="align-top">
             <td>Umur Hewan</td>
@@ -136,17 +136,17 @@
                 <tr class="align-top">
                     <td>Tanggal Pendaftaran</td>
                     <td>:</td>
-                    <td>&nbsp;{{ \Carbon\Carbon::createFromFormat('Y-m-d',$data->tgl_daftar_asuransi)->format('d-m-Y') }}</td>
+                    <td>&nbsp;{{ \Carbon\Carbon::createFromFormat('Y-m-d',$data->tgl_daftar_asuransi)->format('d/m/Y') }}</td>
                 </tr>
                 <tr class="align-top">
                     <td>Tanggal Polis dibuat</td>
                     <td>:</td>
-                    <td>&nbsp;{{ \Carbon\Carbon::now('Asia/Jakarta')->format('d-m-Y') }}</td>
+                    <td>&nbsp;{{ \Carbon\Carbon::now('Asia/Jakarta')->format('d/m/Y') }}</td>
                 </tr>
                 <tr class="align-top">
                     <td>Tanggal Mulai Polis</td>
                     <td>:</td>
-                    <td>&nbsp;{{ \Carbon\Carbon::createFromFormat('Y-m-d',$data->polis->tgl_polis_mulai)->format('d-m-Y') }}</td>
+                    <td>&nbsp;{{ \Carbon\Carbon::createFromFormat('Y-m-d',$data->polis->tgl_polis_mulai)->format('d/m/Y') }}</td>
                 </tr>
                 <tr class="align-top">
                     <td>Jangka Waktu</td>
@@ -179,7 +179,7 @@
                 <tr class="align-top">
                     <td>Premi</td>
                     <td>:</td>
-                    <td>&nbsp;{{ number_format($data->harga_dasar_premi,0,'','.') }}</td>
+                    <td>&nbsp;Rp {{ number_format($data->harga_dasar_premi,0,'','.') }}</td>
                 </tr>
                 <tr class="align-top">
                     <td>Fee Admin</td>
