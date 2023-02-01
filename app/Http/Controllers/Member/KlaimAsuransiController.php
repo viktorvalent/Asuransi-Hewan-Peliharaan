@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\KlaimAsuransi;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\KonfirmasiKlaimAsuransi;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -172,6 +173,44 @@ class KlaimAsuransiController extends Controller
                 'status'=>200,
                 'data'=>$data
             ]);
+        }
+    }
+
+    public function partial_confirm($id)
+    {
+        $data = KlaimAsuransi::with('konfirmasi_klaim_asuransi')->select('id','nominal_bayar_rs','nominal_bayar_obat','nominal_bayar_dokter')->find($id);
+        if ($data) {
+            return response()->json([
+                'status'=>200,
+                'data'=>$data
+            ]);
+        }
+    }
+
+    public function agree_partial_confirm(Request $request)
+    {
+        if (!empty($request->klaim_id)){
+            try {
+                DB::beginTransaction();
+                $data = KlaimAsuransi::find($request->klaim_id);
+                $data->update([
+                    'nominal_disetujui'=>$request->nominal_disetujui,
+                    'status_klaim'=>7
+                ]);
+                DB::commit();
+                Helper::createUserLog("Berhasil menyetujui partial confirmation", auth()->user()->id, $this->title);
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Berhasil menyetujui'
+                ]);
+            } catch (Exception $e) {
+                Helper::createUserLog("Gagal menyetujui partial confirmation", auth()->user()->id, $this->title);
+                DB::rollBack();
+                return response()->json([
+                    'status'=>422,
+                    'message'=>$e->getMessage()
+                ],422);
+            }
         }
     }
 }

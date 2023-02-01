@@ -63,6 +63,8 @@
                                         <span class="badge text-bg-danger shadow-sm">{{ $item->status_set->status }}</span>
                                     @elseif ($item->status_set->id==3)
                                         <span class="badge text-bg-success shadow-sm">{{ $item->status_set->status }}</span>
+                                    @elseif ($item->status_set->id==6)
+                                        <span class="badge text-bg-info shadow-sm">{{ $item->status_set->status }}</span>
                                     @else
                                         <span class="badge text-bg-warning shadow-sm">{{ $item->status_set->status }}</span>
                                     @endif
@@ -78,7 +80,10 @@
                                         <button data-id="{{ $item->id }}" class="btn btn-sm btn-secondary detail" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Bukti Pembayaran Klaim"><i class="bi bi-search"></i></button>
                                         <a href="{{ URL::route('member.download.nota_klaim', ['id'=>$item->id]) }}" class="btn btn-sm btn-success" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Unduh Nota"><i class="bi bi-download"></i></a>
                                     @elseif ($item->status_set->id==5)
-                                        <button data-id="{{ $item->id }}" class="btn btn-sm btn-danger nominal_confirm" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Konfirmasi Nominal Klaim"><i class="bi bi-eye"></i></button>
+                                        <button data-id="{{ $item->id }}" class="btn btn-sm btn-danger limit_confirm" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Konfirmasi Nominal Klaim"><i class="bi bi-eye"></i></button>
+                                        <button class="btn btn-sm btn-secondary" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Unduh Nota" @disabled(true)><i class="bi bi-download"></i></button>
+                                    @elseif ($item->status_set->id==6)
+                                        <button data-id="{{ $item->id }}" class="btn btn-sm btn-info partial_confirm" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Konfirmasi Pembagian Klaim"><i class="bi bi-question-circle"></i></button>
                                         <button class="btn btn-sm btn-secondary" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Unduh Nota" @disabled(true)><i class="bi bi-download"></i></button>
                                     @else
                                         <button class="btn btn-sm btn-secondary" @disabled(true) style="font-size: .825rem;"><i class="bi bi-download"></i>&nbsp;&nbsp;Unduh Nota</button>
@@ -91,8 +96,6 @@
                     </table>
                 @endif
             </div>
-
-
         </div>
         <div class="modal fade" id="modal_accept" tabindex="-1" aria-modal="true" role="dialog">
             <div class="modal-dialog" role="document">
@@ -134,7 +137,7 @@
                     if (response.status == 200) {
                         $('#modal_accept').modal('show')
                         if (response.cek) {
-                            $('.detail_data').html(`<div class="fs-6 mb-1">Bukti Pembayaran Klaim : </div><img src="${response.data.terima_klaim_asuransi.bukti_bayar_klaim}" style="width:100%;" class="mt-3" alt="Logo" />`);
+                            $('.detail_data').html(`<div class="fs-6 mb-1">Keterangan :</div><div class="fst-italic text-success mb-2">"${response.data.terima_klaim_asuransi.keterangan_alasan}."</div><div class="fs-6 mb-1">Bukti Pembayaran Klaim : </div><img src="${response.data.terima_klaim_asuransi.bukti_bayar_klaim}" style="width:100%;" class="mt-3" alt="Logo" />`);
                         } else {
                             $('.detail_data').html(`<div class="fs-6 mb-2">Alasan klaim ditolak :</div><div class="fst-italic text-danger fw-bold">"${response.data.tolak_klaim_asuransi.alasan_menolak}."</div>`);
                         }
@@ -143,7 +146,7 @@
             )
         });
 
-        $(document).on('click','.nominal_confirm', function(e){
+        $(document).on('click','.limit_confirm', function(e){
             e.preventDefault();
             let id = $(this).data('id');
             _ajax.get(`{{ url('/claim/confirm-detail') }}/${id}`,
@@ -154,6 +157,53 @@
                     }
                 }
             )
+        })
+
+        $(document).on('click','.partial_confirm', function(e){
+            e.preventDefault();
+            let id = $(this).data('id');
+            _ajax.get(`{{ url('/claim/partial-confirm') }}/${id}`,
+                (response) => {
+                    if (response.status == 200) {
+                        $('#modal_accept').modal('show')
+                        $('.detail_data').html(`<div class="fs-6 mb-2">Klaim tidak bisa dibayarkan secara penuh karena :</div><div class="fst-italic text-danger fw-bold">"${response.data.konfirmasi_klaim_asuransi.alasan}."</div><hr />
+                        <div class="mt-3">Jumlah yang diajukan : <span class="text-secondary fw-bold">Rp ${_input.rupiah((response.data.nominal_bayar_rs+response.data.nominal_bayar_obat+response.data.nominal_bayar_dokter).toString())}</span></div>
+                        <div class="mt-2 ">Jumlah yang kami tawarkan : <span class="text-success fw-bold">Rp ${_input.rupiah((response.data.konfirmasi_klaim_asuransi.nominal_ditawarkan).toString())}</span></div>
+                        <input type="hidden" class="klaim_id" value="${response.data.id}">
+                        <input type="hidden" class="agree_nominal" value="${response.data.konfirmasi_klaim_asuransi.nominal_ditawarkan}">
+                        <div class="d-flex justify-content-center mt-4 mb-3"><button class="btn btn-success btn-sm me-2 agree_partial"><i class="bi bi-check"></i> Setuju</button><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="bi bi-x"></i> Batal</button></div>`);
+                    }
+                }
+            )
+        });
+
+        $(document).on('click','.agree_partial',function(e){
+            e.preventDefault();
+            let data = {
+                'klaim_id':$('.klaim_id').val(),
+                'nominal_disetujui':$('.agree_nominal').val(),
+            }
+            _ajax.post("{{ route('agree.partial') }}",data,
+                (response) => {
+                    if (response.status == 200) {
+                        _swalert(response);
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    }
+                },
+                (response) => {
+                    if (response.status == 404) {
+                        _swalert(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
         })
     });
 

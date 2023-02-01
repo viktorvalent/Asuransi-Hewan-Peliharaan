@@ -88,6 +88,8 @@ class KlaimController extends Controller
                         return '<span class="badge text-bg-danger text-white shadow-sm">'.$row->status_set->status.'</span>';
                     } elseif ($row->status_set->id==3) {
                         return '<span class="badge text-bg-success text-white shadow-sm">'.$row->status_set->status.'</span>';
+                    } elseif ($row->status_set->id==7) {
+                        return '<span class="badge text-bg-info shadow-sm">'.$row->status_set->status.'</span>';
                     } else {
                         return '<span class="badge text-bg-warning shadow-sm">'.$row->status_set->status.'</span>';
                     }
@@ -113,12 +115,14 @@ class KlaimController extends Controller
             if (!empty($request->id)) {
                 try {
                     DB::beginTransaction();
-                    $data = KlaimAsuransi::with('polis','member','status_set')->find($request->id);
+                    $data = KlaimAsuransi::with('polis','member','status_set','konfirmasi_klaim_asuransi')->find($request->id);
+                    $parsial = PolisKlaimParsial::where(function($q)use($data){$q->where('polis_id',$data->polis_id)->whereDate('tgl_mulai','<=',date('Y-m-d'))->whereDate('tgl_berakhir','>',date('Y-m-d'));})->first();
                     if ($request->hasFile('bukti_bayar_klaim')) {
                         $bukti = $request->file('bukti_bayar_klaim')->store('public/konfirmasi-klaim/member_'.Str::slug($data->member->nama_lengkap));
                         TerimaKlaimAsuransi::create([
                             'klaim_id'=>$request->id,
-                            'bukti_bayar_klaim'=>$bukti
+                            'bukti_bayar_klaim'=>$bukti,
+                            'keterangan_alasan'=>$request->keterangan
                         ]);
                     }
                     view()->share('data',['data'=>$data]);
@@ -133,6 +137,8 @@ class KlaimController extends Controller
                             'status_klaim'=>3,
                             'path'=>$path
                         ]);
+                        $parsial->limit_klaim = $parsial->limit_klaim - $request->total_klaim;
+                        $parsial->save();
                     }
                     Helper::createUserLog("Berhasil konfirmasi klaim untuk member ".$data->member->nama_lengkap, auth()->user()->id, $this->title);
                     DB::commit();
@@ -153,6 +159,35 @@ class KlaimController extends Controller
                     'message'=>'Data pembelian expired!'
                 ],404);
             }
+        }
+    }
+
+    public function partial(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = KlaimAsuransi::with('polis','member','status_set')->find($request->id);
+            $data->update(['status_klaim'=>6]);
+            KonfirmasiKlaimAsuransi::create([
+                'klaim_id'=>$data->id,
+                'nominal_ditawarkan'=>$request->nominal_ditawarkan,
+                'alasan'=>$request->keterangan,
+                'nominal_bayar_rs'=>$request->rs,
+                'nominal_bayar_obat'=>$request->obat,
+                'nominal_bayar_dokter'=>$request->dokter
+            ]);
+            Helper::createUserLog("Berhasil melakukan klaim pembagian klaim", auth()->user()->id, $this->title);
+            DB::commit();
+            return response()->json([
+                'status'=>200,
+                'message'=>'Berhasil konfirmasi partial'
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Helper::createUserLog("Gagal melakukan partial", auth()->user()->id, $this->title);
+            return response()->json([
+                'message'=>$e->getMessage()
+            ],422);
         }
     }
 

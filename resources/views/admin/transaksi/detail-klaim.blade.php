@@ -38,6 +38,8 @@
                                     <span class="badge text-bg-danger text-white shadow-sm">{{ $data->status_set->status }}</span>
                                 @elseif ($data->status_set->id==3)
                                     <span class="badge text-bg-success text-white shadow-sm">{{ $data->status_set->status }}</span>
+                                @elseif ($data->status_set->id==7)
+                                    <span class="badge text-bg-info text-white shadow-sm">{{ $data->status_set->status }}</span>
                                 @else
                                     <span class="badge text-bg-warning shadow-sm">{{ $data->status_set->status }}</span>
                                 @endif
@@ -95,10 +97,30 @@
                         <div class="col-md-6">
                             <div class="fw-bold">Total Nominal Klaim</div>
                         </div>
-                        <div class="col-md-6 text-end fw-bold text-success">
+                        <div class="col-md-6 text-end fw-bold {{ $data->status_klaim==7 || $data->nominal_disetujui!=null?'text-muted text-decoration-line-through':'text-success' }}">
                             Rp{{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}
                         </div>
                     </div>
+                    @if ($data->status_klaim==7 || $data->nominal_disetujui!=null)
+                    <div class="d-flex mb-3 justify-content-between">
+                        <div class="col-md-6">
+                            <div class="fw-bold">Total Nominal Disetujui</div>
+                        </div>
+                        <div class="col-md-6 text-end fw-bold text-success">
+                            Rp{{ number_format(($data->nominal_disetujui),0,'','.') }}
+                        </div>
+                    </div>
+                    @endif
+                    @if ($data->status_klaim==6)
+                    <div class="d-flex mb-3 justify-content-between">
+                        <div class="col-md-6">
+                            <div class="fw-bold">Total Nominal Ditawarkan</div>
+                        </div>
+                        <div class="col-md-6 text-end fw-bold text-info">
+                            Rp{{ number_format(($data->konfirmasi_klaim_asuransi->nominal_ditawarkan),0,'','.') }}
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -126,6 +148,7 @@
     </div>
 </div>
 
+@if ($data->status_klaim!=3)
 <div class="row">
     <div class="card shadow">
         <div class="card-body">
@@ -166,6 +189,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <div class="row">
     <div class="card shadow">
@@ -175,6 +199,9 @@
                     <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
                     <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @elseif ($data->status_klaim==2)
+                    <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
+                    <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
+                @elseif ($data->status_klaim==6)
                     <button class="btn btn-secondary me-2" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-check2-square"></i> Terima & Buat Nota Klaim</button>
                     <button class="btn btn-secondary" style="width: 300px;height: 35px;" @disabled(true)><i class="bi bi-x-circle"></i> Tolak & Butuh Revisi</button>
                 @elseif ($data->status_klaim==5)
@@ -280,10 +307,20 @@
                                         <div class="col-md-6 fw-bold">
                                             Jumlah Pengajuan Klaim
                                         </div>
-                                        <div class="col-md-6 text-end">
+                                        <div class="col-md-6 text-end {{ $data->status_klaim==7?'text-muted text-decoration-line-through':'text-success' }}">
                                             Rp {{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}
                                         </div>
                                     </div>
+                                    @if ($data->status_klaim==7)
+                                    <div class="row mb-2">
+                                        <div class="col-md-6 fw-bold">
+                                            Jumlah Yang Disetujui
+                                        </div>
+                                        <div class="col-md-6 text-end text-success fw-bold">
+                                            Rp <span>{{ number_format(($data->nominal_disetujui),0,'','.') }}</span>
+                                        </div>
+                                    </div>
+                                    @else
                                     <div class="row mb-2">
                                         <div class="col-md-6 fw-bold">
                                             Jumlah Yang Disetujui
@@ -292,9 +329,11 @@
                                             Rp <span class="agree_total">{{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}</span>
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                             <form id="create">
+                                @if ($data->status_klaim!=7)
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-md-6 mb-1">
@@ -360,12 +399,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex justify-content-end mb-3">
                                     <button class="btn btn-sm btn-success rounded count__total" disabled="disabled">Hitung</button>
+                                </div>
+                                @endif
+
+                                <div class="mb-3">
+                                    <textarea id="keterangan" class="form-control keterangan" name="keterangan" placeholder="Keterangan/Alasan" rows="3"></textarea>
+                                    <small class="text-danger keterangan_error"></small>
                                 </div>
                                 <div class="mb-3">
                                     <label for="foto" class="form-label">Foto Bukti Bayar Klaim</label>
                                     <input class="form-control" type="file" id="bukti_bayar_klaim" name="bukti_bayar_klaim">
+                                    <input class="form-control" type="hidden" id="total_klaim" name="total_klaim" value="{{ $data->status_klaim!=7?$data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter:$data->nominal_disetujui }}">
                                     <small class="text-danger bukti_bayar_klaim_error"></small>
                                 </div>
                                 <div class="d-flex justify-content-center mt-4 mb-2">
@@ -435,6 +481,8 @@
             let bukti = $('#bukti_bayar_klaim')[0].files;
             data.append('bukti_bayar_klaim',bukti[0]);
             data.append('id',$('.klaim_id').val());
+            data.append('keterangan',$('.keterangan').val());
+            data.append('total_klaim',$('#total_klaim').val());
             _input.loading.start(this);
             _ajax.postWithFile("{{ route('klaim.confirm') }}",data,
                 (response) => {
@@ -500,6 +548,49 @@
             );
         });
 
+        $(document).on('click','.partial_confirm', function(e){
+            e.preventDefault();
+            let rs = $('.rs').val()==''?0:parseFloat($('.rs').val().split(".").join(""));
+            let obat = $('.obat').val()==''?0:parseFloat($('.obat').val().split(".").join(""));
+            let dokter = $('.dokter').val()==''?0:parseFloat($('.dokter').val().split(".").join(""));
+            let data = {
+                'id': $('.klaim_id').val(),
+                'nominal_ditawarkan':rs+obat+dokter,
+                'keterangan':$('#keterangan').val(),
+                'rs':rs,
+                'obat':obat,
+                'dokter':dokter
+            }
+            _input.loading.start(this);
+            _ajax.post("{{ route('klaim.partial-confirmation') }}",data,
+                (response) => {
+                    _input.loading.stop('.partial_confirm','Konfirmasi');
+                    if (response.status == 200) {
+                        _swalert(response);
+                        setTimeout(() => {
+                            location.href="{{ route('klaim') }}";
+                        }, 1500);
+                    }
+                },
+                (response) => {
+                    _input.loading.stop('.partial_confirm','Konfirmasi');
+                    if (response.status == 400) {
+                        _validation.action(response.responseJSON)
+                    } else if (response.status == 404) {
+                        _swalert(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                }
+            );
+        })
+
+
         $(document).on('change','.tg_radio', function(e){
             e.preventDefault();
             let tg = parseInt($('.tg_radio:checked').val());
@@ -521,7 +612,7 @@
                 $('input.tg_prop').prop('checked', false);
                 $('.agree_total').html('0');
                 $('input.tg_prop').val('');
-                $('.cg__btn').html('<button type="submit" class="btn btn-primary btn-default ms-2 confirm">Konfirmasi</button>');
+                $('.cg__btn').html('<button type="submit" class="btn btn-primary btn-default ms-2 partial_confirm">Konfirmasi</button>');
             }
         });
 

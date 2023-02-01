@@ -72,7 +72,7 @@
     <div class="mt-2 text-capitalized">Keterangan : {{ $data->keterangan_klaim }}</div>
 
     <div class="mt-4 text-justify">Terima kasih atas kepercayaan Bapak/Ibu yang telah menggunakan Jasa Asuransi MYPETT sebagai mitra perlindungan asuransi hewan Bapak/Ibu. </div>
-    <div class="mt-4 text-justify">Pengajuan permohonan klaim sesuai dengan perihal Permohonan asuransi hewan Bapak/Ibu kami terima dengan jumlah sebesar Rp.{{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }} dengan perincian sebagai berikut : </div>
+    <div class="mt-4 text-justify">Pengajuan permohonan klaim sesuai dengan perihal Permohonan asuransi hewan Bapak/Ibu kami terima dengan jumlah sebesar Rp.{{ $data->nominal_disetujui!=null?number_format($data->nominal_disetujui,0,'','.'):number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }} dengan perincian sebagai berikut : </div>
 
     <div>
         <table class="mt-4">
@@ -82,19 +82,19 @@
             </tr>
             <tr>
                 <td>Biaya Dokter</td>
-                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_dokter),0,'','.') }}</td>
+                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_dokter,0,'','.'):number_format(($data->nominal_bayar_dokter),0,'','.') }}</td>
             </tr>
             <tr>
                 <td>Biaya Obat</td>
-                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_obat),0,'','.') }}</td>
+                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_obat,0,'','.'):number_format(($data->nominal_bayar_obat),0,'','.') }}</td>
             </tr>
             <tr class="border-bottom pb-2 border-dark border-black">
                 <td>Biaya Rumah Sakit</td>
-                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_rs),0,'','.') }}</td>
+                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_rs,0,'','.'):number_format(($data->nominal_bayar_rs),0,'','.') }}</td>
             </tr>
             <tr>
                 <td>Biaya Yang Dibayarkan</td>
-                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}</td>
+                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->nominal_disetujui,0,'','.'):number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}</td>
             </tr>
         </table>
     </div>

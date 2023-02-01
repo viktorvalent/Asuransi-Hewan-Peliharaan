@@ -158,6 +158,7 @@ Route::middleware(['is_admin'])->group(function(){
         Route::post('/confirm','confirm_klaim')->name('klaim.confirm');
         Route::post('/reject','reject_klaim')->name('klaim.reject');
         Route::post('/nominal-confirmation','nominal_confirmation')->name('klaim.nominal-confirmation');
+        Route::post('/partial-confirmation','partial')->name('klaim.partial-confirmation');
         Route::get('/edit/{id}','edit');
         Route::get('/testpdf/{id}','pdf')->name('test.pdf.klaim');
         Route::put('/update/{id}','update');
@@ -254,5 +255,7 @@ Route::middleware(['is_member'])->group(function(){
         Route::post('/make-revisi','revisi')->name('claim.revisi');
         Route::get('/cek-detail/{id}','accept_detail');
         Route::get('/confirm-detail/{id}','confirm_detail');
+        Route::get('/partial-confirm/{id}','partial_confirm');
+        Route::post('/agree-partial-confirm','agree_partial_confirm')->name('agree.partial');
     });
 });

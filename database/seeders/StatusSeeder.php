@@ -34,7 +34,15 @@ class StatusSeeder extends Seeder
             ],
             [
                 'id'=>5,
-                'status'=>'NOMINAL CONFIRMATION'
+                'status'=>'LIMIT CONFIRMATION'
+            ],
+            [
+                'id'=>6,
+                'status'=>'PARTIAL CONFIRMATION'
+            ],
+            [
+                'id'=>7,
+                'status'=>'PARTIAL APPROVED'
             ]
         ]);
     }
