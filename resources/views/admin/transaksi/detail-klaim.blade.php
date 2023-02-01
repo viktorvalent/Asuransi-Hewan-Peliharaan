@@ -244,12 +244,12 @@
             <div class="modal fade" id="modal_accept" tabindex="-1" aria-modal="true" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Terima Klaim Asuransi</h4>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
                         <div class="modal-body mx-3">
-                            <div class="row mb-4 border p-2 rounded shadow bg-light">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h4 class="modal-title">Konfirmasi Klaim Asuransi</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="row mb-4 border p-2 rounded shadow-xl bg-light">
                                 <div class="col-12">
                                     <div class="row mb-2">
                                         <div class="col-md-6 fw-bold">
@@ -265,6 +265,15 @@
                                         </div>
                                         <div class="col-md-6 text-end">
                                             {{ $data->member->no_rekening }}
+                                        </div>
+                                    </div>
+                                    <hr class="my-0 mb-2 py-0" />
+                                    <div class="row mb-2">
+                                        <div class="col-md-6 fw-bold">
+                                            Sisa Limit Pengajuan
+                                        </div>
+                                        <div class="col-md-6 text-end {{ $status?'text-success':'text-danger' }}">
+                                            Rp {{ number_format(($limit_klaim),0,'','.') }}
                                         </div>
                                     </div>
                                     <div class="row mb-2">
@@ -307,58 +316,63 @@
                                     </div>
                                 </div>
                                 <div class="mb-2">
-                                    <label for="rs" class="form-label">Tanggungan Biaya RS <i class="text-danger">*</i></label>
+                                    <label for="rs" class="form-label">Tanggungan Biaya RS</label>
                                     <div class="row">
                                         <div class="col-md-5 mb-2">
                                             <div class="form-check form-switch d-flex align-item-center">
-                                                <input class="form-check-input tg_prop full full_rs" type="checkbox" id="full_rs" disabled>
-                                                <label class="form-check-label ms-2" for="full_rs"><i class="text-primary"><small>Tanggung Penuh Biaya RS</small></i></label>
+                                                <input class="form-check-input tg_prop full full_rs" type="checkbox" id="full_rs" checked disabled>
+                                                <label class="form-check-label ms-2" for="full_rs"><i class="text-primary"><small>Tanggung Penuh Rp{{ number_format(($data->nominal_bayar_rs),0,'','.') }}</small></i></label>
                                             </div>
                                         </div>
                                         <div class="col-md-7">
-                                            <input class="form-control tg_prop rupiah_format rs" type="text" id="rs" name="rs" placeholder="Rp. 00,0" disabled>
+                                            <input class="form-control tg_prop rupiah_format rs" type="text" id="rs" name="rs" placeholder="00,0" value="{{ number_format(($data->nominal_bayar_rs),0,'','.') }}" disabled>
                                             <small class="text-danger rs_error"></small>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mb-2">
-                                    <label for="obat" class="form-label">Tanggungan Biaya Obat <i class="text-danger">*</i></label>
+                                    <label for="obat" class="form-label">Tanggungan Biaya Obat</label>
                                     <div class="row">
                                         <div class="col-md-5 mb-2">
                                             <div class="form-check form-switch d-flex align-item-center">
-                                                <input class="form-check-input tg_prop full full_obat" type="checkbox" id="full_obat" disabled>
-                                                <label class="form-check-label ms-2" for="full_obat"><i class="text-primary"><small>Tanggung Penuh Biaya Obat</small></i></label>
+                                                <input class="form-check-input tg_prop full full_obat" type="checkbox" id="full_obat" checked disabled>
+                                                <label class="form-check-label ms-2" for="full_obat"><i class="text-primary"><small>Tanggung Penuh Rp{{ number_format(($data->nominal_bayar_obat),0,'','.') }}</small></i></label>
                                             </div>
                                         </div>
                                         <div class="col-md-7">
-                                            <input class="form-control tg_prop rupiah_format obat" type="text" id="obat" name="obat" placeholder="Rp. 00,0" disabled>
+                                            <input class="form-control tg_prop rupiah_format obat" type="text" id="obat" name="obat" placeholder="00,0" value="{{ number_format(($data->nominal_bayar_obat),0,'','.') }}" disabled>
                                             <small class="text-danger obat_error"></small>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="mb-2">
-                                    <label for="dokter" class="form-label">Tanggungan Biaya Diagnosa Dokter <i class="text-danger">*</i></label>
+                                    <label for="dokter" class="form-label">Tanggungan Biaya Diagnosa Dokter</label>
                                     <div class="row">
                                         <div class="col-md-5 mb-2">
                                             <div class="form-check form-switch d-flex align-item-center">
-                                                <input class="form-check-input tg_prop full full_dokter" type="checkbox" id="full_dokter" disabled>
-                                                <label class="form-check-label ms-2" for="full_dokter"><i class="text-primary"><small>Tanggung Penuh Biaya Obat</small></i></label>
+                                                <input class="form-check-input tg_prop full full_dokter" type="checkbox" id="full_dokter" checked disabled>
+                                                <label class="form-check-label ms-2" for="full_dokter"><i class="text-primary"><small>Tanggung Penuh Rp{{ number_format(($data->nominal_bayar_dokter),0,'','.') }}</small></i></label>
                                             </div>
                                         </div>
                                         <div class="col-md-7">
-                                            <input class="form-control tg_prop rupiah_format dokter" type="text" id="dokter" name="dokter" placeholder="Rp. 00,0" disabled>
+                                            <input class="form-control tg_prop rupiah_format dokter" type="text" id="dokter" name="dokter" placeholder="00,0" value="{{ number_format(($data->nominal_bayar_dokter),0,'','.') }}" disabled>
                                             <small class="text-danger dokter_error"></small>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="mb-2">
-                                    <label for="foto" class="form-label">Foto Bukti Bayar Klaim <i class="text-danger">*</i></label>
+                                <div class="d-flex justify-content-end">
+                                    <button class="btn btn-sm btn-success rounded count__total" disabled="disabled">Hitung</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="foto" class="form-label">Foto Bukti Bayar Klaim</label>
                                     <input class="form-control" type="file" id="bukti_bayar_klaim" name="bukti_bayar_klaim">
                                     <small class="text-danger bukti_bayar_klaim_error"></small>
                                 </div>
-                                <div class="d-flex justify-content-center mt-3">
-                                    <button type="reset" class="btn btn-secondary cancel" data-bs-dismiss="modal">Batal</button>
-                                    <button type="submit" class="btn btn-primary btn-default ms-2 accept">Kirim</button>
+                                <div class="d-flex justify-content-center mt-4 mb-2">
+                                    <button type="reset" class="btn btn-outline-secondary cancel" data-bs-dismiss="modal">Batal</button>
+                                    <div class="cg__btn">
+                                        <button type="submit" class="btn btn-primary btn-default ms-2 accept">Kirim</button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -491,18 +505,35 @@
             let tg = parseInt($('.tg_radio:checked').val());
             if(tg === 1) {
                 $('input.tg_prop').attr('disabled','disabled');
-                $('.full').prop('checked',false);
-                $('input.tg_prop').val('');
+                $('.count__total').attr('disabled','disabled');
+                $('.full').prop('checked',true);
                 $('input#bukti_bayar_klaim').removeAttr('disabled');
                 $('.agree_total').html(_input.rupiah(({!! $data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter !!}).toString()))
+                $('.rs').val(_input.rupiah(({!! $data->nominal_bayar_rs !!}).toString()));
+                $('.obat').val(_input.rupiah(({!! $data->nominal_bayar_obat !!}).toString()));
+                $('.dokter').val(_input.rupiah(({!! $data->nominal_bayar_dokter !!}).toString()));
+                $('.cg__btn').html('<button type="submit" class="btn btn-primary btn-default ms-2 accept">Kirim</button>');
+
             } else {
                 $('input#bukti_bayar_klaim').attr('disabled','disabled');
                 $('input.tg_prop').removeAttr('disabled');
+                $('.count__total').removeAttr('disabled');
+                $('input.tg_prop').prop('checked', false);
                 $('.agree_total').html('0');
+                $('input.tg_prop').val('');
+                $('.cg__btn').html('<button type="submit" class="btn btn-primary btn-default ms-2 confirm">Konfirmasi</button>');
             }
         });
 
-        const autoFull = (elChange,elTarget,acc) => {
+        $(document).on('click','.count__total', function(e){
+            e.preventDefault()
+            let rs = $('.rs').val()==''?0:parseFloat($('.rs').val().split(".").join(""));
+            let obat = $('.obat').val()==''?0:parseFloat($('.obat').val().split(".").join(""));
+            let dokter = $('.dokter').val()==''?0:parseFloat($('.dokter').val().split(".").join(""));
+            $('.agree_total').html(_input.rupiah((rs+obat+dokter).toString()));
+        });
+
+        const autoFullCheckbox = (elChange,elTarget,acc) => {
             $(document).on('change',elChange, function(e){
                 e.preventDefault();
                 if($(this).is(':checked')) {
@@ -513,9 +544,26 @@
             });
         };
 
-        autoFull('.full_rs','.rs',{!! $data->nominal_bayar_rs !!});
-        autoFull('.full_obat','.obat',{!! $data->nominal_bayar_obat !!});
-        autoFull('.full_dokter','.dokter',{!! $data->nominal_bayar_dokter !!});
+        const checkboxFull = (elKeyup,elTarget,acc) => {
+            $(document).on('keyup',elKeyup, function(e){
+                e.preventDefault();
+                let val = parseInt($(this).val().split(".").join(""));
+
+                if (val>=acc) {
+                    $(elTarget).prop('checked',true)
+                } else {
+                    $(elTarget).prop('checked',false)
+                }
+            });
+        }
+
+        checkboxFull('.rs','.full_rs',{!! $data->nominal_bayar_rs !!})
+        checkboxFull('.obat','.full_obat',{!! $data->nominal_bayar_obat !!})
+        checkboxFull('.dokter','.full_dokter',{!! $data->nominal_bayar_dokter !!})
+
+        autoFullCheckbox('.full_rs','.rs',{!! $data->nominal_bayar_rs !!});
+        autoFullCheckbox('.full_obat','.obat',{!! $data->nominal_bayar_obat !!});
+        autoFullCheckbox('.full_dokter','.dokter',{!! $data->nominal_bayar_dokter !!});
     });
 </script>
 @endpush
