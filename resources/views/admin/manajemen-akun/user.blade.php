@@ -19,11 +19,23 @@
                 <thead>
                     <tr>
                         <th>Username</th>
-                        <th>Email</th>
-                        <th>Action</th>
+                        <th>Nama</th>
+                        <th>Kab/Kota</th>
+                        <th>No HP</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    @foreach ($datas as $data)
+                    <tr>
+                        <td>{{ $data->user->username }}</td>
+                        <td>
+                            <a href="{{ URL::route('member.detail',['id'=>$data->id]); }}" class="fw-bold">{{ $data->nama_lengkap }}</a>
+                        </td>
+                        <td>{{ $data->kab_kota->nama }}</td>
+                        <td>{{ $data->no_hp }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
             </table>
         </div>
 
@@ -96,156 +108,9 @@
 <script src="{{ asset('dashboard/libs/sweetalert/app.js') }}"></script>
 <script>
     $(document).ready(function () {
-        _table.set("{{ route('user.data') }}",
-            [
-                {data: 'username', name: 'username'},
-                {data: 'email', name: 'email'},
-                {
-                    data: 'action',
-                    name: 'action',
-                    orderable: false,
-                    searchable: false,
-                },
-            ]
-        );
-
-        _form.reset('.add','#create');
-
-        $(document).on('click','.create',function (e) {
-            e.preventDefault();
-            let data = {
-                'nama':$('#nama').val(),
-                'deskripsi':$('#deskripsi').val()
-            }
-            _input.loading.start(this);
-            _ajax.post("{{ route('master-data.jenis-hewan.create') }}",data,
-                (response)=>{
-                    _input.loading.stop('.create','Kirim');
-                    if (response.status == 200) {
-                        _swalert(response);
-                        _table.reload();
-                    }
-                },
-                (response)=>{
-                    _input.loading.stop('.create','Kirim');
-                    if (response.status == 400) {
-                        _validation.action(response.responseJSON)
-                    } else if (response.status == 404) {
-                        _swalert(response);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
-                }
-            );
+        $('#datatable').DataTable({
+            scrollX: true
         });
-
-        $(document).on('click','.edit', function(e) {
-            e.preventDefault()
-            $('form#edit').trigger('reset');
-            let id = $(this).data('id');
-            _ajax.get(`{{ url('/auth/dashboard/master-jenis-hewan/edit') }}/${id}`,
-                (response) => {
-                    $('#modal_edit').modal('show');
-                    if (response.status == 200) {
-                        $('.edit_nama').val(response.data.nama);
-                        $('.edit_id').val(response.data.id);
-                        $('.edit_deskripsi').val(response.data.deskripsi);
-                    }
-                },
-                (response) => {
-                    if (response.status == 422) {
-                        _swalert(response);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
-                }
-            );
-        });
-
-        $(document).on('click','.update', function(e){
-            e.preventDefault();
-            let data = {
-                'id':$('.edit_id').val(),
-                'nama':$('.edit_nama').val(),
-                'deskripsi':$('.edit_deskripsi').val()
-            }
-            _input.loading.start(this);
-            _ajax.put(`{{ url('/auth/dashboard/master-jenis-hewan/update') }}/${data.id}`,data,
-                (response) => {
-                    _input.loading.stop('.update','Kirim');
-                    if (response.status == 200) {
-                        _swalert(response);
-                        _table.reload();
-                    }
-                },
-                (response) => {
-                    _input.loading.stop('.update','Kirim');
-                    if (response.status == 400) {
-                        _validation.action(response.responseJSON);
-                    } else if (response.status == 404) {
-                        _swalert(response);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan!',
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                    }
-                }
-            );
-        });
-
-        $(document).on('click','.delete', function(e){
-            e.preventDefault();
-            let id = $(this).data('id');
-            Swal.fire({
-                title: 'Apa Anda Yakin ?',
-                text: "Anda tidak akan dapat mengembalikan data ini !",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'Ya, Hapus data ini !',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let id = $(this).data('id');
-                    _ajax.get(`{{ url('/auth/dashboard/master-jenis-hewan/delete') }}/${id}`,
-                        (response)=>{
-                            if (response.status == 200) {
-                                Swal.fire({
-                                    title: 'Data terhapus!',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                });
-                                _table.reload();
-                            }
-                        },
-                        (response)=>{
-                            Swal.fire({
-                                title: 'Data tidak terhapus!',
-                                icon: 'info',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        }
-                    );
-                }
-            });
-        })
-
     });
 </script>
 @endpush

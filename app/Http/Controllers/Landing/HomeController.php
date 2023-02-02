@@ -74,4 +74,11 @@ class HomeController extends Controller
             ]);
         }
     }
+
+    public function about()
+    {
+        return view('landing.about',[
+            'title'=>'About'
+        ]);
+    }
 }

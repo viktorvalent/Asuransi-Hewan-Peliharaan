@@ -8,7 +8,7 @@
                 <li><a href="{{ route('member.nearest-petshop') }}">Nearest Petshop</a></li>
             </ul>
         </li>
-        <li><a href="#">About</a></li>
+        <li><a href="{{ route('home.about') }}">About</a></li>
         <li><a href="#">Contact</a></li>
         <li class="dropdown"><a href="javascript:void(0);"><span>
             @guest

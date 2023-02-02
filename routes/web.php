@@ -31,6 +31,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.package');
 Route::get('/faqs', [HomeController::class, 'faqs'])->name('home.faqs');
 Route::get('/term-and-condition', [HomeController::class, 'term_and_condition'])->name('home.tnc');
+Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 Route::get('/calculator', [HomeController::class, 'kalkulator'])->name('home.calculator');
 Route::get('/calculator/get-ras-hewan/{id}', [HomeController::class, 'get_ras_hewan']);
 
@@ -217,6 +218,7 @@ Route::middleware(['is_admin'])->group(function(){
 
     Route::controller(UserController::class)->prefix('/auth/dashboard/users')->group(function(){
         Route::get('/','index')->name('user.manage');
+        Route::get('/{id}','detail')->name('member.detail');
         Route::get('/list-data','data')->name('user.data');
         Route::get('/edit/{id}','edit');
         Route::put('/update/{id}','update');
