@@ -10,7 +10,7 @@ class LimitConfirmationKlaim extends Model
     use HasFactory;
 
     protected $table = 'limit_confirmation_klaim';
-    protected $fillable = ['klaim_id','alasan','nominal_limit','nominal_pengajuan','nomnial_ditawarkan'];
+    protected $fillable = ['klaim_id','alasan','nominal_limit','nominal_pengajuan','nominal_ditawarkan'];
     public $timestamps = true;
     protected $primaryKey = 'id';
 

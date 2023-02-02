@@ -32,6 +32,7 @@ Route::get('/paket-asuransi', [HomeController::class, 'paket'])->name('home.pack
 Route::get('/faqs', [HomeController::class, 'faqs'])->name('home.faqs');
 Route::get('/term-and-condition', [HomeController::class, 'term_and_condition'])->name('home.tnc');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
+Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
 Route::get('/calculator', [HomeController::class, 'kalkulator'])->name('home.calculator');
 Route::get('/calculator/get-ras-hewan/{id}', [HomeController::class, 'get_ras_hewan']);
 

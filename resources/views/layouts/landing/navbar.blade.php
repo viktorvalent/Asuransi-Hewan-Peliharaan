@@ -9,7 +9,7 @@
             </ul>
         </li>
         <li><a href="{{ route('home.about') }}">About</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="{{ route('home.contact') }}">Contact</a></li>
         <li class="dropdown"><a href="javascript:void(0);"><span>
             @guest
                 <i class="bi bi-person fs-5"></i>

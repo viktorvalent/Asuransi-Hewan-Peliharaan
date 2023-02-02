@@ -81,4 +81,11 @@ class HomeController extends Controller
             'title'=>'About'
         ]);
     }
+
+    public function contact()
+    {
+        return view('landing.contact',[
+            'title'=>'Contact'
+        ]);
+    }
 }
