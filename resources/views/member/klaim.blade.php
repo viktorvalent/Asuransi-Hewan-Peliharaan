@@ -55,7 +55,13 @@
                             <tr class="text-center align-middle" style="height: 3.75rem">
                                 <td class="fw-bold">{{ $no }}</td>
                                 <td>{{ $item->polis->nomor_polis }}</td>
-                                <td class="{{ ($item->status_set->id==5?'text-danger':'') }}">Rp {{ number_format(($item->nominal_bayar_rs+$item->nominal_bayar_dokter+$item->nominal_bayar_obat),0,'','.') }}</td>
+                                <td class="{{ ($item->status_set->id==5?'text-danger':'') }}">
+                                    @if ($item->nominal_disetujui!=null)
+                                    Rp {{ number_format(($item->nominal_disetujui),0,'','.') }}
+                                    @else
+                                    Rp {{ number_format(($item->nominal_bayar_rs+$item->nominal_bayar_dokter+$item->nominal_bayar_obat),0,'','.') }}
+                                    @endif
+                                </td>
                                 <td>
                                     @if ($item->status_set->id==1)
                                         <span class="badge text-bg-light shadow-sm">{{ $item->status_set->status }}</span>
@@ -153,7 +159,10 @@
                 (response) => {
                     if (response.status == 200) {
                         $('#modal_accept').modal('show')
-                        $('.detail_data').html(``);
+                        console.log(response.data);
+                        $('.detail_data').html(`<div class="fs-6 mb-1">Klaim tidak bisa dibayarkan secara penuh karena :</div><div class="fst-italic text-danger fw-bold">"${response.data.limit_confirmation_klaim.alasan}."</div><hr />
+                        <div class="mt-3">Jumlah yang diajukan : <span class="text-secondary fw-bold">Rp ${_input.rupiah((response.data.limit_confirmation_klaim.nominal_pengajuan).toString())}</span></div><div class="mt-3">Sisa limit klaim sekarang : <span class="text-warning fw-bold">Rp ${_input.rupiah((response.data.limit_confirmation_klaim.nominal_limit).toString())}</span></div><input type="hidden" class="klaim_id" value="${response.data.id}">
+                        <input type="hidden" class="agree_nominal_ditwarkan" value="${response.data.limit_confirmation_klaim.nominal_ditawarkan}"><div class="mt-3 ">Jumlah yang kami tawarkan : <span class="text-success fw-bold">Rp ${_input.rupiah((response.data.limit_confirmation_klaim.nominal_ditawarkan).toString())}</span></div><div class="mt-3 d-flex justify-content-center"><button class="btn btn-success btn-sm me-2 agree_limit"><i class="bi bi-check"></i> Setuju</button><a href="{{ URL::route('member.claim.revisi',['id'=>$item->id]) }}" class="btn btn-sm btn-warning" style="font-size: .825rem;" data-bs-toggle="tooltip" data-bs-placement="top" title="Revisi Klaim"><i class="bi bi-pencil"></i> Revisi</a></div>`);
                     }
                 }
             )
@@ -184,6 +193,35 @@
                 'nominal_disetujui':$('.agree_nominal').val(),
             }
             _ajax.post("{{ route('agree.partial') }}",data,
+                (response) => {
+                    if (response.status == 200) {
+                        _swalert(response);
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    }
+                },
+                (response) => {
+                    if (response.status == 404) {
+                        _swalert(response);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Terjadi Kesalahan!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    }
+                })
+        });
+
+        $(document).on('click','.agree_limit',function(e){
+            e.preventDefault();
+            let data = {
+                'klaim_id':$('.klaim_id').val(),
+                'nominal_disetujui':$('.agree_nominal_ditwarkan').val(),
+            }
+            _ajax.post("{{ route('agree.limit') }}",data,
                 (response) => {
                     if (response.status == 200) {
                         _swalert(response);

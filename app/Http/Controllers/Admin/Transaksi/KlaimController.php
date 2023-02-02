@@ -17,6 +17,7 @@ use App\Models\TerimaKlaimAsuransi;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
 use App\Models\KonfirmasiKlaimAsuransi;
+use App\Models\LimitConfirmationKlaim;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -41,7 +42,7 @@ class KlaimController extends Controller
                     })->first();
         $limit_klaim = $cek_limit->limit_klaim;
         $status = false;
-        $total_klaim = $data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter;
+        $total_klaim = $data->nominal_disetujui!=null?$data->nominal_disetujui:$data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter;
         ($total_klaim <= $limit_klaim)?$status=true:$status=false;
 
         return view('admin.transaksi.detail-klaim', [
@@ -115,7 +116,7 @@ class KlaimController extends Controller
             if (!empty($request->id)) {
                 try {
                     DB::beginTransaction();
-                    $data = KlaimAsuransi::with('polis','member','status_set','konfirmasi_klaim_asuransi')->find($request->id);
+                    $data = KlaimAsuransi::with('polis','member','status_set','konfirmasi_klaim_asuransi','limit_confirmation_klaim')->find($request->id);
                     $parsial = PolisKlaimParsial::where(function($q)use($data){$q->where('polis_id',$data->polis_id)->whereDate('tgl_mulai','<=',date('Y-m-d'))->whereDate('tgl_berakhir','>',date('Y-m-d'));})->first();
                     if ($request->hasFile('bukti_bayar_klaim')) {
                         $bukti = $request->file('bukti_bayar_klaim')->store('public/konfirmasi-klaim/member_'.Str::slug($data->member->nama_lengkap));
@@ -232,7 +233,7 @@ class KlaimController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'alasan' => 'required',
-            'nominal' => 'required',
+            'nominal_ditawarkan' => 'required',
         ],
         [
             '*.required' => 'Tidak boleh kosong!'
@@ -245,9 +246,11 @@ class KlaimController extends Controller
             try {
                 DB::beginTransaction();
                 $data = KlaimAsuransi::find($request->id);
-                KonfirmasiKlaimAsuransi::create([
+                LimitConfirmationKlaim::create([
                     'klaim_id'=>$data->id,
-                    'nominal_ditawarkan'=>$request->nominal,
+                    'nominal_ditawarkan'=>$request->nominal_ditawarkan,
+                    'nominal_limit'=>$request->nominal_limit,
+                    'nominal_pengajuan'=>$request->nominal_pengajuan,
                     'alasan'=>$request->alasan
                 ]);
                 $data->update(['status_klaim'=>5]);

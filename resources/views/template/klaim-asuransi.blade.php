@@ -80,22 +80,58 @@
                 <td>Mata Uang Polis</td>
                 <td class="text-end">Rupiah</td>
             </tr>
+            @if ($data->konfirmasi_klaim_asuransi()->exists())
             <tr>
                 <td>Biaya Dokter</td>
-                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_dokter,0,'','.'):number_format(($data->nominal_bayar_dokter),0,'','.') }}</td>
+                <td class="text-end">Rp {{ number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_dokter,0,'','.') }}</td>
             </tr>
             <tr>
                 <td>Biaya Obat</td>
-                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_obat,0,'','.'):number_format(($data->nominal_bayar_obat),0,'','.') }}</td>
+                <td class="text-end">Rp {{ number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_obat,0,'','.') }}</td>
             </tr>
             <tr class="border-bottom pb-2 border-dark border-black">
                 <td>Biaya Rumah Sakit</td>
-                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_rs,0,'','.'):number_format(($data->nominal_bayar_rs),0,'','.') }}</td>
+                <td class="text-end">Rp {{ number_format($data->konfirmasi_klaim_asuransi->nominal_bayar_rs,0,'','.') }}</td>
             </tr>
             <tr>
                 <td>Biaya Yang Dibayarkan</td>
-                <td class="text-end">Rp {{ $data->nominal_disetujui!=null?number_format($data->nominal_disetujui,0,'','.'):number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}</td>
+                <td class="text-end">Rp {{ number_format($data->nominal_disetujui,0,'','.') }}</td>
             </tr>
+            @elseif ($data->limit_confirmation_klaim()->exists())
+            <tr>
+                <td>Biaya Dokter</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_dokter),0,'','.') }}</td>
+            </tr>
+            <tr>
+                <td>Biaya Obat</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_obat),0,'','.') }}</td>
+            </tr>
+            <tr class="border-bottom pb-2 border-dark border-black">
+                <td>Biaya Rumah Sakit</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_rs),0,'','.') }}</td>
+            </tr>
+            <tr>
+                <td>Biaya Yang Dibayarkan</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_disetujui),0,'','.') }} (Sesuai sisa limit)</td>
+            </tr>
+            @else
+            <tr>
+                <td>Biaya Dokter</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_dokter),0,'','.') }}</td>
+            </tr>
+            <tr>
+                <td>Biaya Obat</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_obat),0,'','.') }}</td>
+            </tr>
+            <tr class="border-bottom pb-2 border-dark border-black">
+                <td>Biaya Rumah Sakit</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_rs),0,'','.') }}</td>
+            </tr>
+            <tr>
+                <td>Biaya Yang Dibayarkan</td>
+                <td class="text-end">Rp {{ number_format(($data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter),0,'','.') }}</td>
+            </tr>
+            @endif
         </table>
     </div>
 

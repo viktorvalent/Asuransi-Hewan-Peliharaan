@@ -251,11 +251,13 @@
                             <form id="create">
                                 <div class="mb-3">
                                     <label for="foto" class="form-label">Nominal yang bisa diberikan <i class="text-danger">*</i></label>
-                                    <input class="form-control rupiah_format" type="text" id="nominal" name="nominal" placeholder="Rp. 00,0">
-                                    <small class="text-danger nominal_error"></small>
+                                    <input type="hidden" name="diajukan" class="diajukan" value="{{ $data->nominal_bayar_rs+$data->nominal_bayar_obat+$data->nominal_bayar_dokter }}">
+                                    <input type="hidden" name="limit" class="limit_sekarang" value="{{ $limit_klaim }}">
+                                    <input class="form-control rupiah_format" type="text" id="nominal_ditawarkan" name="nominal" placeholder="Rp. 00,0" value="{{ number_format(($limit_klaim),0,'','.') }}">
+                                    <small class="text-danger nominal_ditawarkan_error"></small>
                                 </div>
                                 <div class="mb-3">
-                                    <textarea id="alasan_nominal" class="form-control alasan_nominal" name="alasan_nominal" placeholder="Alasan konfirmasi nominal" rows="3"></textarea>
+                                    <textarea id="alasan" class="form-control alasan_nominal" name="alasan_nominal" placeholder="Alasan konfirmasi nominal" rows="3"></textarea>
                                     <small class="text-danger alasan_error"></small>
                                 </div>
                                 <div class="d-flex justify-content-center mt-3">
@@ -516,13 +518,15 @@
             e.preventDefault();
             let data = {
                 'id': $('.klaim_id').val(),
-                'nominal':parseFloat($('#nominal').val().split(".").join("")),
-                'alasan':$('#alasan_nominal').val()
+                'nominal_limit':parseFloat($('.limit_sekarang').val()),
+                'nominal_pengajuan':parseFloat($('.diajukan').val()),
+                'nominal_ditawarkan':$('#nominal_ditawarkan').val()==''?null:parseFloat($('#nominal_ditawarkan').val().split(".").join("")),
+                'alasan':$('.alasan_nominal').val()
             }
             _input.loading.start(this);
             _ajax.post("{{ route('klaim.nominal-confirmation') }}",data,
                 (response) => {
-                    _input.loading.stop('.reject','Kirim');
+                    _input.loading.stop('.nominal_confirm','Kirim');
                     if (response.status == 200) {
                         _swalert(response);
                         setTimeout(() => {
@@ -531,7 +535,7 @@
                     }
                 },
                 (response) => {
-                    _input.loading.stop('.reject','Kirim');
+                    _input.loading.stop('.nominal_confirm','Kirim');
                     if (response.status == 400) {
                         _validation.action(response.responseJSON)
                     } else if (response.status == 404) {

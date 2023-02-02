@@ -40,4 +40,9 @@ class KlaimAsuransi extends Model
     {
         return $this->hasOne(KonfirmasiKlaimAsuransi::class, 'klaim_id');
     }
+
+    public function limit_confirmation_klaim()
+    {
+        return $this->hasOne(LimitConfirmationKlaim::class, 'klaim_id');
+    }
 }

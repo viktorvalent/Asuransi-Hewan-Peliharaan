@@ -257,5 +257,6 @@ Route::middleware(['is_member'])->group(function(){
         Route::get('/confirm-detail/{id}','confirm_detail');
         Route::get('/partial-confirm/{id}','partial_confirm');
         Route::post('/agree-partial-confirm','agree_partial_confirm')->name('agree.partial');
+        Route::post('/agree-limit-confirm','agree_limit_confirm')->name('agree.limit');
     });
 });

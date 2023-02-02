@@ -167,7 +167,7 @@ class KlaimAsuransiController extends Controller
 
     public function confirm_detail($id)
     {
-        $data = KlaimAsuransi::with('konfirmasi_klaim_asuransi')->select('id')->find($id);
+        $data = KlaimAsuransi::with('limit_confirmation_klaim')->select('id')->find($id);
         if ($data) {
             return response()->json([
                 'status'=>200,
@@ -188,6 +188,33 @@ class KlaimAsuransiController extends Controller
     }
 
     public function agree_partial_confirm(Request $request)
+    {
+        if (!empty($request->klaim_id)){
+            try {
+                DB::beginTransaction();
+                $data = KlaimAsuransi::find($request->klaim_id);
+                $data->update([
+                    'nominal_disetujui'=>$request->nominal_disetujui,
+                    'status_klaim'=>7
+                ]);
+                DB::commit();
+                Helper::createUserLog("Berhasil menyetujui partial confirmation", auth()->user()->id, $this->title);
+                return response()->json([
+                    'status'=>200,
+                    'message'=>'Berhasil menyetujui'
+                ]);
+            } catch (Exception $e) {
+                Helper::createUserLog("Gagal menyetujui partial confirmation", auth()->user()->id, $this->title);
+                DB::rollBack();
+                return response()->json([
+                    'status'=>422,
+                    'message'=>$e->getMessage()
+                ],422);
+            }
+        }
+    }
+
+    public function agree_limit_confirm(Request $request)
     {
         if (!empty($request->klaim_id)){
             try {
